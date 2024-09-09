@@ -1,0 +1,57 @@
+input-float {
+  width: 100%;
+  display: block;
+
+  input{
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+    &.disabled{
+      border-top-right-radius: 4px !important;
+      border-bottom-right-radius: 4px !important;
+    }
+  }
+
+  .ant-input-group-addon {
+    padding: 0px !important;
+    border-left: none !important;
+    border-top-right-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+  }
+
+  .input-group-append {
+    display: block;
+    width: 30px;
+
+    .actions {
+      text-align: center;
+      height: 15px;
+      line-height: 11px;
+
+      &:hover {
+        cursor: pointer;
+        background-color: #dbd8d8;
+      }
+
+      i {
+        font-size: 10px;
+      }
+    }
+  }
+
+  &.view {
+    input {
+      border: none !important;
+      background: none !important;
+    }
+
+    .ant-input-disabled,
+    .ant-input[disabled] {
+      background-color: rgb(255 255 255 / 0%) !important;
+    }
+
+    span.ant-input-group-addon {
+      border: none !important;
+      background: none !important;
+    }
+  }
+}

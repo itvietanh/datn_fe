@@ -1,0 +1,65 @@
+// input-date {
+//   width: 100%;
+//   display: block;
+
+//   nz-date-picker {
+//     width: 100%;
+//     .form-control {
+//       padding: 0px;
+//       .ant-input {
+//         border: none;
+//         height: calc(100% - 2px);
+//         margin-left: 1px;
+//         margin-top: 1px;
+//         margin-right: 1px;
+//         width: calc(100% - 2px);
+//       }
+//     }
+//   }
+// }
+
+input-date {
+  width: 100%;
+  display: block;
+
+  nz-date-picker {
+    width: 40px;
+    position: absolute !important;
+    z-index: 100;
+    opacity: 0;
+    top: 0;
+    right: -40px;
+    width: 40px;
+    cursor: pointer;
+  }
+
+  &.view {
+    nz-input-group {
+      border: none;
+      background: none;
+
+      .ant-input-disabled,
+      .ant-input[disabled] {
+        background-color: rgb(255 255 255 / 0%) !important;
+      }
+    }
+  }
+
+}
+
+.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner,
+.ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner,
+.ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
+  color: #fff;
+  background: #2d78d7;
+  border-radius: 20px;
+}
+
+.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner:before {
+  border: 1px solid #2d78d7 !important;
+  border-radius: 20px !important;
+}
+
+.ant-picker-header {
+  background-color: #FFF7F3;
+}

@@ -1,0 +1,58 @@
+<!-- <nz-spin [nzSpinning]="!isInit"> -->
+<nz-input-group [nzAddOnAfter]="disabled ? undefined : addOnAfterTemplate">
+  <nz-select
+    [class]="classControl"
+    [nzShowSearch]="allowSearch"
+    [nzAllowClear]="allowClear"
+    [hidden]="hidden"
+    [nzDisabled]="disabled"
+    nzMode="multiple"
+    [nzMaxMultipleCount]="max"
+    [(ngModel)]="controlValue"
+    [nzClearIcon]="selectIconClose"
+    [nzPlaceHolder]="!disabled ? placeholder : ''"
+    (nzOnSearch)="onSearch($event)"
+    (ngModelChange)="onChange()"
+    (nzScrollToBottom)="loadMore()"
+    [nzServerSearch]="!!apiService"
+    [nzLoading]="!isInit || isLoading"
+    [nzShowArrow]="true"
+    [attr.actionName]="actionName"
+    [attr.apiParams]="apiParamsJSon"
+    [ngClass]="{ 'has-after': addOnAfterTemplate && !disabled }"
+  >
+    <ng-container *ngFor="let item of items">
+      <nz-option
+        [nzLabel]="item.label"
+        [nzValue]="item.value"
+        [nzDisabled]="item.disabled"
+      >
+      </nz-option>
+    </ng-container>
+    <ng-container *ngIf="searchLength === 0">
+      <ng-container *ngFor="let item of listItemBonus">
+        <nz-option
+          [nzLabel]="item.label"
+          [nzValue]="item.value"
+          [nzDisabled]="item.disabled"
+        >
+        </nz-option>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngFor="let item of listOption">
+      <nz-option
+        [nzLabel]="item.label"
+        [nzValue]="item.value"
+        [nzDisabled]="item.disabled"
+      >
+      </nz-option>
+    </ng-container>
+    <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
+      <i nz-icon nzType="loading" class="loading-icon"></i> Đang tải dữ liệu...
+    </nz-option>
+  </nz-select>
+</nz-input-group>
+<!-- </nz-spin> -->
+<ng-template #selectIconClose>
+  <i nz-icon nzType="close-circle" nzTheme="fill" (click)="onClear()"></i>
+</ng-template>

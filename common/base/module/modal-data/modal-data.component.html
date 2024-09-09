@@ -1,0 +1,30 @@
+<button
+  aria-label="Close"
+  class="ant-modal-close ng-star-inserted"
+  (click)="close.emit()"
+>
+  <span class="ant-modal-close-x">
+    <i
+      nz-icon
+      nzType="close"
+      nzTheme="outline"
+      class="anticon ant-modal-close-icon anticon-close"
+    ></i>
+  </span>
+</button>
+<form [formGroup]="formGroup">
+  <ng-content> </ng-content>
+  <div class="list-control-search">
+    <button
+      nz-button
+      type="button"
+      class="btn btn-default"
+      (click)="close.emit()"
+    >
+      <i nz-icon nzType="close" nzTheme="outline"></i>Hủy
+    </button>
+    <button nz-button type="submit" class="btn btn-primary" *ngIf="!isView">
+      <i class="icon-plus-circle2 mr-2"></i>Lưu và đóng
+    </button>
+  </div>
+</form>

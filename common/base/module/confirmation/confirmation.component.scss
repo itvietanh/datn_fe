@@ -1,0 +1,28 @@
+.icon {
+  text-align: center;
+
+  img {
+    height: 80px;
+  }
+}
+
+.list-action,
+.content {
+  text-align: center;
+  white-space: pre-line;
+}
+
+.list-action {
+  display: flex;
+  justify-content: center;
+
+  button {
+    width: 40%;
+  }
+}
+
+.icon-close {
+  position: absolute;
+  right: 0px;
+  margin-top: 10px;
+}

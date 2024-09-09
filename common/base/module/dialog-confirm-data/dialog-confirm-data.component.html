@@ -1,0 +1,41 @@
+<button
+  aria-label="Close"
+  class="ant-modal-close ng-star-inserted"
+  (click)="cancel()"
+>
+  <span class="ant-modal-close-x">
+    <i
+      nz-icon
+      nzType="close"
+      nzTheme="outline"
+      class="anticon ant-modal-close-icon anticon-close"
+    ></i>
+  </span>
+</button>
+
+<form [formGroup]="myForm">
+  <ng-template #controlErrorTpl let-control>
+    <app-render-errors [control]="control"></app-render-errors>
+  </ng-template>
+  <div class="row">
+    <div class="col-md-12">
+      <app-form-control [label]="labelText">
+        <input-textarea formControlName="note"> </input-textarea>
+      </app-form-control>
+    </div>
+  </div>
+</form>
+
+<div class="text-center">
+  <button
+    nz-button
+    type="button"
+    class="btn btn-default mr-2"
+    (click)="cancel()"
+  >
+    <i class="isax-close-circle1 mr-2"></i>{{ cancelText }}
+  </button>
+  <button nz-button type="button" class="btn btn-primary" (click)="ok()">
+    <i class="isax-copy-success1 mr-2"></i>{{ okText }}
+  </button>
+</div>

@@ -1,0 +1,112 @@
+@import "variables";
+
+app-menu {
+  nz-spin {
+    min-height: calc(100vh - 200px);
+  }
+
+  >.sidebar {
+    width: 278px;
+    z-index: 1;
+  }
+
+
+  .nav-sidebar {
+    >li>.nav-link {
+      padding: 0.75rem 8px;
+      padding-left: 18px;
+
+      i {
+        margin-right: 10px;
+        font-size: 24px;
+        display: none; // Menu ngoài cùng sẽ ko hiện icon
+        // margin-top: 0;
+        // margin-bottom: 0;
+      }
+
+      span {
+        padding-right: 18px;
+        // line-height: 37px;
+      }
+    }
+
+    .nav-group-sub {
+      >li>.nav-link {
+        padding: 0.75rem 14px;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 28px !important;
+
+        i {
+          font-size: 24px;
+        }
+
+        span {
+          line-height: 35px !important;
+        }
+      }
+
+    }
+
+    .nav-item-submenu {
+      &.nav-item-open {
+        >a {
+          background-color: rgb(204 204 204 / 26%) !important;
+        }
+      }
+    }
+
+    .nav-item:not(.nav-item-header):first-child {
+      padding-top: 1px;
+    }
+
+    .nav-item:not(.nav-item-header):last-child {
+      padding-bottom: 0px;
+    }
+  }
+
+  .nav-item-submenu>.nav-link:after {
+    right: 18px !important;
+    top: 14px !important;
+    transform: rotate(90deg) !important;
+  }
+
+  .nav-item-submenu.nav-item-open>.nav-link:after {
+    transform: rotate(- 90deg) !important;
+  }
+
+  .card-sidebar-mobile {
+    overflow: auto;
+    max-height: calc(100vh - 70px);
+
+  }
+
+  @include tablet-and-mobile {
+    .nav-item-header {
+      display: none;
+      @include mobile {
+        background-color: #2d78d7;
+      }
+    }
+
+    .sidebar-content {
+      background-color: #fff ;
+      @include tablet-and-mobile{
+        background-color: transparent;
+      }
+      @include mobile {
+        top: 65px !important;
+        padding-top: 10px;
+        background-color: #2d78d7;
+      }
+    }
+  }
+}
+
+body.sidebar-xs {
+  .card-sidebar-mobile {
+    overflow: unset;
+    max-height: unset;
+  }
+
+}

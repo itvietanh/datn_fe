@@ -1,0 +1,12 @@
+<nz-form-item class="mb-0">
+  <nz-form-label *ngIf="label" [nzRequired]="required">{{
+    label
+  }}</nz-form-label>
+  <nz-form-control [nzErrorTip]="errorTpl">
+    <ng-content></ng-content>
+  </nz-form-control>
+</nz-form-item>
+
+<ng-template #errorTpl let-control>
+  {{ control?.errors?.error }}
+</ng-template>

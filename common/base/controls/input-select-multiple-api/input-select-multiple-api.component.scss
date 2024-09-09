@@ -1,0 +1,43 @@
+input-select-multiple-api{
+    width: 100%;
+    display: block;
+
+    nz-select {
+      width: 100%;
+    }
+
+    nz-spin{
+      .ant-spin-container{
+        min-height: 30px !important;
+      }
+      .ant-spin-nested-loading>div>.ant-spin{
+        max-height: 30px !important;
+      }
+    }
+
+    .loading-icon {
+      margin-right: 8px;
+    }
+
+    .ant-select-multiple .ant-select-selection-item-remove{
+      vertical-align: 0;
+    }
+
+    .has-after{
+      nz-select-top-control {
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+      }
+    }
+
+    &.view {
+      nz-select-top-control {
+        border: none !important;
+        background: none !important;
+      }
+
+      nz-select-arrow {
+        display: none !important;
+      }
+    }
+}

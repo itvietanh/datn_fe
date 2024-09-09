@@ -1,0 +1,57 @@
+<form [formGroup]="myForm!">
+  <div class="row">
+    <div class="col-md-4">
+      <app-form-control [label]="placeholderCity">
+        <input-select-api
+          [apiService]="apiService"
+          [actionName]="actionNameCity"
+          (onChange)="changeCity()"
+          placeholder="Chọn Tỉnh/Thành"
+          formControlName="city"
+        >
+        </input-select-api>
+      </app-form-control>
+    </div>
+    <div class="col-md-4">
+      <app-form-control [label]="placeholderDistrict">
+        <input-select-api
+          [apiService]="apiService"
+          [actionName]="actionNameDistrict"
+          (onChange)="changeDistrict()"
+          [apiParams]="whereDistrict"
+          placeholder="Chọn Quận/Huyện"
+          formControlName="district"
+        >
+        </input-select-api>
+      </app-form-control>
+    </div>
+    <div class="col-md-4">
+      <app-form-control [label]="placeholderVillage">
+        <input-select-api
+          [apiService]="apiService"
+          [actionName]="actionNameVillage"
+          [apiParams]="whereVillage"
+          (onChange)="changeVillage()"
+          placeholder="Chọn Phường/Xã"
+          formControlName="village"
+        >
+        </input-select-api>
+      </app-form-control>
+    </div>
+    <div class="col-md-12" *ngIf="address">
+      <app-form-control [label]="placeholderAddress">
+        <input-text
+          placeholder="Số nhà, ngách, hẻm, đường..."
+          formControlName="address"
+        >
+        </input-text>
+      </app-form-control>
+    </div>
+
+    <div class="col-md-12">
+      <app-form-control [label]="placeholderDonvi">
+        <input-text formControlName="donviLabel"></input-text>
+      </app-form-control>
+    </div>
+  </div>
+</form>

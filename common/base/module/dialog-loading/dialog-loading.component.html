@@ -1,0 +1,28 @@
+<div class="icon-loading text-center">
+  <div class="app-loading">
+    <div class="lds-ring">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div class="text-loading">Đang tải</div>
+  </div>
+</div>
+<div class="mess-loading text-center">
+  Hệ thống đang xử lý. <br />Vui lòng đợi thêm giây lát!
+</div>
+<div class="control-loading text-center">
+  <button
+    [disabled]="!!timeDisable"
+    nz-button
+    type="button"
+    class="btn btn-primary"
+    (click)="cancelLoading()"
+  >
+    <i class="icon-cross2 mr-2"></i>Hủy
+    <!-- <div class="time-disable">
+      {{ timeDisable }}
+    </div> -->
+  </button>
+</div>

@@ -1,0 +1,43 @@
+<nz-input-group
+  [nzAddOnAfter]="disabled ? undefined : suffixControlNumber"
+  [nzSuffix]="inputClearTpl"
+>
+  <input
+    type="text"
+    nz-input
+    [class]="class"
+    [ngModel]="controlValue"
+    [disabled]="disabled"
+    [readonly]="readonly"
+    [hidden]="hidden"
+    [placeholder]="!disabled ? placeholder : ''"
+    (ngModelChange)="setValue($event)"
+    (keydown)="checkCopy($event)"
+    #myInputDate
+  />
+
+  <nz-date-picker
+    [(ngModel)]="controlValueDate"
+    (ngModelChange)="onChangePicker()"
+    #dateTimePicker
+    [nzAllowClear]="false"
+    [nzDisabled]="disabled"
+    [nzDisabledDate]="disabledDate"
+  >
+  </nz-date-picker>
+</nz-input-group>
+
+<ng-template #suffixControlNumber>
+  <i *ngIf="!disabled" nz-icon nzType="carry-out" nzTheme="outline"></i>
+</ng-template>
+
+<ng-template #inputClearTpl>
+  <i
+    nz-icon
+    class="ant-input-clear-icon"
+    nzTheme="fill"
+    nzType="close-circle"
+    *ngIf="controlValue && !disabled"
+    (click)="onClear()"
+  ></i>
+</ng-template>

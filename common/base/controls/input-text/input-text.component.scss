@@ -1,0 +1,16 @@
+input-text {
+  width: 100%;
+  display: block;
+
+  &.view {
+    nz-input-group {
+      border: none !important;
+      background: none !important;
+
+      .ant-input-disabled,
+      .ant-input[disabled] {
+        background-color: rgb(255 255 255 / 0%) !important;
+      }
+    }
+  }
+}

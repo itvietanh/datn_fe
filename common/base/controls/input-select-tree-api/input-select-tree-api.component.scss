@@ -1,0 +1,84 @@
+input-select-tree-api {
+  width: 100%;
+  display: block;
+
+  .ant-input-down-icon {
+    font-size: 11px;
+    color: #d9d9d9;
+  }
+
+  .ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected {
+    background-color: #f7e8e0;
+  }
+
+  .select-tree-template2 {
+    .text-search {
+      height: 50px;
+      position: relative;
+
+      .i-search {
+        color: #8c8c8c;
+        font-size: 22px;
+        line-height: 30px;
+        position: absolute;
+        left: 15px;
+        top: 12px;
+      }
+
+      nz-input-group {
+        position: absolute;
+        left: 45px;
+        top: 13px;
+        outline: none !important;
+        width: calc(100% - 46px);
+        border: none;
+        box-shadow: none !important;
+
+        input {
+          border: none;
+          outline: none !important;
+          box-shadow: none !important;
+        }
+      }
+    }
+
+    .data-tree {
+      max-height: calc(100vh - 150px);
+      overflow-y: auto;
+      border-top: solid 1px #e6e7e9;
+      padding-left: 12px;
+      padding-top: 5px;
+    }
+  }
+
+  .root-tree-btn {
+    position: absolute;
+    z-index: -9999;
+    top: 5px;
+  }
+
+  .text-error {
+    color: rgb(185, 5, 5)
+  }
+
+  &.view {
+    nz-input-group {
+      border: none !important;
+      background: none !important;
+
+      .ant-input-disabled,
+      .ant-input[disabled] {
+        background-color: unset !important;
+      }
+    }
+  }
+}
+
+.virtual-scroll-tree {
+  max-height: 300px;
+  overflow-y: auto;
+
+  .text-error {
+    color: rgb(185, 5, 5)
+  }
+}

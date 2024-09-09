@@ -1,0 +1,30 @@
+<button
+  aria-label="Close"
+  class="ant-modal-close ng-star-inserted"
+  (click)="close()"
+>
+  <span class="ant-modal-close-x">
+    <i
+      nz-icon
+      nzType="close"
+      nzTheme="outline"
+      class="anticon ant-modal-close-icon anticon-close"
+    ></i>
+  </span>
+</button>
+<form [formGroup]="myForm">
+  <!-- <div class="breadcrumb my-2">
+    <div class="list-control-main">
+      <button nz-button type="button" class="btn btn-primary" (click)="startScanning()">
+        <i class="isax-scan-barcode1 mr-2"></i>Quét mã
+      </button>
+    </div>
+  </div> -->
+  <div class="list-btn-action my-3">
+    <div class="qr-scanner-container">
+      <div id="reader"></div>
+      <div class="qr-frame"></div>
+      <div class="scanning-line"></div>
+    </div>
+  </div>
+</form>

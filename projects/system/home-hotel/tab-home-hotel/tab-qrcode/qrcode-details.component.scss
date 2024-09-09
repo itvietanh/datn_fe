@@ -1,0 +1,79 @@
+.flip-camera {
+    transform: scaleX(-1);
+    /* Lật ngược theo chiều ngang */
+}
+
+/* CSS cho khung quét mã QR */
+.qr-scanner-container {
+    position: relative;
+    width: 100%;
+    height: 225px;
+    max-width: 300px;
+    margin: auto;
+    border: 1px solid #000;
+}
+
+.qr-scanner-container video {
+    width: 100%;
+    display: block;
+}
+
+.qr-scanner-container .qr-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 3px solid yellow;
+    pointer-events: none;
+    /* Để khung không can thiệp vào sự kiện của video */
+    box-sizing: border-box;
+    display: none;
+    /* Ẩn khung quét khi không có mã QR */
+}
+
+.qr-scanner-container.active .qr-frame {
+    display: block;
+    /* Hiển thị khung quét khi có mã QR */
+    animation: flash 1s infinite;
+    /* Hiệu ứng nhấp nháy khi quét */
+}
+
+@keyframes flash {
+    0% {
+        border-color: yellow;
+    }
+
+    50% {
+        border-color: green;
+    }
+
+    100% {
+        border-color: green;
+    }
+}
+
+.scanning-line {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: green;
+    top: 0;
+    left: 0;
+    animation: scanning 3.5s infinite;
+}
+
+/* Scanning animation */
+@keyframes scanning {
+    0% {
+        top: 0;
+    }
+
+    50% {
+        top: 100%;
+    }
+
+    100% {
+        top: 0;
+    }
+}

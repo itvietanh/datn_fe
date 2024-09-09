@@ -1,0 +1,92 @@
+app-paging {
+  a {
+    color: black;
+  }
+
+  .paging-wapper {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    height: 30px;
+  }
+
+  .temp1 {
+    width: 100%;
+    display: inline-block;
+
+    .paging-title {
+      float: left;
+    }
+
+    .paging-size {
+      float: right;
+      margin-right: 10px;
+      line-height: 30px;
+
+      .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+        height: 30px;
+      }
+
+      input-select {
+        width: 70px;
+        width: 70px;
+        float: right;
+        margin-left: 10px;
+      }
+    }
+
+    .pagination {
+      float: right;
+
+      .page-item {
+        margin-right: 4px;
+        font-size: 14px;
+
+        &:nth-last-child(1) {
+          margin-right: 0px;
+        }
+
+        .page-link {
+          height: 30px !important;
+          line-height: 30px !important;
+          border: solid 1px #ccc !important;
+          border-radius: 4px !important;
+          color: black;
+          padding: 0px 11px;
+        }
+
+        &.active {
+          .page-link {
+            background: #2d78d7;
+            border-color: #2d78d7 !important;
+            color: white;
+          }
+        }
+
+        &:hover {
+          .page-link {
+            background: #2d78d7b3;
+            border-color: #2d78d7b3 !important;
+            color: white;
+          }
+        }
+
+        &.disabled {
+          .page-link {
+            background: #ccc;
+            border: solid 1px #ccc !important;
+            color: black;
+          }
+        }
+      }
+    }
+  }
+
+  .temp2 {
+    background: #bdb2ac66;
+    color: #2d78d7;
+    border-radius: 3px;
+    cursor: pointer;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+}

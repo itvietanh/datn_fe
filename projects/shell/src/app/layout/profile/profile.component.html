@@ -1,0 +1,60 @@
+<div class="page-header page-header-light">
+  <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
+    <div class="d-flex">
+      <div class="breadcrumb-title">Thông tin tài khoản</div>
+      <div class="breadcrumb">
+        <div class="list-control-main"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <form [formGroup]="myForm">
+    <ng-template #controlErrorTpl let-control>
+      <app-render-errors [control]="control"></app-render-errors>
+    </ng-template>
+    <div class="row">
+      <div class="col-md-6">
+        <nz-form-item>
+          <nz-form-label [nzRequired]="false">Tài khoản</nz-form-label>
+          <nz-form-control [nzErrorTip]="controlErrorTpl">
+            <input-text placeholder="" formControlName="username"></input-text>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div class="col-md-6">
+        <nz-form-item>
+          <nz-form-label [nzRequired]="false">Email</nz-form-label>
+          <nz-form-control [nzErrorTip]="controlErrorTpl">
+            <input-text formControlName="issuedDate" type="email"></input-text>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div class="col-md-12">
+        <nz-form-item>
+          <nz-form-label [nzRequired]="false">Số điện thoại</nz-form-label>
+          <nz-form-control [nzErrorTip]="controlErrorTpl">
+            <input-text placeholder="" formControlName="phoneNumber">
+            </input-text>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div class="col-md-12">
+        <nz-form-item>
+          <nz-form-label [nzRequired]="false">Đơn vị quản lý</nz-form-label>
+          <nz-form-control [nzErrorTip]="controlErrorTpl">
+            <input-select-tree-api
+              [apiService]="unitService"
+              formControlName="units"
+            >
+            </input-select-tree-api>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+</div>

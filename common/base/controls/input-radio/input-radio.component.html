@@ -1,0 +1,14 @@
+<nz-radio-group
+  [(ngModel)]="controlValue"
+  (ngModelChange)="onChange()"
+  [nzDisabled]="disabled"
+>
+  <label
+    nz-radio
+    [className]="className"
+    [nzValue]="item.value"
+    [nzDisabled]="item.disable"
+    *ngFor="let item of items"
+    >{{ item.label }}</label
+  >
+</nz-radio-group>

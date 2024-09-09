@@ -1,0 +1,16 @@
+input-textarea {
+  width: 100%;
+  display: block;
+
+  textarea {
+    border: none !important;
+    padding: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .ant-input:hover {
+    border-color: unset;
+    border-right-width: 1px;
+  }
+}

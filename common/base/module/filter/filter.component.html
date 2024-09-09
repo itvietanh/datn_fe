@@ -1,0 +1,24 @@
+<form [formGroup]="form">
+  <div class="row">
+    <div
+      *ngFor="let filter of filters"
+      [ngSwitch]="filter.type"
+      [class]="filter?.class"
+    >
+      <ng-container *ngSwitchCase="'input'">
+        <input-text-search
+          [placeholder]="filter.placeholder ?? 'Tìm kiếm'"
+          [formControlName]="filter.key"
+        >
+        </input-text-search>
+      </ng-container>
+      <ng-container *ngSwitchCase="'select'">
+        <app-select [formControlName]="filter.key" placeholder="Lựa chọn">
+        </app-select>
+      </ng-container>
+      <ng-container *ngSwitchCase="'datepicker'">
+        <app-datepicker [formControlName]="filter.key"> </app-datepicker>
+      </ng-container>
+    </div>
+  </div>
+</form>

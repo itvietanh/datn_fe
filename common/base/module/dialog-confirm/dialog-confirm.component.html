@@ -1,0 +1,28 @@
+<!-- <div class="icon-close">
+  <i class="isax-close-circle1 mr-2" (click)="cancel()"></i>
+</div> -->
+<div class="icon">
+  <img src="assets/images/confirm-{{ mode }}.png" />
+</div>
+<div class="content">{{ content }}</div>
+
+<div class="list-action">
+  <button
+    nz-button
+    type="button"
+    class="btn btn-default mr-2"
+    (click)="cancel()"
+    [hidden]="!cancelText"
+  >
+    <i class="isax-close-circle1 mr-2"></i>{{ cancelText }}
+  </button>
+  <button
+    nz-button
+    type="button"
+    class="btn btn-primary"
+    (click)="ok()"
+    [hidden]="!okText"
+  >
+    <i class="isax-copy-success1 mr-2"></i>{{ okText }}
+  </button>
+</div>

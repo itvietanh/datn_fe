@@ -1,0 +1,53 @@
+<div class="paging-wapper">
+  <div class="temp1" *ngIf="data && (temp === undefined || temp === 1)">
+    <div class="paging-title">
+      <span *ngIf="curentPage === totalPage;else tempTuongDoi">
+        Có {{totalItem | numberFormat}} kết quả được tìm thấy
+      </span>
+      <ng-template #tempTuongDoi>
+        <!-- {{totalItem > 100? 'Có hơn 100 kết quả được tìm thấy': 'Có '+totalItem+' kết quả được tìm thấy'}} -->
+        Có {{totalItem | numberFormat}} kết quả được tìm thấy
+      </ng-template>
+    </div>
+    <ul class="pagination mr-auto">
+      <li class="page-item" [ngClass]="{'disabled': curentPage < 2}">
+        <a class="page-link" (click)="onChangePage(1)" href="javascript:void(0)">
+          <i nz-icon nzType="step-backward" nzTheme="outline"></i>
+        </a>
+      </li>
+      <li class="page-item" [ngClass]="{'disabled': curentPage === 1}">
+        <a class="page-link" *ngIf="curentPage > 1" (click)="onChangePage(curentPage-1)" href="javascript:void(0)">
+          <i nz-icon nzType="caret-left" nzTheme="outline"></i>
+        </a>
+        <a class="page-link" *ngIf="curentPage === 1" href="javascript:void(0)">
+          <i nz-icon nzType="caret-left" nzTheme="outline"></i>
+        </a>
+      </li>
+      <li class="page-item ng-star-inserted" [ngClass]="{'active': x === curentPage}" *ngFor="let x of lstPage">
+        <a *ngIf="x === curentPage" class="page-link" (click)="onChangePage(x)" href="javascript:void(0)">{{x}}</a>
+        <a *ngIf="x !== curentPage" class="page-link" (click)="onChangePage(x)" href="javascript:void(0)">{{x}}</a>
+      </li>
+      <li class="page-item" [ngClass]="{'disabled': curentPage === totalPage}">
+        <a class="page-link" *ngIf="curentPage < totalPage" (click)="onChangePage(curentPage+1)"
+          href="javascript:void(0)">
+          <i nz-icon nzType="caret-right" nzTheme="outline"></i>
+        </a>
+        <a class="page-link" *ngIf="curentPage === totalPage" href="javascript:void(0)">
+          <i nz-icon nzType="caret-right" nzTheme="outline"></i>
+        </a>
+      </li>
+      <li class="page-item" [ngClass]="{'disabled':curentPage >= totalPage }">
+        <a class="page-link" (click)="goLast()" href="javascript:void(0)">
+          <i nz-icon nzType="step-forward" nzTheme="outline"></i>
+        </a>
+      </li>
+    </ul>
+    <div class="paging-size">
+      <span>Số hàng mỗi trang: </span>
+      <input-select [allowClear]="false" [allowSearch]="false" [items]="listPage" [(ngModel)]="itemsPerPage" (onChange)="changeSize($event)"></input-select>
+    </div>
+  </div>
+  <div class="temp2" *ngIf="data && temp === 2">
+      <div class="text-center">Xem thêm</div>
+  </div>
+</div>

@@ -1,0 +1,143 @@
+<div class="page-header page-header-light">
+  <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
+    <div class="d-flex">
+      <div class="d-flex">
+        <div class="breadcrumb-title">Sơ đồ phòng</div>
+      </div>
+      <div class="d-flex hd-room">
+        <div class="breadcrumb-title">
+          <!-- <nz-segmented [nzOptions]="viewOptions" [ngModel]="viewSelectedIndex"
+            (nzValueChange)="onViewSelectedChange($event)"></nz-segmented> -->
+
+          <div class="chon-tang">
+            <input-select placeholder="Tầng..."></input-select>
+          </div>
+
+          <ng-container>
+            <div class="mo-ta">
+              <div class="status">
+                <input-check-box>Phòng trống: 1</input-check-box>
+              </div>
+            </div>
+
+            <div class="phong-ban">
+              <input-check-box>Dọn phòng (5)</input-check-box>
+            </div>
+          </ng-container>
+        </div>
+        <div class="breadcrumb">
+          <div class="list-control-main"></div>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center">
+        <div class="breadcrumb">
+          <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
+            <i class="icon-plus-circle2 mr-2"></i>
+            Đặt phòng
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="data-table">
+    <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 20 }" [nzLoading]="loading"></nz-skeleton>
+    <ng-container>
+      <div class="floor">
+        <div class="title">
+          <div class="name">
+            Tầng 1
+          </div>
+          <div class="check-in-out">
+            <div class="check-out">Chờ thanh toán</div>
+          </div>
+          <div>
+            <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
+              <span nz-icon nzType="more" nzTheme="outline"></span>
+            </a>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <ul nz-menu>
+                <li nz-menu-item>
+                  <span class="mr-2" nz-icon nzType="exclamation-circle" nzTheme="outline"></span>
+                  Thanh toán
+                </li>
+              </ul>
+            </nz-dropdown-menu>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <div class="floor">
+      <div class="title">
+        <div class="name">
+          Tầng 2
+        </div>
+        <ng-container>
+          <div class="check-in-out">
+            <div class="check-out">
+              <i class="isax-calendar-remove1 mr-1"></i>
+              Quá giờ trả phòng theo dự kiến:
+              15 phút
+            </div>
+          </div>
+          <div>
+            <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
+              <span nz-icon nzType="more" nzTheme="outline"></span>
+            </a>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <ul nz-menu>
+                <li nz-menu-item>
+                  <span class="mr-2" nz-icon nzType="exclamation-circle" nzTheme="outline"></span>
+                  Chi tiết
+                </li>
+              </ul>
+            </nz-dropdown-menu>
+          </div>
+        </ng-container>
+      </div>
+      <div class="room-list">
+        <div class="room-item">
+          <div class="room" [ngStyle]="{
+              borderColor: 'green'
+            }">
+            <div class="left" [ngStyle]="{
+                backgroundColor: 'green'
+              }">
+              <div class="text-center mt-2">
+                <div class="name">Phòng 103</div>
+                <div class="type">Phòng đơn</div>
+              </div>
+              <div class="capability d-flex justify-content-between w-100">
+                <div>
+                  <span nz-tooltip [nzTooltipTitle]="status" [attr.class]="'cv'"></span>
+                  <span style="color: #ffda46" nz-tooltip [nzTooltipTitle]="outDate">&#9888;</span>
+                  <ng-template #outDate>
+                    <span>Quá hạn</span>
+                  </ng-template>
+                  <ng-template #status>
+                    <span>Sẵn sàng</span>
+                    <span>Đang ở</span>
+                    <span>Phòng bẩn</span>
+                  </ng-template>
+                </div>
+                <div>
+                  <span class="isax-user1"></span>
+                  <span>
+                    2
+                  </span>
+                  /
+                  <span>
+                    2
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

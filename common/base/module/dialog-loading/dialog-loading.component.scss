@@ -1,0 +1,27 @@
+.app-loading {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-loading{
+  margin-bottom: 22px;
+  width: 100%;
+}
+
+.mess-loading {
+  font-weight: 400;
+  font-size: 14px;
+  margin-bottom: 22px;
+}
+
+.control-loading{
+  >button{
+    padding: 5px 40px;
+  }
+  .time-disable{
+    margin-left: 5px;
+    display: inline;
+  }
+}

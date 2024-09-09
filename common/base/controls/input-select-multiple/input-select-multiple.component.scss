@@ -1,0 +1,22 @@
+input-select-multiple {
+  width: 100%;
+  display: block;
+
+  .ant-select-multiple .ant-select-selection-item-remove{
+    vertical-align: 0;
+  }
+
+  &.view {
+    nz-select-top-control {
+      border: none !important;
+      background: none !important;
+    }
+
+    nz-select-arrow {
+      display: none !important;
+    }
+  }
+  nz-select {
+    width: 100%;
+  }
+}

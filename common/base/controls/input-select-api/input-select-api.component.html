@@ -1,0 +1,146 @@
+<ng-container *ngIf="template === 1">
+  <nz-input-group
+    class="select-template1"
+    [ngClass]="{ 'has-after': addOnAfterTemplate && !disabled }"
+    [nzAddOnAfter]="disabled ? undefined : addOnAfterTemplate"
+  >
+    <nz-select
+      [nzShowSearch]="allowSearch"
+      [nzAllowClear]="allowClear"
+      [hidden]="hidden"
+      [nzDisabled]="disabled"
+      [(ngModel)]="controlValue"
+      [nzClearIcon]="selectIconClose"
+      [nzLoading]="!isInit || isLoading"
+      [nzPlaceHolder]="!disabled ? placeholder : ''"
+      (nzOnSearch)="onSearch($event)"
+      (ngModelChange)="onChange()"
+      (nzScrollToBottom)="loadMore()"
+      [nzServerSearch]="!!apiService"
+      [attr.actionName]="actionName"
+      [attr.apiParams]="apiParamsJSon"
+    >
+      <ng-container *ngFor="let item of items">
+        <nz-option
+          [nzLabel]="item.label"
+          [nzValue]="item.value"
+          [nzDisabled]="item.disabled"
+        >
+        </nz-option>
+      </ng-container>
+      <ng-container *ngIf="searchLength === 0">
+        <ng-container *ngFor="let item of listItemBonus">
+          <nz-option
+            [nzLabel]="item.label"
+            [nzValue]="item.value"
+            [nzDisabled]="item.disabled"
+          >
+          </nz-option>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngFor="let item of listOption">
+        <nz-option
+          [nzLabel]="item.label"
+          [nzValue]="item.value"
+          [nzDisabled]="item.disabled"
+        >
+        </nz-option>
+      </ng-container>
+      <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
+        <i nz-icon nzType="loading" class="loading-icon"></i> Đang tải dữ
+        liệu...
+      </nz-option>
+    </nz-select>
+  </nz-input-group>
+</ng-container>
+
+<ng-container *ngIf="template === 2">
+  <div class="select-template2">
+    <div class="text-search">
+      <i nz-icon nzType="search" class="i-search"></i>
+      <nz-input-group [nzSuffix]="inputClearSearch">
+        <input
+          type="text"
+          nz-input
+          (keyup)="onSearchKyUp($event)"
+          placeholder="{{ placeholder }}"
+          [(ngModel)]="inputValue"
+      /></nz-input-group>
+    </div>
+    <div class="data-tree">
+      <div *ngIf="isLoading && this.searchChange$.value" class="text-center">
+        Đang tải...
+      </div>
+      <div
+        *ngIf="
+          !isLoading &&
+          this.searchChange$.value &&
+          this.searchChange$.value.length < 3
+        "
+        class="text-center text-error"
+      >
+        Nhập tối thiểu 3 ký tự
+      </div>
+      <nz-skeleton
+        style="padding-right: 10px"
+        [nzLoading]="isLoading && !this.searchChange$.value"
+        [nzActive]="true"
+        [nzParagraph]="{ rows: 18 }"
+      ></nz-skeleton>
+      <div
+        *ngIf="listOption.length === 0 && this.searchChange$.value.length >= 3"
+        class="text-center"
+      >
+        Không tìm thấy kết quả nào
+      </div>
+
+      <ng-container *ngIf="!isLoading">
+        <ng-container *ngFor="let item of items">
+          <div
+            *ngClass="{ disabled: item.disabled }"
+            (click)="clickSelectItem(item.value)"
+          >
+            {{ item.label }}
+          </div>
+        </ng-container>
+        <ng-container *ngIf="searchLength === 0">
+          <ng-container *ngFor="let item of listItemBonus">
+            <div
+              *ngClass="{ disabled: item.disabled }"
+              (click)="clickSelectItem(item.value)"
+            >
+              {{ item.label }}
+            </div>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngFor="let item of listOption">
+          <div
+            class="option-item-temp2"
+            [ngClass]="{
+              disabled: item.disabled,
+              activated: item.value === controlValue
+            }"
+            (click)="clickSelectItem(item.value)"
+          >
+            {{ item.label }}
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #selectIconClose>
+  <i nz-icon nzType="close-circle" nzTheme="fill" (click)="onClear()"></i>
+</ng-template>
+
+<ng-template #inputClearSearch>
+  <i
+    nz-icon
+    class="ant-input-clear-icon"
+    nzTheme="fill"
+    nzType="close-circle"
+    *ngIf="this.searchChange$.value && !disabled"
+    (click)="onClear()"
+  ></i>
+</ng-template>

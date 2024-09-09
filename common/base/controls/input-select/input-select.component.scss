@@ -1,0 +1,19 @@
+input-select {
+  width: 100%;
+  display: block;
+
+  nz-select {
+    width: 100%;
+  }
+
+  &.view {
+    nz-select-top-control {
+      border: none !important;
+      background: none !important;
+    }
+
+    nz-select-arrow {
+      display: none !important;
+    }
+  }
+}

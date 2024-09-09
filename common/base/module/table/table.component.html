@@ -1,0 +1,115 @@
+<div class="h-full flex flex-col justify-between">
+  <nz-table
+    nzBordered
+    [nzData]="items"
+    [nzFrontPagination]="false"
+    [nzLoading]="loading"
+    (nzQueryParams)="onQueryParams($event)"
+    [nzScroll]="scroll"
+    nzTableLayout="fixed"
+  >
+    <thead>
+      <tr>
+        <th
+          *ngIf="showCheckbox"
+          nzAlign="center"
+          [(nzChecked)]="checked"
+          [nzIndeterminate]="indeterminate"
+          (nzCheckedChange)="onAllChecked($event)"
+          [nzDisabled]="disableAllCheck"
+          class="w-10"
+          nzWidth="50px"
+        ></th>
+        <th *ngIf="showIndex" nzAlign="center" nzWidth="65px">STT</th>
+        <ng-container *ngFor="let column of displayedColumns">
+          <ng-container *ngIf="!column.sortable; else sortableTmp">
+            <th nzAlign="center" [nzWidth]="column.nzWidth || null">
+              {{ column.header }}
+            </th>
+          </ng-container>
+          <ng-template #sortableTmp>
+            <th
+              nzAlign="center"
+              [nzSortFn]="true"
+              [nzColumnKey]="column.key"
+              [nzWidth]="column.nzWidth || null"
+            >
+              {{ column.header }}
+            </th>
+          </ng-template>
+        </ng-container>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items; let i = index">
+        <td
+          *ngIf="showCheckbox"
+          [nzChecked]="setOfCheckedKeys.has(item[key])"
+          (nzCheckedChange)="onItemChecked(item[key], $event)"
+        ></td>
+        <td *ngIf="showIndex" class="text-center">
+          {{ (pagination.page - 1) * pagination.size + i + 1 }}
+        </td>
+        <td
+          *ngFor="let column of displayedColumns"
+          [class]="column.tdClass"
+          nzEllipsis
+        >
+          <ng-container [ngSwitch]="column.pipe">
+            <ng-container *ngSwitchCase="'number'">
+              {{ item[column.key] | number }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'date'">
+              {{ item[column.key] | dateFormat }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'time'">
+              {{ item[column.key] | datetimeFormat : "time" }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'fullTime'">
+              {{ item[column.key] | datetimeFormat : "fullTime" }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'currency'">
+              {{ item[column.key] | currency }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'boolean'">
+              // TODO: View boolean
+            </ng-container>
+            <ng-container *ngSwitchCase="'json'">
+              <pre>{{ item[column.key] | json }}</pre>
+            </ng-container>
+            <ng-container *ngSwitchCase="'template'">
+              <ng-container
+                *ngTemplateOutlet="
+                  column.templateColumn!;
+                  context: { $implicit: item, key: column.key, index: i }
+                "
+              >
+              </ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'link'">
+              <a class="color-primary">
+                {{ item[column.key] }}
+              </a>
+            </ng-container>
+            <ng-container *ngSwitchCase="'optionLabel'">
+              {{ item[column.key] }}
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              {{ item[column.key] }}
+            </ng-container>
+          </ng-container>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <div *ngIf="showPagination" class="table-pagination mt-5">
+    <!-- <nz-pagination
+      [nzPageIndex]="pagination.page"
+      [nzTotal]="pagination.count"
+      nzShowSizeChanger
+      [nzPageSize]="pagination.size"
+      (nzPageIndexChange)="onIndexChange($event)"
+      (nzPageSizeChange)="onSizeChange($event)"
+    ></nz-pagination> -->
+  </div>
+</div>

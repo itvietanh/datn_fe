@@ -1,0 +1,32 @@
+<ng-content></ng-content>
+<ng-template #template>
+  <div>
+    <ng-container *ngIf="confirmationString">
+      <div class="icon">
+        <img alt="alert" src="assets/images/confirm-alert.png" />
+      </div>
+      <div class="content">
+        {{ confirmationString }}
+      </div>
+    </ng-container>
+    <ng-container *ngTemplateOutlet="confirmationTemplate"></ng-container>
+    <div class="list-action">
+      <button
+        nz-button
+        type="button"
+        class="btn btn-default mr-2"
+        (click)="hide()"
+      >
+        <i class="isax-close-circle1 mr-2"></i>{{ labelButtonCancel || "Hủy" }}
+      </button>
+      <button
+        nz-button
+        type="button"
+        class="btn btn-primary"
+        (click)="confirm()"
+      >
+        <i class="isax-copy-success1 mr-2"></i> {{ labelButton || "Xác nhận" }}
+      </button>
+    </div>
+  </div>
+</ng-template>

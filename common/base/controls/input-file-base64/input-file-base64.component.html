@@ -1,0 +1,52 @@
+<ng-container *ngIf="tempType === 1">
+  <nz-upload
+    class="temp1"
+    [(nzFileList)]="controlValue"
+    [nzBeforeUpload]="beforeUpload"
+    [nzShowButton]="!disabled && controlValue.length < size"
+    [nzShowUploadList]="showUploadList"
+    [nzMultiple]="true"
+    (nzFileListChange)="changeFile()"
+    [nzRemove]="removeFile"
+  >
+    <button type="button" nz-button class="btn-upload" *ngIf="this.isallowUpload">
+      <ng-container *ngIf="!uploading ; else phanTram">
+        {{ placeholder }}
+      </ng-container>
+    </button>
+  </nz-upload>
+</ng-container>
+
+<ng-container *ngIf="tempType === 2">
+  <nz-upload
+    class="temp2"
+    [ngClass]="{ 'img-none': controlValue.length === 0, 'border-0': controlValue.length > 0, 'disabled': disabled }"
+    [(nzFileList)]="controlValue"
+    [nzBeforeUpload]="beforeUpload"
+    [nzShowButton]="!disabled && controlValue.length < size"
+    [nzShowUploadList]="showUploadList"
+    nzListType="picture-card"
+    [nzPreview]="handlePreview"
+    (nzFileListChange)="changeFile()"
+    [nzRemove]="removeFile"
+  >
+    <button type="button" nz-button class="btn-upload">
+      <i class="isax-camera1 mr-2"></i>
+      <ng-container *ngIf="!uploading; else phanTram">
+        {{ placeholder }}
+      </ng-container>
+    </button>
+  </nz-upload>
+</ng-container>
+
+<ng-template #phanTram>
+  <span>{{ progress }} %</span>
+</ng-template>
+
+<div class="note-file-attached" *ngIf="!disabled && tempType === 1 && this.isallowUpload">
+  <!-- <i nz-icon nzType="upload" nzTheme="outline" style="font-size: 25px"></i> -->
+  <i class="-ap upload-icon icon-upload" style="font-size: 25px"></i>
+  <div>
+    <span>Kéo thả tại đây hoặc </span>
+  </div>
+</div>

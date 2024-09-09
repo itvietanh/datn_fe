@@ -1,0 +1,19 @@
+<app-modal-data *ngIf="!loading" [formGroup]="myForm" [isView]="isView" (close)="close()" (submit)="submit()">
+  <div class="list-btn-action">
+    <button nz-button type="button" class="btn btn-primary" (click)="startScanning()">
+      <i class="isax-scan-barcode1 mr-2"></i>Quét mã
+    </button>
+  </div>
+
+  <div class="row">
+    <!-- Khu vực để hiển thị camera và quét mã QR -->
+    <div class="qr-scanner-container">
+      <div id="reader"></div>
+      <div class="qr-frame"></div>
+    </div>
+  </div>
+
+  <app-form-control label="Tên cơ sở lưu trú">
+    <input-text formControlName="idNumber"> </input-text>
+  </app-form-control>
+</app-modal-data>

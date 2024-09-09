@@ -1,0 +1,65 @@
+app-login {
+  .wapper-login {
+    background-image: url("/assets/images/login-background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+
+    /* Add the blur effect */
+    filter: blur(3px);
+    -webkit-filter: blur(3px);
+  }
+
+  .login-form {
+    position: absolute;
+    width: 500px;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    z-index: 2;
+
+    padding: 75px;
+    background: rgb(45 40 40 / 31%);
+    border-radius: 8px;
+
+    .login-icon {
+      text-align: center;
+
+      img {
+        height: 60px;
+        object-fit: cover;
+      }
+    }
+
+    .login-title {
+      font-size: 24px;
+      text-align: center;
+      color: #fff;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .btn-primary {
+      background-color: #2d78d7;
+      border-color: #2d78d7;
+      font-size: 13px;
+      line-height: 17px;
+      font-weight: 600;
+      color: #fff;
+      margin-top: 8px;
+    }
+  }
+}
+
+body.open-loading>.home-loading {
+  padding-left: 0px !important;
+  padding-bottom: 50px !important;
+}
+
+body .body-dialog-tab .ant-modal-wrap {
+  left: 0px;
+}
+
+body .body-dialog-tab .ant-modal-mask {
+  left: 0px;
+}

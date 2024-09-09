@@ -1,0 +1,23 @@
+input-text-search {
+  flex: auto;
+
+  &.view {
+    nz-input-group {
+      border: none;
+      background: none;
+    }
+  }
+}
+
+.ant-input-suffix i[nztype=close] {
+  cursor: pointer;
+}
+
+.anticon-search {
+  cursor: pointer;
+}
+
+.noBorder {
+  border: none;
+  ;
+}

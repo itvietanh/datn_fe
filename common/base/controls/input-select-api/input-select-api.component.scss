@@ -1,0 +1,108 @@
+input-select-api {
+  width: 100%;
+  display: block;
+
+  nz-select {
+    width: 100%;
+  }
+
+  nz-spin {
+    .ant-spin-container {
+      min-height: 30px !important;
+    }
+
+    .ant-spin-nested-loading>div>.ant-spin {
+      max-height: 30px !important;
+    }
+  }
+
+  .loading-icon {
+    margin-right: 8px;
+  }
+
+  &.view {
+    nz-select-top-control {
+      border: none !important;
+      background: none !important;
+    }
+
+    nz-select-arrow {
+      display: none !important;
+    }
+  }
+
+  .select-template1{
+    display: inline-block;
+    &.has-after{
+      display: inline-block;
+      .ant-input-wrapper{
+        display: inline-block;
+      }
+      nz-select{
+        width: calc(100% - 37px) !important;
+        float: left;
+        nz-select-top-control {
+          border-top-right-radius: 0 !important;
+          border-bottom-right-radius: 0 !important;
+        }
+      }
+      .ant-input-group-addon{
+        height: 32px;
+      }
+    }
+  }
+
+  .select-template2 {
+    .text-search {
+      height: 50px;
+      position: relative;
+
+      .i-search {
+        color: #8c8c8c;
+        font-size: 22px;
+        line-height: 30px;
+        position: absolute;
+        left: 15px;
+        top: 12px;
+      }
+
+      nz-input-group {
+        position: absolute;
+        left: 45px;
+        top: 13px;
+        outline: none !important;
+        width: calc(100% - 46px);
+        border: none;
+        box-shadow: none !important;
+
+        input {
+          border: none;
+          outline: none !important;
+          box-shadow: none !important;
+        }
+      }
+    }
+
+    .data-tree {
+      max-height: calc(100vh - 150px);
+      overflow-y: auto;
+      border-top: solid 1px #e6e7e9;
+      padding-left: 12px;
+      padding-top: 5px;
+
+      .option-item-temp2 {
+        padding: 5px 0px 5px 0px;
+        cursor: pointer;
+      }
+    }
+
+    .option-item-temp2.activated {
+      margin-left: -10px;
+      padding-left: 10px;
+      margin-right: 2px;
+      border-radius: 5px;
+      background: rgb(215 108 45 / 90%);
+      color: #fff;
+    }
+  }
+}

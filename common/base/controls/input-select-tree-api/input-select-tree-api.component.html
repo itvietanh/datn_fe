@@ -1,0 +1,245 @@
+<ng-container *ngIf="template === 1">
+  <nz-input-group
+    [nzSuffix]="inputClearTpl"
+    [attr.actionName]="actionName"
+    [attr.apiParams]="apiParamsJSon"
+    nz-tooltip
+    [nzTooltipTitle]="disabled ? controlText : null"
+  >
+    <input
+      [hidden]="isOpenDrop"
+      type="text"
+      nz-input
+      [class]="classControl"
+      [(ngModel)]="controlText"
+      [disabled]="disabled"
+      [readonly]="true"
+      [placeholder]="!disabled ? placeholder : ''"
+      (click)="openSearch(1)"
+    />
+    <input
+      [hidden]="!isOpenDrop"
+      id="{{ idSearch }}"
+      type="text"
+      nz-input
+      [(ngModel)]="textSearch"
+      (keyup)="onSearch($event)"
+      (click)="openSearch(2)"
+      [maxlength]="250"
+      placeholder="Nhập từ khóa tìm kiếm"
+    />
+  </nz-input-group>
+  <div
+    *ngIf="!hiddenClickMe"
+    class="w-100 root-tree-btn"
+    nz-dropdown
+    [nzDropdownMenu]="menu"
+    [nzDisabled]="disabled"
+    [nzClickHide]="false"
+    [nzBackdrop]="false"
+    nzTrigger="click"
+    [nzVisible]="isOpenDrop"
+    (nzVisibleChange)="changeVisible($event)"
+  >
+    Click me
+  </div>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <div nz-menu class="virtual-scroll-tree">
+      <div *ngIf="isLoading" class="text-center">Đang tải...</div>
+      <div
+        *ngIf="!isLoading && textSearch && textSearch.length < 3"
+        class="text-center text-error"
+      >
+        Nhập tối thiểu 3 ký tự
+      </div>
+      <div
+        *ngIf="noData && (!textSearch || textSearch.length >= 3)"
+        class="text-center"
+      >
+        Không tìm thấy kết quả nào
+      </div>
+      <nz-tree-view
+        *ngIf="isOpenDrop && !isLoading && !noData"
+        [nzTreeControl]="treeControl"
+        [nzDataSource]="dataSource"
+        [trackBy]="trackBy"
+      >
+        <nz-tree-node *nzTreeNodeDef="let node" nzTreeNodeIndentLine>
+          <nz-tree-node-option
+            [nzDisabled]="node.disabled"
+            [nzSelected]="selectListSelection.isSelected(node.key)"
+            (nzClick)="selectItem(node)"
+          >
+            {{ node.name | textMore : 50 }}
+          </nz-tree-node-option>
+        </nz-tree-node>
+
+        <nz-tree-node
+          *nzTreeNodeDef="let node; when: hasChild"
+          nzTreeNodeIndentLine
+        >
+          <nz-tree-node-toggle (click)="getChild(node)">
+            <span
+              *ngIf="!node.loading"
+              nz-icon
+              [nzType]="treeControl.isExpanded(node) ? 'down' : 'right'"
+              nzTheme="outline"
+            ></span>
+            <span
+              *ngIf="node.loading"
+              nz-icon
+              [nzType]="'loading'"
+              nzTheme="outline"
+              nzTreeNodeToggleActiveIcon
+            ></span>
+          </nz-tree-node-toggle>
+          <nz-tree-node-option
+            [nzDisabled]="node.disabled"
+            [nzSelected]="selectListSelection.isSelected(node.key)"
+            (nzClick)="selectItem(node)"
+          >
+            {{ node.name | textMore : 50 }}
+          </nz-tree-node-option>
+        </nz-tree-node>
+      </nz-tree-view>
+    </div>
+  </nz-dropdown-menu>
+</ng-container>
+
+<ng-container *ngIf="template === 2">
+  <div class="select-tree-template2">
+    <div class="text-search">
+      <i nz-icon nzType="search" class="i-search"></i>
+      <nz-input-group [nzSuffix]="inputClearSearch">
+        <input
+          id="{{ idSearch }}"
+          type="text"
+          nz-input
+          [(ngModel)]="textSearch"
+          (keyup)="onSearch($event)"
+          placeholder="{{ placeholder }}"
+          [maxlength]="250"
+      /></nz-input-group>
+    </div>
+    <div class="data-tree">
+      <div *ngIf="isLoading && textSearch" class="text-center">Đang tải...</div>
+      <div
+        *ngIf="!isLoading && textSearch && textSearch.length < 3"
+        class="text-center text-error"
+      >
+        Nhập tối thiểu 3 ký tự
+      </div>
+      <nz-skeleton
+        style="padding-right: 10px"
+        [nzLoading]="isLoading && !textSearch"
+        [nzActive]="true"
+        [nzParagraph]="{ rows: 18 }"
+      ></nz-skeleton>
+      <div
+        *ngIf="noData && (!textSearch || textSearch.length >= 3)"
+        class="text-center"
+      >
+        Không tìm thấy kết quả nào
+      </div>
+      <nz-tree-view
+        *ngIf="!isLoading && !noData"
+        [nzTreeControl]="treeControl"
+        [nzDataSource]="dataSource"
+        [trackBy]="trackBy"
+      >
+        <nz-tree-node *nzTreeNodeDef="let node" nzTreeNodeIndentLine>
+          <nz-tree-node-option
+            [nzDisabled]="node.disabled"
+            [nzSelected]="selectListSelection.isSelected(node.key)"
+            (nzClick)="selectItem(node)"
+          >
+            {{ node.name | textMore : 30 }}
+          </nz-tree-node-option>
+        </nz-tree-node>
+
+        <nz-tree-node
+          *nzTreeNodeDef="let node; when: hasChild"
+          nzTreeNodeIndentLine
+        >
+          <nz-tree-node-toggle (click)="getChild(node)">
+            <span
+              *ngIf="!node.loading"
+              nz-icon
+              [nzType]="treeControl.isExpanded(node) ? 'down' : 'right'"
+              nzTheme="outline"
+            ></span>
+            <span
+              *ngIf="node.loading"
+              nz-icon
+              [nzType]="'loading'"
+              nzTheme="outline"
+              nzTreeNodeToggleActiveIcon
+            ></span>
+          </nz-tree-node-toggle>
+          <nz-tree-node-option
+            [nzDisabled]="node.disabled"
+            [nzSelected]="selectListSelection.isSelected(node.key)"
+            (nzClick)="selectItem(node)"
+          >
+            {{ node.name | textMore : 30 }}
+          </nz-tree-node-option>
+        </nz-tree-node>
+      </nz-tree-view>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #inputClearTpl>
+  <ng-container *ngIf="isOpenDrop">
+    <i
+      nz-icon
+      class="ant-input-down-icon"
+      nzTheme="outline"
+      nzType="search"
+      *ngIf="!textSearch"
+    ></i>
+    <i
+      nz-icon
+      class="ant-input-clear-icon"
+      nzTheme="fill"
+      nzType="close-circle"
+      *ngIf="textSearch"
+      (click)="onClearSearch(2)"
+    ></i>
+  </ng-container>
+  <ng-container *ngIf="!isOpenDrop">
+    <i
+      nz-icon
+      class="ant-input-clear-icon"
+      nzTheme="fill"
+      nzType="close-circle"
+      *ngIf="controlValue && !disabled && !isLoading"
+      (click)="onClear()"
+    ></i>
+    <i
+      nz-icon
+      class="ant-input-down-icon"
+      nzTheme="outline"
+      nzType="down"
+      *ngIf="!controlValue && !isLoading"
+    ></i>
+    <i
+      nz-icon
+      class="ant-input-down-icon"
+      nzTheme="outline"
+      nzType="loading"
+      nzSpin
+      *ngIf="isLoading"
+    ></i>
+  </ng-container>
+</ng-template>
+<ng-template #inputClearSearch>
+  <i
+    nz-icon
+    class="ant-input-clear-icon"
+    nzTheme="fill"
+    nzType="close-circle"
+    *ngIf="textSearch && !disabled"
+    (click)="onClearSearch()"
+  ></i>
+</ng-template>

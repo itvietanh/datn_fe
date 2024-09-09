@@ -1,0 +1,112 @@
+<button aria-label="Close" class="ant-modal-close ng-star-inserted" (click)="close()">
+  <span class="ant-modal-close-x">
+    <i nz-icon nzType="close" nzTheme="outline" class="anticon ant-modal-close-icon anticon-close"></i>
+  </span>
+</button>
+<form [formGroup]="myForm">
+
+  <div class="breadcrumb my-2">
+    <div class="list-control-main">
+      <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog('view')">
+        <i class="isax-scan-barcode1 mr-2"></i>Mở máy quét QR
+      </button>
+    </div>
+  </div>
+
+  <ng-template #controlErrorTpl let-control>
+    <app-render-errors [control]="control"></app-render-errors>
+  </ng-template>
+
+  <div class="group-header">
+    <div class="title-left">
+      <div class="title-group-table">Thông tin phòng đặt</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <app-form-control label="Số Phòng">
+        <input-text formControlName="roomNumber"> </input-text>
+      </app-form-control>
+    </div>
+    <div class="col-md-6">
+      <app-form-control label="Tầng">
+        <input-text formControlName="floor"> </input-text>
+      </app-form-control>
+    </div>
+
+    <div class="col-md-6">
+      <app-form-control label="Loại phòng">
+        <input-text formControlName="roomType"> </input-text>
+      </app-form-control>
+    </div>
+
+    <div class="col-md-6">
+      <app-form-control label="Giá phòng">
+        <input-number formControlName="roomPrice"> </input-number>
+      </app-form-control>
+    </div>
+
+    <div class="col-md-6">
+      <app-form-control label="Check In">
+        <input-date-time formControlName="checkIn"> </input-date-time>
+      </app-form-control>
+    </div>
+
+    <div class="col-md-6">
+      <app-form-control label="Check Out">
+        <input-date-time formControlName="checkOut"> </input-date-time>
+      </app-form-control>
+    </div>
+  </div>
+
+  <div class="group-header">
+    <div class="title-left">
+      <div class="title-group-table">Thông tin khách hàng</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <app-form-control label="Họ và tên">
+        <input-text formControlName="fullName"> </input-text>
+      </app-form-control>
+    </div>
+    <div class="col-md-6">
+      <app-form-control label="Ngày sinh">
+        <input-text formControlName="birthDay"> </input-text>
+      </app-form-control>
+    </div>
+
+    <div class="col-md-12">
+      <app-form-control label="Số CCCD">
+        <input-text formControlName="idNumber"> </input-text>
+      </app-form-control>
+    </div>
+
+    <div class="col-md-6">
+      <app-form-control label="Giới tính">
+        <input-text formControlName="gender"> </input-text>
+      </app-form-control>
+    </div>
+
+    <div class="col-md-6">
+      <app-form-control label="Địa chỉ">
+        <input-text formControlName="address"> </input-text>
+      </app-form-control>
+    </div>
+
+    
+  </div>
+
+  <div class="list-control-search">
+    <button nz-button type="button" class="btn btn-default" (click)="close()">
+      <i nz-icon nzType="close" nzTheme="outline"></i>Hủy
+    </button>
+    <!-- lưu và đóng -->
+    <button nz-button type="button" class="btn btn-primary" (click)="handlerSubmit()">
+      <i class="icon-plus-circle2 mr-2"></i>
+      Lưu và đóng
+    </button>
+  </div>
+</form>

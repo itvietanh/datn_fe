@@ -1,0 +1,60 @@
+<nz-input-group
+  [nzAddOnBefore]="
+    disabled || listOption.length <= 1 ? undefined : suffixControlNumber2
+  "
+  [nzAddOnAfter]="disabled ? undefined : suffixControlNumber"
+  [nzSuffix]="inputClearTpl"
+>
+  <input
+    type="text"
+    nz-input
+    [class]="class"
+    [ngModel]="controlValue"
+    [disabled]="disabled"
+    [readonly]="readonly"
+    [hidden]="hidden"
+    [placeholder]="!disabled ? placeholder : ''"
+    (ngModelChange)="setValue($event)"
+    (keydown)="checkCopy($event)"
+    #myInputDate
+  />
+  <nz-date-picker
+    [(ngModel)]="controlValueDate"
+    (ngModelChange)="onChangePicker()"
+    #dateTimePicker
+    [nzMode]="typePicker"
+    [nzDisabledDate]="disabledDate"
+    [nzAllowClear]="false"
+  >
+  </nz-date-picker>
+</nz-input-group>
+<ng-template #suffixControlNumber>
+  <ng-container *ngIf="!disabled">
+    <i class="date-picker-cls" nz-icon nzType="carry-out" nzTheme="outline"></i>
+  </ng-container>
+</ng-template>
+<ng-template #suffixControlNumber2>
+  <ng-container *ngIf="!disabled">
+    <nz-select
+      [(ngModel)]="typePicker"
+      (ngModelChange)="onChangeFormat($event)"
+    >
+      <nz-option
+        *ngFor="let item of listOption"
+        [nzLabel]="item.text"
+        [nzValue]="item.value"
+      ></nz-option>
+    </nz-select>
+  </ng-container>
+</ng-template>
+
+<ng-template #inputClearTpl>
+  <i
+    nz-icon
+    class="ant-input-clear-icon"
+    nzTheme="fill"
+    nzType="close-circle"
+    *ngIf="controlValue && !disabled"
+    (click)="onClear()"
+  ></i>
+</ng-template>
