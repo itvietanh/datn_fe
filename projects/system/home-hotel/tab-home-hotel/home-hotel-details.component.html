@@ -4,15 +4,6 @@
   </span>
 </button>
 <form [formGroup]="myForm">
-
-  <div class="breadcrumb my-2">
-    <div class="list-control-main">
-      <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog('view')">
-        <i class="isax-scan-barcode1 mr-2"></i>Mở máy quét QR
-      </button>
-    </div>
-  </div>
-
   <ng-template #controlErrorTpl let-control>
     <app-render-errors [control]="control"></app-render-errors>
   </ng-template>
@@ -63,6 +54,14 @@
   <div class="group-header">
     <div class="title-left">
       <div class="title-group-table">Thông tin khách hàng</div>
+    </div>
+
+    <div class="breadcrumb my-2">
+      <div class="list-control-main">
+        <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog('view')">
+          <i class="isax-scan-barcode1 mr-2"></i>Mở máy quét QR
+        </button>
+      </div>
     </div>
   </div>
 

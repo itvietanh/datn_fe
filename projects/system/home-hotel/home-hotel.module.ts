@@ -7,7 +7,11 @@ import { HomeHotelComponent } from './home-hotel.component';
 import { QrCodeDetailsComponent } from './tab-home-hotel/tab-qrcode/qrcode-details.component';
 
 @NgModule({
-  imports: [CommonModule, FormModule, HomeHotelRoutes],
+  imports:
+    [CommonModule,
+      FormModule,
+      HomeHotelRoutes
+    ],
   declarations: [HomeHotelComponent, HomeHotelDetailsComponent, QrCodeDetailsComponent],
 })
-export class HomeHotelModule {}
+export class HomeHotelModule { }

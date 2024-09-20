@@ -33,8 +33,7 @@
       <div class="d-flex align-items-center">
         <div class="breadcrumb">
           <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
-            <i class="icon-plus-circle2 mr-2"></i>
-            Đặt phòng
+            Nhận phòng nhanh
           </button>
         </div>
       </div>
@@ -45,44 +44,12 @@
 <div class="content">
   <div class="data-table">
     <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 20 }" [nzLoading]="loading"></nz-skeleton>
-    <ng-container>
-      <div class="floor">
-        <div class="title">
-          <div class="name">
-            Tầng 1
-          </div>
-          <div class="check-in-out">
-            <div class="check-out">Chờ thanh toán</div>
-          </div>
-          <div>
-            <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
-              <span nz-icon nzType="more" nzTheme="outline"></span>
-            </a>
-            <nz-dropdown-menu #menu="nzDropdownMenu">
-              <ul nz-menu>
-                <li nz-menu-item>
-                  <span class="mr-2" nz-icon nzType="exclamation-circle" nzTheme="outline"></span>
-                  Thanh toán
-                </li>
-              </ul>
-            </nz-dropdown-menu>
-          </div>
-        </div>
-      </div>
-    </ng-container>
-    <div class="floor">
+    <div class="floor shadow-lg">
       <div class="title">
         <div class="name">
-          Tầng 2
+          Tầng 1
         </div>
         <ng-container>
-          <div class="check-in-out">
-            <div class="check-out">
-              <i class="isax-calendar-remove1 mr-1"></i>
-              Quá giờ trả phòng theo dự kiến:
-              15 phút
-            </div>
-          </div>
           <div>
             <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
               <span nz-icon nzType="more" nzTheme="outline"></span>
@@ -99,7 +66,7 @@
         </ng-container>
       </div>
       <div class="room-list">
-        <div class="room-item">
+        <div class="room-item" *ngFor="let item of rooms">
           <div class="room" [ngStyle]="{
               borderColor: 'green'
             }">
@@ -107,8 +74,8 @@
                 backgroundColor: 'green'
               }">
               <div class="text-center mt-2">
-                <div class="name">Phòng 103</div>
-                <div class="type">Phòng đơn</div>
+                <div class="name">{{item.name}}</div>
+                <div class="type">{{item.roomType}}</div>
               </div>
               <div class="capability d-flex justify-content-between w-100">
                 <div>
@@ -126,11 +93,74 @@
                 <div>
                   <span class="isax-user1"></span>
                   <span>
-                    2
+                    {{item.isIn}}
                   </span>
                   /
                   <span>
-                    2
+                    {{item.maximal}}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="floor shadow-lg">
+      <div class="title">
+        <div class="name">
+          Tầng 2
+        </div>
+        <ng-container>
+          <div>
+            <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
+              <span nz-icon nzType="more" nzTheme="outline"></span>
+            </a>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <ul nz-menu>
+                <li nz-menu-item>
+                  <span class="mr-2" nz-icon nzType="exclamation-circle" nzTheme="outline"></span>
+                  Chi tiết
+                </li>
+              </ul>
+            </nz-dropdown-menu>
+          </div>
+        </ng-container>
+      </div>
+      <div class="room-list">
+        <div class="room-item" *ngFor="let item of rooms">
+          <div class="room" [ngStyle]="{
+              borderColor: 'green'
+            }">
+            <div class="left" [ngStyle]="{
+                backgroundColor: 'green'
+              }">
+              <div class="text-center mt-2">
+                <div class="name">{{item.name}}</div>
+                <div class="type">{{item.roomType}}</div>
+              </div>
+              <div class="capability d-flex justify-content-between w-100">
+                <div>
+                  <span nz-tooltip [nzTooltipTitle]="status" [attr.class]="'cv'"></span>
+                  <span style="color: #ffda46" nz-tooltip [nzTooltipTitle]="outDate">&#9888;</span>
+                  <ng-template #outDate>
+                    <span>Quá hạn</span>
+                  </ng-template>
+                  <ng-template #status>
+                    <span>Sẵn sàng</span>
+                    <span>Đang ở</span>
+                    <span>Phòng bẩn</span>
+                  </ng-template>
+                </div>
+                <div>
+                  <span class="isax-user1"></span>
+                  <span>
+                    {{item.isIn}}
+                  </span>
+                  /
+                  <span>
+                    {{item.maximal}}
                   </span>
                 </div>
               </div>

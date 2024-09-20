@@ -193,7 +193,7 @@ export class MenuComponent implements OnInit {
       },
       {
         icon: 'isax-pen-tool-2-1',
-        name: 'BÁO CÁO',
+        name: 'BÁO CÁO & THỐNG KÊ',
         url: '/he-thong/bao-cao',
         isOpen: false,
         exact: false,

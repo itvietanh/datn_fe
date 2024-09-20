@@ -25,6 +25,14 @@ export class HomeHotelComponent implements OnInit {
   public paging: any;
   items: any[] = [];
   loading = false;
+
+  rooms = [
+    { name: 'P102', roomType: 'Phòng đơn', isIn: 1, maximal: 2, status: 'Phòng trống', time: '0 giờ', cleanStatus: 'Đã dọn dẹp' },
+    { name: 'P104', roomType: 'Phòng đơn', isIn: 1, maximal: 2, status: 'Phòng trống', time: '0 giờ', cleanStatus: 'Đã dọn dẹp' },
+    { name: 'P105', roomType: 'Phòng đơn', isIn: 1, maximal: 2, status: 'Phòng trống', time: '0 giờ', cleanStatus: 'Đã dọn dẹp' },
+    { name: 'P106', roomType: 'Phòng đơn', isIn: 1, maximal: 2, status: 'Phòng trống', time: '0 giờ', cleanStatus: 'Đã dọn dẹp' },
+  ];
+
   
   columns: ColumnConfig[] = [
     {
