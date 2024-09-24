@@ -4,9 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageUtil } from 'common/base/utils';
 import {
   AccommodationFacilityService,
-  AutService,
   DialogService,
-  MenuService,
 } from 'share';
 @Component({
   selector: 'app-home',
@@ -22,8 +20,6 @@ export class HomeComponent implements OnInit {
   constructor(
     private rt: Router,
     private ar: ActivatedRoute,
-    private user: AutService,
-    private menu: MenuService,
     private dialogService: DialogService,
     private accommodationFacilityService: AccommodationFacilityService,
     private location: Location

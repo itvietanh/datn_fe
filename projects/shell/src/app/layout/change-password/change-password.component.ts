@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MessageService } from 'common/base/service/message.service';
 import { ValidatorExtension } from 'common/validator-extension';
-import { AutService, DialogService, UnitService } from 'share';
+import { DialogService, UnitService } from 'share';
 
 @Component({
   selector: 'app-change-password',
@@ -14,7 +14,6 @@ export class ChangePasswordComponent implements OnInit {
   public profileData: any;
   public myForm: FormGroup;
   constructor(
-    public userService: AutService,
     private dialogService: DialogService,
     private messageService: MessageService,
     private fb: FormBuilder,
@@ -31,7 +30,7 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.profileData = this.userService.userInfo;
+    // this.profileData = this.userService.userInfo;
     this.myForm.patchValue(this.profileData);
   }
 
@@ -47,7 +46,7 @@ export class ChangePasswordComponent implements OnInit {
 
     let formData = this.myForm.getRawValue();
     const optionBindForm = { myForm: this.myForm, elementForm: this.ref };
-    await this.userService.changePassword(formData).firstValueFrom(optionBindForm);
+    // await this.userService.changePassword(formData).firstValueFrom(optionBindForm);
     this.dialogService.closeLoading();
     await this.messageService.alert('Thay đổi mật khẩu thành công!', 'Đăng nhập lại');
     location.href = '/auth/logout';

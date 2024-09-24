@@ -14,6 +14,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'co-so',
+        loadChildren: () =>
+          import('./facility/facility.module').then(
+            (x) => x.FacilityModule
+          ),
+      },
+      {
         path: 'danh-sach-tang',
         loadChildren: () =>
           import('./building/building.module').then(

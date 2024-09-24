@@ -23,10 +23,6 @@ export * from './service/application/task/role.service';
 export * from './service/application/task/feedback.service';
 export * from './service/application/task/notification.service';
 
-export * from './service/application/sso/aut.service';
-export * from './service/application/sso/menu.service';
-export * from './service/application/sso/end-point.service';
-
 export * from './service/base/dialog.service';
 export * from './service/base/setting.service';
 export * from './service/base/destroy.service';

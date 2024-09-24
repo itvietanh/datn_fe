@@ -28,8 +28,6 @@ import { registerLocaleData } from '@angular/common';
 import vi from '@angular/common/locales/vi';
 import { DialogConfirmDataModule } from 'common/base/module/dialog-confirm-data/dialog-confirm-data.module';
 import {
-  AutService,
-  MenuService,
   FILE_BASE_URL,
   API_BASE_URL,
   PrivilegeService,
@@ -102,8 +100,6 @@ const ngZorroConfig: any = {
       provide: APP_INITIALIZER,
       useFactory: initializeApp,
       deps: [
-        AutService,
-        MenuService,
         PrivilegeService,
         SettingService,
         AccommodationFacilityService,
@@ -116,8 +112,6 @@ const ngZorroConfig: any = {
 })
 export class AppModule {}
 export function initializeApp(
-  user: AutService,
-  menu: MenuService,
   privi: PrivilegeService,
   setting: SettingService,
   accom: AccommodationFacilityService

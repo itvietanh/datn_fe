@@ -8,7 +8,6 @@ import { LocalStorageUtil } from 'common/base/utils';
 import { Observable } from 'rxjs';
 import {
   AccommodationFacilityService,
-  AutService,
   DialogService,
   NotificationService,
   PagingModel,
@@ -32,38 +31,14 @@ export class NavbarComponent implements OnInit {
   public dropdownOpen: boolean = false;
   public paging?: PagingModel;
 
-  docLink = environment.files.asmHDSD;
-
   constructor(
     private messageService: MessageService,
     private notificationService: NotificationService,
     private accommodationFacilityService: AccommodationFacilityService,
-    public userService: AutService,
     private local: LocationStrategy
   ) {}
 
   async ngOnInit() {
-    this.listAccom = this.accommodationFacilityService.listAccom.map((x) => ({
-      value: x.id,
-      label: x.accomName,
-    }));
-    this.accomId = LocalStorageUtil.getFacilityId();
-  }
-
-  async changeAccom(event: any) {
-    const confirm = await this.messageService.confirm(
-      'Bạn có chắc chắn muốn thay đổi cơ sở lưu trú không?'
-    );
-    if (!confirm) {
-      this.accomId = LocalStorageUtil.getFacilityId();
-      return;
-    }
-    if (event) {
-      LocalStorageUtil.setFacilityId(event.value);
-    } else {
-      LocalStorageUtil.setFacilityId(0);
-    }
-    location.href = this.local.getBaseHref();
   }
 
   resizeMenu() {
@@ -89,27 +64,14 @@ export class NavbarComponent implements OnInit {
   }
 
   async getNotify(paging: PagingModel = { page: 1, size: 20 }) {
-    this.isLoading = true;
-    let rs = await this.notificationService.getPaging(paging).firstValueFrom();
-    if (paging.page === 1) {
-      this.listNotification = [];
-    }
-    if (rs.data?.items.length === 0) {
-      this.isLoading = null;
-      return;
-    }
-    this.listNotification = [...this.listNotification, ...rs.data?.items!];
-    this.paging = rs.data?.meta;
-    this.isLoading = false;
+   
   }
 
   loadMore = async () => {
-    // khi đang loading hoặc ko có dữ liệu sẽ ko call api
     if (this.isLoading || this.isLoading === null) {
       return;
     }
     this.isLoading = true;
     this.paging!.page!++;
-    this.getNotify(this.paging);
   };
 }

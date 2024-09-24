@@ -4,7 +4,6 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ACCESS_TOKEN_KEY, LocalStorageUtil } from 'common/base/utils';
-import { AutService } from 'common/share/src/service/application/sso/aut.service';
 import { ValidatorExtension } from 'common/validator-extension';
 import { finalize } from 'rxjs';
 import { DialogService } from 'share';
@@ -23,7 +22,6 @@ export class LoginComponent implements OnInit {
     private ar: ActivatedRoute,
     private dialogService: DialogService,
     private fb: FormBuilder,
-    private autService: AutService,
     private location: Location
   ) {
     this.myForm = this.fb.group({
@@ -43,17 +41,17 @@ export class LoginComponent implements OnInit {
       return;
     }
     this.dialogService.openLoading();
-    this.autService
-      .login(this.myForm.value)
-      .pipe(finalize(() => this.dialogService.closeLoading()))
-      .subscribe({
-        next: (res) => {
-          LocalStorageUtil.setItem(ACCESS_TOKEN_KEY, res.data.token);
-          this.location.go(this.redirectLogin!);
-        },
-        error: (error: HttpErrorResponse) => {
-          this.myForm.bindError(error.error.errors);
-        },
-      });
+    // this.autService
+    //   .login(this.myForm.value)
+    //   .pipe(finalize(() => this.dialogService.closeLoading()))
+    //   .subscribe({
+    //     next: (res) => {
+    //       LocalStorageUtil.setItem(ACCESS_TOKEN_KEY, res.data.token);
+    //       this.location.go(this.redirectLogin!);
+    //     },
+    //     error: (error: HttpErrorResponse) => {
+    //       this.myForm.bindError(error.error.errors);
+    //     },
+    //   });
   }
 }

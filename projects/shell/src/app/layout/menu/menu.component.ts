@@ -2,7 +2,6 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { filter } from 'rxjs/operators';
-import { MenuService } from 'share';
 
 declare let $: any;
 @Component({
@@ -18,7 +17,6 @@ export class MenuComponent implements OnInit {
 
   constructor(
     private rt: Router,
-    public menuService: MenuService,
     private location: Location
   ) {}
 
@@ -82,26 +80,26 @@ export class MenuComponent implements OnInit {
   }
 
   async getMenuByApi() {
-    const dataRaw = this.menuService.listMenu.map((x) => ({
-      id: x.id,
-      parent: x.parentUid,
-      code: x.code,
-      icon: x.icon,
-      name: x.name,
-      url: x.url,
-      isOpen: false,
-      exact: false,
-      child: [],
-      level: 0,
-    }));
-    if (!dataRaw) return;
+    // const dataRaw = this.menuService.listMenu.map((x) => ({
+    //   id: x.id,
+    //   parent: x.parentUid,
+    //   code: x.code,
+    //   icon: x.icon,
+    //   name: x.name,
+    //   url: x.url,
+    //   isOpen: false,
+    //   exact: false,
+    //   child: [],
+    //   level: 0,
+    // }));
+    // if (!dataRaw) return;
 
-    dataRaw.forEach((item: any) => {
-      item.child = dataRaw.filter((x) => x.parent === item.id);
-    });
-    const result = dataRaw.filter((x) => x.parent === null);
-    this.setMenuLevel(result);
-    this.menuData = result;
+    // dataRaw.forEach((item: any) => {
+    //   item.child = dataRaw.filter((x) => x.parent === item.id);
+    // });
+    // const result = dataRaw.filter((x) => x.parent === null);
+    // this.setMenuLevel(result);
+    // this.menuData = result;
   }
 
   setMenuLevel(data: any[]) {
@@ -137,12 +135,21 @@ export class MenuComponent implements OnInit {
         child: [],
       },
       {
+        icon: 'isax-pen-tool-2-1',
+        name: 'QUẢN LÝ CƠ SỞ',
+        url: '/he-thong/co-so',
+        isOpen: false,
+        exact: false,
+        level: 1,
+        child: [],
+      },
+      {
         icon: 'isax-people1',
         name: 'QUẢN LÝ KHÁCH SẠN ',
         url: null,
         isOpen: false,
         exact: false,
-        level: 2,
+        level: 1,
         child: [
           {
             icon: 'isax-pen-tool-2-1',

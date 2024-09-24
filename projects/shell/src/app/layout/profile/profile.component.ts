@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ValidatorExtension } from 'common/validator-extension';
-import { AutService, UnitService } from 'share';
 
 @Component({
   selector: 'app-profile',
@@ -13,8 +12,6 @@ export class ProfileComponent implements OnInit {
   public profileData: any;
   public myForm: FormGroup;
   constructor(
-    public userService: AutService,
-    public unitService: UnitService,
     private fb: FormBuilder
   ) {
     this.myForm = this.fb.group({
@@ -30,8 +27,6 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.profileData = this.userService.userInfo;
-    this.myForm.patchValue(this.profileData);
     this.myForm.disable();
   }
 }
