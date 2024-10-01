@@ -2,42 +2,8 @@
     <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
         <div class="d-flex">
             <div class="d-flex">
-                <div class="breadcrumb-title">Sơ đồ phòng</div>
+                <div class="breadcrumb-title">Quản Lý Tầng & Phòng</div>
             </div>
-            <div class="d-flex hd-room">
-                <div class="breadcrumb-title ">
-                    <!-- <nz-segmented [nzOptions]="viewOptions" [ngModel]="viewSelectedIndex"
-              (nzValueChange)="onViewSelectedChange($event)"></nz-segmented> -->
-
-                    <div class="chon-tang">
-                        <input-select placeholder="Tầng..."></input-select>
-                    </div>
-
-                    <ng-container>
-                        <div class="mo-ta">
-                            <div class="status">
-                                <input-check-box class="color1">Phòng trống: 1</input-check-box>
-                            </div>
-                        </div>
-
-                        <div class="mo-ta">
-                            <div class="status">
-                                <input-check-box class="color2">Đang ở: 1</input-check-box>
-                            </div>
-                        </div>
-
-                        <div class="mo-ta">
-                            <div class="phong-ban">
-                                <input-check-box>Cần dọn (5)</input-check-box>
-                            </div>
-                        </div>
-                    </ng-container>
-                </div>
-                <div class="breadcrumb">
-                    <div class="list-control-main"></div>
-                </div>
-            </div>
-
             <div class="d-flex align-items-center">
                 <div class="breadcrumb">
                     <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog('add-floor')">
@@ -75,7 +41,7 @@
                         <div class="room-right">
                             <p>Trạng thái: {{room.status | labelValue: listRoomStatus}}</p>
                             <p>{{room.type}}</p>
-                            <button *ngIf="room.status === 'available'" class="book-room-btn">Đặt phòng</button>
+                            <button *ngIf="room.status === 1" class="book-room-btn">Đặt phòng</button>
                         </div>
                     </div>
                 </div>

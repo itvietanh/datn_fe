@@ -17,7 +17,7 @@
     </div>
     <div class="col-md-6">
       <app-form-control label="Tầng">
-        <input-number formControlName="floor"> </input-number>
+        <input-number formControlName="floorNumber"> </input-number>
       </app-form-control>
     </div>
   </div>
@@ -35,7 +35,7 @@
     </div>
     <div class="col-md-6">
       <app-form-control label="Kiểu phòng">
-        <input-select-api formControlName="roomType"> </input-select-api>
+        <input-select-api [apiService]="roomTypeService" [actionName]="'getCombobox'" formControlName="roomType"> </input-select-api>
       </app-form-control>
     </div>
     <div class="col-md-6">
@@ -45,7 +45,7 @@
     </div>
     <div class="col-md-6">
       <app-form-control label="Trạng thái">
-        <input-number formControlName="status"> </input-number>
+        <input-select [items]="listRoomStatus" formControlName="status"> </input-select>
       </app-form-control>
     </div>
     <div class="col-md-6">
