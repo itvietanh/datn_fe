@@ -2,16 +2,17 @@ import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, OnDestro
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { ExtentionService } from "common/base/service/extention.service";
 import { MessageService } from "common/base/service/message.service";
+import { FloorService } from "common/share/src/service/application/hotel/floor.service";
 import { HotelService } from "common/share/src/service/application/hotel/hotel.service";
 import { ValidatorExtension } from "common/validator-extension";
 import { DialogService, DialogMode, PagingModel, DialogSize } from "share";
 
 @Component({
-  selector: 'app-facility-details',
-  templateUrl: './facility-details.component.html',
-  styleUrls: ['./facility-details.component.scss'],
+  selector: 'app-building-details',
+  templateUrl: './building-details.component.html',
+  styleUrls: ['./building-details.component.scss'],
 })
-export class FacilityDetailsComponent implements OnInit {
+export class BuildingDetailsComponent implements OnInit {
   @Input() id: any;
   @Input() uuid: any;
   @Input() mode: any;
@@ -26,10 +27,15 @@ export class FacilityDetailsComponent implements OnInit {
     private dialogService: DialogService,
     public hotelService: HotelService,
     private ex: ExtentionService,
+    public floorService: FloorService,
   ) {
     this.myForm = this.fb.group({
-      name: [null, ValidatorExtension.required()],
-      address: [null, ValidatorExtension.required()],
+      facility: [null, ValidatorExtension.required()],
+      floor: [null, ValidatorExtension.required()],
+      roomType: [null, ValidatorExtension.required()],
+      roomNumber: [null, ValidatorExtension.required()],
+      status: [null, ValidatorExtension.required()],
+      maxCapacity: [null, ValidatorExtension.required()],
     })
   }
 

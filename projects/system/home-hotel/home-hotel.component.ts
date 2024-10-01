@@ -13,6 +13,19 @@ import { DatePipe } from '@angular/common';
 import { ColumnConfig } from 'common/base/models';
 import { HomeHotelDetailsComponent } from './tab-home-hotel/home-hotel-details.component';
 
+interface Room {
+  number: string;
+  type: string;
+  maxGuests: number;
+  status: 'available' | 'occupied' | 'cleaning';
+  amenities: string[];
+}
+
+interface Floor {
+  number: number;
+  rooms: Room[];
+}
+
 @Component({
   selector: 'app-home-hotel',
   templateUrl: './home-hotel.component.html',
@@ -33,40 +46,6 @@ export class HomeHotelComponent implements OnInit {
     { name: 'P106', roomType: 'Phòng đơn', isIn: 1, maximal: 2, status: 'Phòng trống', time: '0 giờ', cleanStatus: 'Đã dọn dẹp' },
   ];
 
-  
-  columns: ColumnConfig[] = [
-    {
-      key: 'clientId',
-      header: 'Mã thiết bị',
-    },
-    {
-      key: 'secret',
-      header: 'Mã bảo mật',
-    },
-    {
-      key: 'accomName',
-      header: 'Tên cơ sở lưu trú',
-    },
-    {
-      key: 'createDateTxt',
-      header: 'Ngày tạo',
-    },
-    {
-      key: 'accountType',
-      header: 'Loại tài khoản',
-    },
-    {
-      key: 'status',
-      header: 'Trạng thái hoạt động',
-    },
-    {
-      key: 'action',
-      header: 'Thao tác',
-      tdClass: 'text-center',
-      pipe: 'template',
-    },
-  ];
-
   constructor(
     private fb: FormBuilder,
     private dialogService: DialogService,
@@ -78,14 +57,14 @@ export class HomeHotelComponent implements OnInit {
 
     });
     this.formSearch
-        .get('outEndDate')
-        ?.addValidators(
-          ValidatorExtension.gteDateValidator(
-            this.formSearch,
-            'signEndDate',
-            'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
-          )
-        );
+      .get('outEndDate')
+      ?.addValidators(
+        ValidatorExtension.gteDateValidator(
+          this.formSearch,
+          'signEndDate',
+          'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
+        )
+      );
     this.formSearch
       .get('outEndDate')
       ?.addValidators(
@@ -97,28 +76,37 @@ export class HomeHotelComponent implements OnInit {
       );
   }
 
+  floors: Floor[] = [];
+  selectedFilter: string = 'all';
+  selectedRoom: Room | null = null;
+  showBookingPopup: boolean = false;
+  bookingDetails = {
+    guestName: '',
+    checkInDate: '',
+    checkOutDate: ''
+  };
+
   ngOnInit() {
-    this.isLoading = true;
+    this.dialogService.openLoading();
     this.getData();
-    this.isLoading = false;
+    this.initializeHotel();
+    this.dialogService.closeLoading();
   }
 
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
     this.dialogService.openLoading();
-   
+
     this.dialogService.closeLoading();
   }
 
-  handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
+  handlerOpenDialog(item: any = null) {
     const dialog = this.dialogService.openDialog(
       async (option) => {
-        option.title = mode === 'view' ? 'Xem Phòng' : 'Đặt Phòng Nhanh';
-        if(mode === 'edit') option.title = 'Cập Nhật Phòng';
-        option.size = DialogSize.xlarge;
+        option.title = 'Nhận Phòng';
+        option.size = DialogSize.tab;
         option.component = HomeHotelDetailsComponent;// open component;
         option.inputs = {
           id: item?.id,
-          mode: mode,
         };
       },
       (eventName, eventValue) => {
@@ -130,6 +118,65 @@ export class HomeHotelComponent implements OnInit {
         }
       }
     );
+  }
+
+  initializeHotel() {
+    // Mock data for demonstration
+    for (let i = 1; i <= 5; i++) {
+      const floor: Floor = {
+        number: i,
+        rooms: []
+      };
+      for (let j = 1; j <= 10; j++) {
+        const room: Room = {
+          number: `${i}0${j}`,
+          type: j % 3 === 0 ? 'Phòng đơn' : 'Phòng đôi',
+          maxGuests: j % 3 === 0 ? 4 : 2,
+          status: this.getRandomStatus(),
+          amenities: ['Wi-Fi', 'TV', 'Air Conditioning']
+        };
+        floor.rooms.push(room);
+      }
+      this.floors.push(floor);
+    }
+  }
+
+  getRandomStatus(): 'available' | 'occupied' | 'cleaning' {
+    const statuses: ('available' | 'occupied' | 'cleaning')[] = ['available', 'occupied', 'cleaning'];
+    return statuses[Math.floor(Math.random() * statuses.length)];
+  }
+
+  filterRooms() {
+    // Implement room filtering logic here
+    console.log('Filtering rooms:', this.selectedFilter);
+  }
+
+  selectRoom(room: Room) {
+    this.selectedRoom = room;
+  }
+
+  closeRoomDetails() {
+    this.selectedRoom = null;
+  }
+
+  openBookingPopup(room: Room) {
+    this.selectedRoom = room;
+    this.showBookingPopup = true;
+  }
+
+  closeBookingPopup() {
+    this.showBookingPopup = false;
+    this.bookingDetails = {
+      guestName: '',
+      checkInDate: '',
+      checkOutDate: ''
+    };
+  }
+
+  bookRoom() {
+    // Implement room booking logic here
+    console.log('Booking room:', this.selectedRoom?.number, 'for', this.bookingDetails);
+    this.closeBookingPopup();
   }
 
 }

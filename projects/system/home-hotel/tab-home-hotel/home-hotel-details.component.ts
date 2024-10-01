@@ -8,6 +8,8 @@ import { ValidatorExtension } from "common/validator-extension";
 import { DialogService, DialogMode, PagingModel, DialogSize } from "share";
 import { Html5Qrcode } from 'html5-qrcode';
 import { QrCodeDetailsComponent } from "./tab-qrcode/qrcode-details.component";
+import { ColumnConfig } from "common/base/models";
+import { DatePipe } from "@angular/common";
 
 
 @Component({
@@ -22,6 +24,36 @@ export class HomeHotelDetailsComponent implements OnInit {
   myForm: FormGroup;
   loading = true;
   public paging: any;
+  items: any[] = [];
+
+  columns: ColumnConfig[] = [
+    {
+      key: 'fullName',
+      header: 'Họ và tên',
+    },
+    {
+      key: 'birthDay',
+      header: 'Ngày sinh',
+    },
+    {
+      key: 'idNumber',
+      header: 'Số CCCD/ID Passport',
+    },
+    {
+      key: 'gender',
+      header: 'Giới tính',
+    },
+    {
+      key: 'address',
+      header: 'Địa chỉ',
+    },
+    {
+      key: 'action',
+      header: 'Thao tác',
+      tdClass: 'text-center',
+      pipe: 'template',
+    },
+  ];
 
   constructor(
     private messageService: MessageService,
@@ -29,15 +61,9 @@ export class HomeHotelDetailsComponent implements OnInit {
     private dialogService: DialogService,
     public shrAccountApiService: ShrAccountApiService,
     private ex: ExtentionService,
+    private datePipe: DatePipe,
   ) {
     this.myForm = this.fb.group({
-      // Customer info
-      fullName: [null, ValidatorExtension.required()],
-      idNumber: [null, ValidatorExtension.required()],
-      birthDay: [null, ValidatorExtension.required()],
-      gender: [null, ValidatorExtension.required()],
-      address: [null, ValidatorExtension.required()],
-
       // Room Info
       roomNumber: [null, ValidatorExtension.required()],
       floor: [null, ValidatorExtension.required()],
@@ -88,11 +114,21 @@ export class HomeHotelDetailsComponent implements OnInit {
   }
 
   handlerGetDataQrCode(item: any) {
-    this.myForm.get('idNumber')?.setValue(item[0]);
-    this.myForm.get('birthDay')?.setValue(item[3]);
-    this.myForm.get('fullName')?.setValue(item[2]);
-    this.myForm.get('gender')?.setValue(item[4]);
-    this.myForm.get('address')?.setValue(item[5]);
+    const day = item[3].substring(0, 2);
+    const month = item[3].substring(2, 4);
+    const year = item[3].substring(4, 8);
+    const parseDate = new Date(+year, +month - 1, +day);
+    item[3] = this.datePipe.transform(parseDate, 'dd/MM/yyyy');
+    const guest = [
+      {
+        idNumber: item[0],
+        birthDay: item[3],
+        fullName: item[2],
+        gender: item[4],
+        address: item[5]
+      }
+    ];
+    this.items = guest;
   }
 
   async handlerSubmit() {

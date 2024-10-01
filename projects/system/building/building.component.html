@@ -1,13 +1,53 @@
 <div class="page-header page-header-light">
     <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
         <div class="d-flex">
-            <div class="breadcrumb-title">
-                Quản Lý Tầng
+            <div class="d-flex">
+                <div class="breadcrumb-title">Sơ đồ phòng</div>
             </div>
-            <div class="breadcrumb">
-                <div class="list-control-main">
-                    <button nz-button type="button" class="btn btn-primary">
-                        <i class="isax-add-circle1 mr-2"></i>Thêm tầng
+            <div class="d-flex hd-room">
+                <div class="breadcrumb-title ">
+                    <!-- <nz-segmented [nzOptions]="viewOptions" [ngModel]="viewSelectedIndex"
+              (nzValueChange)="onViewSelectedChange($event)"></nz-segmented> -->
+
+                    <div class="chon-tang">
+                        <input-select placeholder="Tầng..."></input-select>
+                    </div>
+
+                    <ng-container>
+                        <div class="mo-ta">
+                            <div class="status">
+                                <input-check-box class="color1">Phòng trống: 1</input-check-box>
+                            </div>
+                        </div>
+
+                        <div class="mo-ta">
+                            <div class="status">
+                                <input-check-box class="color2">Đang ở: 1</input-check-box>
+                            </div>
+                        </div>
+
+                        <div class="mo-ta">
+                            <div class="phong-ban">
+                                <input-check-box>Cần dọn (5)</input-check-box>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="breadcrumb">
+                    <div class="list-control-main"></div>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center">
+                <div class="breadcrumb">
+                    <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog('add-floor')">
+                        Thêm tầng
+                    </button>
+                </div>
+
+                <div class="breadcrumb ml-3">
+                    <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog('add-room')">
+                        Thêm phòng
                     </button>
                 </div>
             </div>
@@ -15,19 +55,67 @@
     </div>
 </div>
 
-<div>
-    <div class="breadcrumb-title">
-        Tầng 1
-    </div>
-    <div class="col-md-4 col-lg-3">
-        <div class="room-select border p-3 rounded">
-            <div class="form-check form-switch form-check-reverse">
-                <input class="form-check-input" type="checkbox" role="switch">
-            </div>
-            <div class="text-center">
-                <span class="fw-bold d-block text-primary">Room No.101</span>
-                <span class="mt-1">Booked</span>
+<div class="hotel-management">
+    <div class="main-interface">
+        <div class="floors-container">
+            <div *ngFor="let floor of listFloor" class="floor">
+                <h4>Tầng {{floor.floorNumber}}</h4>
+                <div class="rooms-grid">
+                    <div *ngFor="let room of floor.rooms" class="room"
+                        [ngClass]="{'available': room.status === 1, 'occupied': room.status === 2, 'cleaning': room.status === 3}"
+                        (click)="selectRoom(room)">
+                        <div class="room-left">
+                            <h5>Phòng {{room.roomNumber}}</h5>
+                            <p>
+                                <span nz-icon nzType="user" nzTheme="outline"></span>
+                                {{room.maxCapacity}} / 0
+                            </p>
+                        </div>
+
+                        <div class="room-right">
+                            <p>Trạng thái: {{room.status | labelValue: listRoomStatus}}</p>
+                            <p>{{room.type}}</p>
+                            <button *ngIf="room.status === 'available'" class="book-room-btn">Đặt phòng</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+</div>
+
+<div *ngIf="selectedRoom" class="room-details-popup">
+    <div class="popup-content">
+        <h3>Room Details</h3>
+        <p>Room Number: {{selectedRoom.number}}</p>
+        <p>Type: {{selectedRoom.type}}</p>
+        <p>Max Guests: {{selectedRoom.maxGuests}}</p>
+        <p>Status: {{selectedRoom.status}}</p>
+        <p>Amenities: {{selectedRoom.amenities.join(', ')}}</p>
+        <button (click)="closeRoomDetails()">Close</button>
+    </div>
+</div>
+
+<div *ngIf="showBookingPopup" class="booking-popup">
+    <div class="popup-content">
+        <h3>Book Room</h3>
+        <form (ngSubmit)="bookRoom()">
+            <div>
+                <label for="guestName">Guest Name:</label>
+                <input type="text" id="guestName" [(ngModel)]="bookingDetails.guestName" name="guestName" required>
+            </div>
+            <div>
+                <label for="checkInDate">Check-in Date:</label>
+                <input type="date" id="checkInDate" [(ngModel)]="bookingDetails.checkInDate" name="checkInDate"
+                    required>
+            </div>
+            <div>
+                <label for="checkOutDate">Check-out Date:</label>
+                <input type="date" id="checkOutDate" [(ngModel)]="bookingDetails.checkOutDate" name="checkOutDate"
+                    required>
+            </div>
+            <button type="submit">Confirm Booking</button>
+            <button type="button" (click)="closeBookingPopup()">Cancel</button>
+        </form>
     </div>
 </div>

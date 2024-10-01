@@ -5,7 +5,7 @@
         <div class="breadcrumb-title">Sơ đồ phòng</div>
       </div>
       <div class="d-flex hd-room">
-        <div class="breadcrumb-title">
+        <div class="breadcrumb-title ">
           <!-- <nz-segmented [nzOptions]="viewOptions" [ngModel]="viewSelectedIndex"
             (nzValueChange)="onViewSelectedChange($event)"></nz-segmented> -->
 
@@ -16,12 +16,20 @@
           <ng-container>
             <div class="mo-ta">
               <div class="status">
-                <input-check-box>Phòng trống: 1</input-check-box>
+                <input-check-box class="color1">Phòng trống: 1</input-check-box>
               </div>
             </div>
 
-            <div class="phong-ban">
-              <input-check-box>Dọn phòng (5)</input-check-box>
+            <div class="mo-ta">
+              <div class="status">
+                <input-check-box class="color2">Đang ở: 1</input-check-box>
+              </div>
+            </div>
+
+            <div class="mo-ta">
+              <div class="phong-ban">
+                <input-check-box>Cần dọn (5)</input-check-box>
+              </div>
             </div>
           </ng-container>
         </div>
@@ -41,133 +49,66 @@
   </div>
 </div>
 
-<div class="content">
-  <div class="data-table">
-    <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 20 }" [nzLoading]="loading"></nz-skeleton>
-    <div class="floor shadow-lg">
-      <div class="title">
-        <div class="name">
-          Tầng 1
-        </div>
-        <ng-container>
-          <div>
-            <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
-              <span nz-icon nzType="more" nzTheme="outline"></span>
-            </a>
-            <nz-dropdown-menu #menu="nzDropdownMenu">
-              <ul nz-menu>
-                <li nz-menu-item>
-                  <span class="mr-2" nz-icon nzType="exclamation-circle" nzTheme="outline"></span>
-                  Chi tiết
-                </li>
-              </ul>
-            </nz-dropdown-menu>
-          </div>
-        </ng-container>
-      </div>
-      <div class="room-list">
-        <div class="room-item" *ngFor="let item of rooms">
-          <div class="room" [ngStyle]="{
-              borderColor: 'green'
-            }">
-            <div class="left" [ngStyle]="{
-                backgroundColor: 'green'
-              }">
-              <div class="text-center mt-2">
-                <div class="name">{{item.name}}</div>
-                <div class="type">{{item.roomType}}</div>
-              </div>
-              <div class="capability d-flex justify-content-between w-100">
-                <div>
-                  <span nz-tooltip [nzTooltipTitle]="status" [attr.class]="'cv'"></span>
-                  <span style="color: #ffda46" nz-tooltip [nzTooltipTitle]="outDate">&#9888;</span>
-                  <ng-template #outDate>
-                    <span>Quá hạn</span>
-                  </ng-template>
-                  <ng-template #status>
-                    <span>Sẵn sàng</span>
-                    <span>Đang ở</span>
-                    <span>Phòng bẩn</span>
-                  </ng-template>
-                </div>
-                <div>
-                  <span class="isax-user1"></span>
-                  <span>
-                    {{item.isIn}}
-                  </span>
-                  /
-                  <span>
-                    {{item.maximal}}
-                  </span>
-                </div>
-              </div>
+<div class="hotel-management">
+  <div class="main-interface">
+    <div class="floors-container">
+      <div *ngFor="let floor of floors" class="floor">
+        <h4>Tầng {{floor.number}}</h4>
+        <div class="rooms-grid">
+          <div *ngFor="let room of floor.rooms" class="room"
+            [ngClass]="{'available': room.status === 'available', 'occupied': room.status === 'occupied', 'cleaning': room.status === 'cleaning'}"
+            (click)="selectRoom(room)">
+            <div class="room-left">
+              <h5>Phòng {{room.number}}</h5>
+              <p>
+                <span nz-icon nzType="user" nzTheme="outline"></span>
+                {{room.maxGuests}} / 0
+              </p>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="floor shadow-lg">
-      <div class="title">
-        <div class="name">
-          Tầng 2
-        </div>
-        <ng-container>
-          <div>
-            <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
-              <span nz-icon nzType="more" nzTheme="outline"></span>
-            </a>
-            <nz-dropdown-menu #menu="nzDropdownMenu">
-              <ul nz-menu>
-                <li nz-menu-item>
-                  <span class="mr-2" nz-icon nzType="exclamation-circle" nzTheme="outline"></span>
-                  Chi tiết
-                </li>
-              </ul>
-            </nz-dropdown-menu>
-          </div>
-        </ng-container>
-      </div>
-      <div class="room-list">
-        <div class="room-item" *ngFor="let item of rooms">
-          <div class="room" [ngStyle]="{
-              borderColor: 'green'
-            }">
-            <div class="left" [ngStyle]="{
-                backgroundColor: 'green'
-              }">
-              <div class="text-center mt-2">
-                <div class="name">{{item.name}}</div>
-                <div class="type">{{item.roomType}}</div>
-              </div>
-              <div class="capability d-flex justify-content-between w-100">
-                <div>
-                  <span nz-tooltip [nzTooltipTitle]="status" [attr.class]="'cv'"></span>
-                  <span style="color: #ffda46" nz-tooltip [nzTooltipTitle]="outDate">&#9888;</span>
-                  <ng-template #outDate>
-                    <span>Quá hạn</span>
-                  </ng-template>
-                  <ng-template #status>
-                    <span>Sẵn sàng</span>
-                    <span>Đang ở</span>
-                    <span>Phòng bẩn</span>
-                  </ng-template>
-                </div>
-                <div>
-                  <span class="isax-user1"></span>
-                  <span>
-                    {{item.isIn}}
-                  </span>
-                  /
-                  <span>
-                    {{item.maximal}}
-                  </span>
-                </div>
-              </div>
+            <div class="room-right">
+              <p>{{room.type}}</p>
+              <p>Status: {{room.status}}</p>
+              <button *ngIf="room.status === 'available'" (click)="openBookingPopup(room)" class="book-room-btn">Book
+                Room</button>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<div *ngIf="selectedRoom" class="room-details-popup">
+  <div class="popup-content">
+    <h3>Room Details</h3>
+    <p>Room Number: {{selectedRoom.number}}</p>
+    <p>Type: {{selectedRoom.type}}</p>
+    <p>Max Guests: {{selectedRoom.maxGuests}}</p>
+    <p>Status: {{selectedRoom.status}}</p>
+    <p>Amenities: {{selectedRoom.amenities.join(', ')}}</p>
+    <button (click)="closeRoomDetails()">Close</button>
+  </div>
+</div>
+
+<div *ngIf="showBookingPopup" class="booking-popup">
+  <div class="popup-content">
+    <h3>Book Room</h3>
+    <form (ngSubmit)="bookRoom()">
+      <div>
+        <label for="guestName">Guest Name:</label>
+        <input type="text" id="guestName" [(ngModel)]="bookingDetails.guestName" name="guestName" required>
+      </div>
+      <div>
+        <label for="checkInDate">Check-in Date:</label>
+        <input type="date" id="checkInDate" [(ngModel)]="bookingDetails.checkInDate" name="checkInDate" required>
+      </div>
+      <div>
+        <label for="checkOutDate">Check-out Date:</label>
+        <input type="date" id="checkOutDate" [(ngModel)]="bookingDetails.checkOutDate" name="checkOutDate" required>
+      </div>
+      <button type="submit">Confirm Booking</button>
+      <button type="button" (click)="closeBookingPopup()">Cancel</button>
+    </form>
   </div>
 </div>
