@@ -61,6 +61,13 @@ const routes: Routes = [
           import('./roomusingserivce/roomusingservice.module').then(
             (x) => x.RoomUsingServiceModule
           ),
+      },
+      {
+        path: 'nhan-vien',
+        loadChildren: () =>
+          import('./employee/employee.module').then(
+            (x) => x.EmployeeModule
+          ),
       }
     ],
   },
