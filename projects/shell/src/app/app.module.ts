@@ -39,6 +39,7 @@ import { ErrorInterceptor } from 'common/base/interceptors/error.interceptor';
 import { GlobalErrorHandler } from 'common/base/interceptors/global-error-handler.service';
 import { environment } from '@env/environment';
 import { AuthGuard } from 'common/base/service/auth.guard';
+// import { LoginComponent } from '../../../system/login/login.component';
 
 registerLocaleData(vi);
 
@@ -96,25 +97,13 @@ const ngZorroConfig: any = {
     },
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeApp,
-      deps: [
-        PrivilegeService,
-        SettingService,
-        AccommodationFacilityService,
-      ],
-      multi: true,
-    },
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
   ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
 export function initializeApp(
-  privi: PrivilegeService,
-  setting: SettingService,
-  accom: AccommodationFacilityService
+ 
 ) {
   return (): Promise<any> => {
     return new Promise<void>(async (resolve) => {
@@ -127,8 +116,6 @@ export function initializeApp(
         resolve();
         return;
       }
-      // await Promise.all([user.initUser(), setting.init(), accom.initData()]);
-      // menu.verifyMenu(privi.listPrivilege);
       resolve();
     });
   };

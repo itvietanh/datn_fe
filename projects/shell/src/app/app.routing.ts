@@ -4,6 +4,13 @@ import { Error404Component } from './error/error-404/error-404.component';
 
 const routes: Routes = [
   {
+    path: 'dang-nhap',
+    loadChildren: () =>
+      import('./auth/login/login.module').then(
+        (x) => x.LoginModule
+      ),
+  },
+  {
     path: 'error',
     loadChildren: () =>
       import('./error/error.module').then((x) => x.ErrorModule),

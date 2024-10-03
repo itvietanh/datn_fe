@@ -1,12 +1,12 @@
-import { Location } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
+import { DatePipe} from '@angular/common';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { ACCESS_TOKEN_KEY, LocalStorageUtil } from 'common/base/utils';
+import { ColumnConfig } from 'common/base/models';
+import { MessageService } from 'common/base/service/message.service';
+import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
 import { ValidatorExtension } from 'common/validator-extension';
-import { finalize } from 'rxjs';
-import { DialogService } from 'share';
+import { FacilityDetailsComponent } from 'projects/system/facility/facility-detail/facility-details.component';
+import { DialogMode, DialogService, DialogSize, PagingModel } from 'share';
 
 @Component({
   selector: 'app-login',
@@ -15,43 +15,26 @@ import { DialogService } from 'share';
   encapsulation: ViewEncapsulation.None,
 })
 export class LoginComponent implements OnInit {
-  public myForm: FormGroup;
-  public redirectLogin!: string;
+  public formSearch: FormGroup
 
   constructor(
-    private ar: ActivatedRoute,
-    private dialogService: DialogService,
     private fb: FormBuilder,
-    private location: Location
+    private dialogService: DialogService,
+    private messageService: MessageService,
   ) {
-    this.myForm = this.fb.group({
-      username: [null, ValidatorExtension.required()],
-      password: [null, ValidatorExtension.required()],
-    });
+    this.formSearch = this.fb.group({
+      name: [null],
+      address: [null]
+    })
   }
 
   ngOnInit() {
-    this.redirectLogin = this.ar.snapshot.queryParams['redirect'];
-    if (!this.redirectLogin) this.redirectLogin = '/';
+   
   }
 
-  async submitForm() {
-    this.myForm.markAllAsDirty();
-    if (this.myForm.invalid) {
-      return;
-    }
-    this.dialogService.openLoading();
-    // this.autService
-    //   .login(this.myForm.value)
-    //   .pipe(finalize(() => this.dialogService.closeLoading()))
-    //   .subscribe({
-    //     next: (res) => {
-    //       LocalStorageUtil.setItem(ACCESS_TOKEN_KEY, res.data.token);
-    //       this.location.go(this.redirectLogin!);
-    //     },
-    //     error: (error: HttpErrorResponse) => {
-    //       this.myForm.bindError(error.error.errors);
-    //     },
-    //   });
+  async getData(paging: PagingModel = { page: 1, size: 20 }) {
+    this.dialogService.closeLoading();
   }
+
+  
 }
