@@ -56,10 +56,10 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'nhan-vien',
+        path: 'dich-vu-khach-dat',
         loadChildren: () =>
-          import('./employee/employee.module').then(
-            (x) => x.EmployeeModule
+          import('./roomusingserivce/roomusingservice.module').then(
+            (x) => x.RoomUsingServiceModule
           ),
       }
     ],
