@@ -54,6 +54,13 @@ const routes: Routes = [
           import('./transaction/transaction.module').then(
             (x) => x.TransactionModule
           ),
+      },
+      {
+        path: 'nhan-vien',
+        loadChildren: () =>
+          import('./employee/employee.module').then(
+            (x) => x.EmployeeModule
+          ),
       }
     ],
   },
