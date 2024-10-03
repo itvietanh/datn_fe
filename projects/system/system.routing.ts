@@ -47,6 +47,13 @@ const routes: Routes = [
           import('./service/service.module').then(
             (x) => x.ServiceModule
           ),
+      },
+      {
+        path: 'giao-dich',
+        loadChildren: () =>
+          import('./transaction/transaction.module').then(
+            (x) => x.TransactionModule
+          ),
       }
     ],
   },
