@@ -18,7 +18,7 @@ export class MenuComponent implements OnInit {
   constructor(
     private rt: Router,
     private location: Location
-  ) {}
+  ) { }
 
   async ngOnInit(): Promise<void> {
     const url = this.location.path();
@@ -143,6 +143,7 @@ export class MenuComponent implements OnInit {
         level: 1,
         child: [],
       },
+
       {
         icon: 'isax-people1',
         name: 'QUẢN LÝ KHÁCH SẠN ',
@@ -202,6 +203,15 @@ export class MenuComponent implements OnInit {
         icon: 'isax-pen-tool-2-1',
         name: 'BÁO CÁO & THỐNG KÊ',
         url: '/he-thong/bao-cao',
+        isOpen: false,
+        exact: false,
+        level: 1,
+        child: [],
+      },
+      {
+        icon: 'isax-pen-tool-2-1',
+        name: "ĐĂNG NHẬP",
+        url: '/he-thong/dang-nhap',
         isOpen: false,
         exact: false,
         level: 1,
