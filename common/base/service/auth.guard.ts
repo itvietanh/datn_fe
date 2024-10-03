@@ -20,25 +20,6 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): boolean {
     const baseUrl = this.local.getBaseHref();
-    // if (
-    //   [baseUrl, '/he-thong/quan-ly-co-so-luu-tru'].includes(
-    //     location.pathname
-    //   ) ||
-    //   [baseUrl, '/he-thong/quan-ly-hop-dong'].includes(location.pathname)
-    // ) {
-    //   return true;
-    // }
-    // if (!LocalStorageUtil.getFacilityId()) {
-    //   this.message
-    //     .alertOption({
-    //       content:
-    //         'Không xác định được cơ sở lưu trú sử dụng. Vui lòng chọn lại cơ sở lưu trú',
-    //       cancelText: undefined,
-    //       signel: true,
-    //     })
-    //     ?.then((x) => (location.href = baseUrl));
-    //   return false;
-    // }
     return true;
   }
 }

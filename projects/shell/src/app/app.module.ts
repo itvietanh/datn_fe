@@ -39,6 +39,7 @@ import { ErrorInterceptor } from 'common/base/interceptors/error.interceptor';
 import { GlobalErrorHandler } from 'common/base/interceptors/global-error-handler.service';
 import { environment } from '@env/environment';
 import { AuthGuard } from 'common/base/service/auth.guard';
+import { LoginModule } from './auth/login/login.module';
 // import { LoginComponent } from '../../../system/login/login.component';
 
 registerLocaleData(vi);
@@ -59,6 +60,7 @@ const ngZorroConfig: any = {
     DialogLoadingComponent,
     DialogConfirmComponent,
     NoDataComponent,
+    
   ],
   imports: [
     BrowserModule,
