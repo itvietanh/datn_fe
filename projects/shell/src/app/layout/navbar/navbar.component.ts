@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { environment } from '@env/environment';
 import { MessageService } from 'common/base/service/message.service';
 import { LocalStorageUtil } from 'common/base/utils';
+import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
 import { Observable } from 'rxjs';
 import {
   AccommodationFacilityService,
@@ -34,7 +35,7 @@ export class NavbarComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     private notificationService: NotificationService,
-    private accommodationFacilityService: AccommodationFacilityService,
+    public hotelService: HotelService,
     private local: LocationStrategy
   ) {}
 

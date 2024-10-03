@@ -40,6 +40,13 @@ const routes: Routes = [
           import('./room/room.module').then(
             (x) => x.RoomModule
           ),
+      },
+      {
+        path: 'dich-vu',
+        loadChildren: () =>
+          import('./service/service.module').then(
+            (x) => x.ServiceModule
+          ),
       }
     ],
   },
