@@ -1,18 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { ExtentionService } from 'common/base/service/extention.service';
-import { MessageService } from 'common/base/service/message.service';
-import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
-import { ValidatorExtension } from 'common/validator-extension';
-import { DialogService, DialogMode } from 'share';
+import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, OnDestroy } from "@angular/core";
+import { FormGroup, FormBuilder } from "@angular/forms";
+import { ExtentionService } from "common/base/service/extention.service";
+import { MessageService } from "common/base/service/message.service";
+import { RoomTypeService } from "common/share/src/service/application/hotel/room-type.service";
+import { ValidatorExtension } from "common/validator-extension";
+import { DialogService, DialogMode, PagingModel, DialogSize } from "share";
 
 @Component({
-  selector: 'app-transaction-detail',
-  templateUrl: './transaction-detail.component.html',
-  styleUrls: ['./transaction-detail.component.scss']
+  selector: 'app-roomtype-details',
+  templateUrl: './roomtype-details.component.html',
+  styleUrls: ['./roomtype-details.component.scss'],
 })
-export class TransactionDetailComponent implements OnInit {
-
+export class RoomTypeDetailsComponent implements OnInit {
   @Input() id: any;
   @Input() uuid: any;
   @Input() mode: any;
@@ -25,13 +24,13 @@ export class TransactionDetailComponent implements OnInit {
     private messageService: MessageService,
     private fb: FormBuilder,
     private dialogService: DialogService,
-    public hotelService: HotelService,
+    public RoomTypeService: RoomTypeService,
     private ex: ExtentionService,
   ) {
     this.myForm = this.fb.group({
-      name: [null, ValidatorExtension.required()],
-      address: [null, ValidatorExtension.required()],
-    })
+      type_name: [null, ValidatorExtension.required()],
+      type_price: [null, [ValidatorExtension.required(), ValidatorExtension.number()]],
+    });
   }
 
   async ngOnInit() {
@@ -46,7 +45,8 @@ export class TransactionDetailComponent implements OnInit {
 
   async getData() {
     this.dialogService.openLoading;
-    const rs = await this.hotelService.findOne(this.uuid).firstValueFrom();
+    const rs = await this.RoomTypeService.findOne(this.uuid).firstValueFrom();
+    console.log(rs);
     if (rs) {
       this.myForm.patchValue(rs.data);
     }
@@ -62,12 +62,12 @@ export class TransactionDetailComponent implements OnInit {
     if (this.uuid) {
       //Update
       this.dialogService.openLoading();
-      await this.hotelService.edit(this.uuid, formData).firstValueFrom();
+      await this.RoomTypeService.edit(this.uuid, formData).firstValueFrom();
       this.dialogService.closeLoading();
     } else {
       //Create
       this.dialogService.openLoading();
-      await this.hotelService.add(formData).firstValueFrom();
+      await this.RoomTypeService.add(formData).firstValueFrom();
       this.dialogService.closeLoading();
     }
 
@@ -80,4 +80,4 @@ export class TransactionDetailComponent implements OnInit {
     this.onClose.emit(data);
   }
 
-}
+} 

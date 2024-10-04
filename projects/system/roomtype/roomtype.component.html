@@ -1,13 +1,11 @@
 <div class="page-header page-header-light">
     <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
         <div class="d-flex">
-            <div class="breadcrumb-title">
-                Quản Lý Tầng
-            </div>
+            <div class="breadcrumb-title">Quản Lý Loại Phòng</div>
             <div class="breadcrumb">
                 <div class="list-control-main">
-                    <button nz-button type="button" class="btn btn-primary">
-                        <i class="isax-add-circle1 mr-2"></i>Thêm tầng
+                    <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
+                        <i class="isax-add-circle1 mr-2"></i>Thêm loại phòng
                     </button>
                 </div>
             </div>
@@ -15,19 +13,81 @@
     </div>
 </div>
 
-<div>
-    <div class="breadcrumb-title">
-        Tầng 1
-    </div>
-    <div class="col-md-4 col-lg-3">
-        <div class="room-select border p-3 rounded">
-            <div class="form-check form-switch form-check-reverse">
-                <input class="form-check-input" type="checkbox" role="switch">
+<div class="content">
+    <div class="header-elements-inline">
+        <div class="navbar-expand-md w-100">
+            <div class="padding-left-15 text-right d-md-none w-100 row">
+                <button class="navbar-toggler" data-target="#search-list" data-toggle="collapse" type="button">
+                    <i nz-icon nzType="menu" nzTheme="outline"></i>
+                </button>
             </div>
-            <div class="text-center">
-                <span class="fw-bold d-block text-primary">Room No.101</span>
-                <span class="mt-1">Booked</span>
+            <!-- search -->
+            <div class="navbar-collapse collapse" id="search-list" *ngIf="!isLoading">
+                <form *ngIf="formSearch" [formGroup]="formSearch" class="w-100" (ngSubmit)="getData()">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <nz-form-item>
+                                <nz-form-label>Tên Loại Phòng</nz-form-label>
+                                <nz-form-control>
+                                    <input-text placeholder="Tên loại phòng..."
+                                        formControlName="type_name"></input-text>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                        <div class="col-md-6">
+                            <nz-form-item>
+                                <nz-form-label>Giá loại phòng</nz-form-label>
+                                <nz-form-control>
+                                    <input-text placeholder="Giá loại phòng..."
+                                        formControlName="type_price"></input-text>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button nz-button type="submit" class="btn btn-primary ml-2">
+                            <span nz-icon nzType="search" nzTheme="outline"></span>Tìm kiếm
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+    <!-- 
+    <div class="hearder-table mt-1">
+        <nz-tabset>
+            <nz-tab nzTitle="Kết quả tìm kiếm">
+                <ng-template [ngTemplateOutlet]="tab1">
+
+                </ng-template>
+            </nz-tab>
+        </nz-tabset>
+    </div> -->
+
+    <div class="header-table mt-1">
+        <nz-tabset>
+            <nz-tab nzTitle="Kết quả tìm kiếm">
+                <ng-template [ngTemplateOutlet]="tab1">
+                </ng-template>
+            </nz-tab>
+        </nz-tabset>
+    </div>
+    <ng-template #tab1>
+        <app-table [columns]="columns" [items]="items" [loading]="loading">
+            <ng-template [appCellTemplate]="'action'" let-item>
+                <div class="list-icons list-icons-extended text-center">
+                    <a class="list-icons-item action-view" (click)="handlerOpenDialog('view', item)">
+                        <span nz-tooltip nzTooltipTitle="Xem thông tin loại phòng" class="isax-eye1"></span>
+                    </a>
+                    <a class="list-icons-item action-delete" (click)="handlerDelete(item)">
+                        <span nz-tooltip nzTooltipTitle="Xóa loại phòng" class="isax-trash1"></span>
+                    </a>
+                    <a class="list-icons-item action-edit" (click)="handlerOpenDialog('edit', item)">
+                        <span nz-tooltip nzTooltipTitle="Sửa loại phòng" class="isax-edit-21"></span>
+                    </a>
+                </div>
+            </ng-template>
+        </app-table>
+        <app-paging [data]="paging" [changeListPage]="0" (onChange)="getData($event)"></app-paging>
+    </ng-template>
 </div>

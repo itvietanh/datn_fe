@@ -53,11 +53,11 @@ export class ServiceComponent implements OnInit {
     public hotelService: HotelService,
     private datePipe: DatePipe,
     public floorService: FloorService,
-    private service: Service,
+    public service: Service,
   ) {
     this.formSearch = this.fb.group({
-      name: [null],
-      address: [null]
+      service_name: [null],
+      service_price: [null]
     });
     this.formSearch
       .get('outEndDate')

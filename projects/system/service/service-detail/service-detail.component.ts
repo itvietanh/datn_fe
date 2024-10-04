@@ -28,7 +28,7 @@ export class ServiceDetailComponent implements OnInit {
     private dialogService: DialogService,
     public hotelService: HotelService,
     private ex: ExtentionService,
-    private service: Service,
+    public service: Service,
   ) {
     this.myForm = this.fb.group({
       hotel_id: [null, ValidatorExtension.required()],
@@ -49,7 +49,8 @@ export class ServiceDetailComponent implements OnInit {
 
   async getData() {
     this.dialogService.openLoading;
-    const rs = await this.hotelService.findOne(this.uuid).firstValueFrom();
+    const rs = await this.service.findOne(this.uuid).firstValueFrom();
+    console.log(rs);
     if (rs) {
       this.myForm.patchValue(rs.data);
     }
