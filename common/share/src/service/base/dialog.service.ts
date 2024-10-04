@@ -3,6 +3,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { BehaviorSubject } from 'rxjs';
 import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
+import {MatSnackBar} from '@angular/material/snack-bar'
 import {
   DialogConfigModal,
   DialogModal,
@@ -15,6 +16,12 @@ declare let $: any;
   providedIn: 'root',
 })
 export class DialogService {
+  open(message:string, type:'success'|'error'){
+    this.snackBar.open(message,'',{
+      duration:3000,
+      panelClass: type === 'success'?'snackbar-success':'snackbar-error'
+    })
+  }
   public listDialog: DialogModal<any>[] = [];
   private listDialogDrawer: DialogModalDrawer<any>[] = [];
   public isCloseLoading = new BehaviorSubject<any>(false);
@@ -25,6 +32,7 @@ export class DialogService {
   private loadingId: boolean = false;
 
   constructor(
+    private snackBar:MatSnackBar,
     private modalService: NzModalService,
     private drawerService: NzDrawerService
   ) {
