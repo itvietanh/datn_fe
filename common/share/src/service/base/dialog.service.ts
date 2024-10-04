@@ -18,7 +18,7 @@ declare let $: any;
 export class DialogService {
   open(message:string, type:'success'|'error'){
     this.snackBar.open(message,'',{
-      duration:3000,
+      duration:5000,
       panelClass: type === 'success'?'snackbar-success':'snackbar-error'
     })
   }

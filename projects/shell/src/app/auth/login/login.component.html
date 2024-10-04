@@ -1,25 +1,29 @@
 <div class="login-container">
     <h2>Đăng Nhập</h2>
+    
     <form [formGroup]="loginF" (submit)="onSubmit()">
       <div class="form-group">
         <label for="username">Email</label>
         <input type="email" formControlName="email" class="form-control" placeholder="Email" required />
-        <div *ngIf="loginF.controls['email'].errors?.['required'] && loginF.controls['email'].touched">
-           <small class="text-danger text-small">Email là bắt buộc</small>
-        </div>
-        <div *ngIf="loginF.controls['email'].errors?.['email'] && loginF.controls['email'].touched">
-           <small class="text-danger text-small">Email không đúng định dạng</small>
-        </div>
       </div>
+      <div *ngIf="loginF.controls['email'].errors?.['required'] && loginF.controls['email'].touched">
+         <small class="text-danger text-small">Email là bắt buộc</small>
+      </div>
+      <div *ngIf="loginF.controls['email'].errors?.['email'] && loginF.controls['email'].touched">
+         <small class="text-danger text-small">Email không đúng định dạng</small>
+      </div>
+
+
       <div class="form-group">
         <label for="password">Mật Khẩu</label>
         <input type="password" formControlName="password" class="form-control" placeholder="Mật khẩu" required />
-        <div *ngIf="loginF.controls['password'].errors?.['required']&& loginF.controls['password'].touched">
-           <small class="text-danger text-small fz-15">Password là bắt buộc</small>            
-        </div>
-        <div *ngIf="loginF.controls['password'].errors?.['minLength']&& loginF.controls['password'].touched">
-           <small class="text-danger text-small">Password ít nhất 6 ký tự</small>            
-        </div>
+      </div>
+      <div *ngIf="loginF.controls['password'].errors?.['required'] && loginF.controls['password'].touched">
+         <small class="text-danger text-small fs-15">Password là bắt buộc</small>            
+      </div>
+      
+      <div *ngIf="loginF.controls['password'].errors?.['minlength'] && loginF.controls['password'].touched">
+         <small class="text-danger text-small fs-15">Password tối thiểu 6 ký tự</small>            
       </div>
       <hr>
       

@@ -239,7 +239,7 @@ export class MenuComponent implements OnInit {
       {
         icon: 'isax-pen-tool-2-1',
         name: 'ĐĂNG NHẬP',
-        url: '/dang-nhap',
+        url: 'dang-nhap',
         isOpen: false,
         exact: false,
         level: 1,

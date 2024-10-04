@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
     console.log(this.loginF.value);
     const mockLoginSuccess = true;
     if(mockLoginSuccess){
-      this.dialogService.open("Đăng nhập thành công!",'success')
+      this.dialogService.open("Đăng nhập thành công!!!",'success')
       console.log("Đăng nhập thành công!", this.loginF.value);
       this.route.navigate(['/he-thong/trang-chu'])
       
