@@ -1,34 +1,33 @@
-<div class="wapper-login" [ngStyle]="{ 'background-image': 'url(assets/images/login-background.png)' }"></div>
-<form nz-form [formGroup]="myForm" class="login-form" (ngSubmit)="submitForm()">
-    <ng-template #controlErrorTpl let-control>
-        <app-render-errors [control]="control"></app-render-errors>
-    </ng-template>
-    <div class="login-icon">
-        <img src="assets/images/logo.png" />
-    </div>
-    <div class="login-title">ĐĂNG NHẬP TÀI KHOẢN</div>
-    <nz-form-item>
-        <nz-form-control [nzErrorTip]="controlErrorTpl">
-            <nz-input-group nzPrefixIcon="user">
-                <input type="text" nz-input formControlName="username" placeholder="Tài khoản hoặc CCCD" readonly
-                    onfocus="this.removeAttribute('readonly');" />
-            </nz-input-group>
-        </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-        <nz-form-control [nzErrorTip]="controlErrorTpl">
-            <nz-input-group nzPrefixIcon="lock">
-                <input type="password" nz-input formControlName="password" placeholder="******" readonly
-                    onfocus="this.removeAttribute('readonly');" />
-            </nz-input-group>
-        </nz-form-control>
-    </nz-form-item>
-    <div class="text-center">
-        <button nz-button type="submit" class="btn btn-primary">Đăng nhập</button>
-    </div>
-    <div nz-row class="login-form-margin">
-        <div nz-col [nzSpan]="12">
-            <a class="login-form-forgot">Quên mật khẩu</a>
-        </div>
-    </div>
-</form>
+<div class="login-container">
+    <h2>Đăng Nhập</h2>
+    
+    <form [formGroup]="loginF" (submit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">Email</label>
+        <input type="email" formControlName="email" class="form-control" placeholder="Email" required />
+      </div>
+      <div *ngIf="loginF.controls['email'].errors?.['required'] && loginF.controls['email'].touched">
+         <small class="text-danger text-small">Email là bắt buộc</small>
+      </div>
+      <div *ngIf="loginF.controls['email'].errors?.['email'] && loginF.controls['email'].touched">
+         <small class="text-danger text-small">Email không đúng định dạng</small>
+      </div>
+
+
+      <div class="form-group">
+        <label for="password">Mật Khẩu</label>
+        <input type="password" formControlName="password" class="form-control" placeholder="Mật khẩu" required />
+      </div>
+      <div *ngIf="loginF.controls['password'].errors?.['required'] && loginF.controls['password'].touched">
+         <small class="text-danger text-small fs-15">Password là bắt buộc</small>            
+      </div>
+      
+      <div *ngIf="loginF.controls['password'].errors?.['minlength'] && loginF.controls['password'].touched">
+         <small class="text-danger text-small fs-15">Password tối thiểu 6 ký tự</small>            
+      </div>
+      <hr>
+      
+      <button type="submit" class="btn btn-primary" [disabled]="loginF.invalid">Đăng Nhập</button>
+    </form>
+  </div>
+  

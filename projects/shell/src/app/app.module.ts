@@ -41,7 +41,7 @@ import { environment } from '@env/environment';
 import { AuthGuard } from 'common/base/service/auth.guard';
 import { LoginModule } from './auth/login/login.module';
 // import { LoginComponent } from '../../../system/login/login.component';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 registerLocaleData(vi);
 
 const ngZorroConfig: any = {
@@ -60,9 +60,11 @@ const ngZorroConfig: any = {
     DialogLoadingComponent,
     DialogConfirmComponent,
     NoDataComponent,
+   
     
   ],
   imports: [
+    MatSnackBarModule,
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
