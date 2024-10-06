@@ -51,31 +51,30 @@
 
 <div class="hotel-management">
   <div class="main-interface">
-    <div class="floors-container">
-      <div *ngFor="let floor of floors" class="floor">
-        <h4>Tầng {{floor.number}}</h4>
-        <div class="rooms-grid">
-          <div *ngFor="let room of floor.rooms" class="room"
-            [ngClass]="{'available': room.status === 'available', 'occupied': room.status === 'occupied', 'cleaning': room.status === 'cleaning'}"
-            (click)="selectRoom(room)">
-            <div class="room-left">
-              <h5>Phòng {{room.number}}</h5>
-              <p>
-                <span nz-icon nzType="user" nzTheme="outline"></span>
-                {{room.maxGuests}} / 0
-              </p>
-            </div>
+      <div class="floors-container">
+          <div *ngFor="let floor of listFloor" class="floor">
+              <h4>Tầng {{floor.floorNumber}}</h4>
+              <div class="rooms-grid">
+                  <div *ngFor="let room of floor.rooms" class="room"
+                      [ngClass]="{'available': room.status === 1, 'occupied': room.status === 2, 'cleaning': room.status === 3}"
+                      (click)="handlerOpenDialog()">
+                      <div class="room-left">
+                          <h5>Phòng {{room.roomNumber}}</h5>
+                          <p>
+                              <span nz-icon nzType="user" nzTheme="outline"></span>
+                              {{room.maxCapacity}} / 0
+                          </p>
+                      </div>
 
-            <div class="room-right">
-              <p>{{room.type}}</p>
-              <p>Status: {{room.status}}</p>
-              <button *ngIf="room.status === 'available'" (click)="openBookingPopup(room)" class="book-room-btn">Book
-                Room</button>
-            </div>
+                      <div class="room-right">
+                          <p>Trạng thái: {{room.status | labelValue: listRoomStatus}}</p>
+                          <p>{{room.type}}</p>
+                          <button *ngIf="room.status === 1" class="book-room-btn">Nhận phòng</button>
+                      </div>
+                  </div>
+              </div>
           </div>
-        </div>
       </div>
-    </div>
   </div>
 </div>
 
@@ -93,8 +92,8 @@
 
 <div *ngIf="showBookingPopup" class="booking-popup">
   <div class="popup-content">
-    <h3>Book Room</h3>
-    <form (ngSubmit)="bookRoom()">
+    <h3>Nhận phòng</h3>
+    <form (ngSubmit)="handlerOpenDialog()">
       <div>
         <label for="guestName">Guest Name:</label>
         <input type="text" id="guestName" [(ngModel)]="bookingDetails.guestName" name="guestName" required>

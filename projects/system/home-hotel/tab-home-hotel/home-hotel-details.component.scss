@@ -1,52 +1,155 @@
-.flip-camera {
-    transform: scaleX(-1);
-    /* Lật ngược theo chiều ngang */
+@import "variables";
+
+.card {
+  border-color: #e8e8e8;
+  // background-color: #ffe1ca;
+  padding: 10px 10px;
+  min-height: 215px;
+  margin-bottom: 0;
+
+  h1 {
+    // border-bottom: solid 1px #ccc;
+  }
+
+  .pay-data {
+    background-color: #e8e8e8;
+    margin: -10px -10px 10px -10px;
+    padding: 5px 10px 10px 10px;
+
+    .pay-item {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+
+      .name {}
+
+      .value {
+        color: #db3e3e;
+      }
+    }
+  }
+
+  .return-money {
+    display: flex;
+    justify-content: space-between;
+    border-top: solid 1px #e8e8e8;
+    margin: 0 -10px -10px -10px;
+    padding: 10px;
+
+    .name {
+      font-weight: 500px;
+    }
+
+    .value {
+      color: #db3e3e;
+    }
+  }
 }
 
-/* CSS cho khung quét mã QR */
-.qr-scanner-container {
-    position: relative;
-    width: 100%;
-    max-width: 300px;
-    margin: auto;
+form {
+  padding-top: 15px;
 }
 
-.qr-scanner-container video {
-    width: 100%;
-    display: block;
+@include mobile {
+  .title-group {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
-.qr-scanner-container .qr-frame {
+.customer-data {
+  display: flex;
+
+  @include mobile {
+    display: flex;
+    flex-direction: column;
+
+    .customer-detail {
+      width: 100% !important;
+
+      .title-control {
+        display: flex;
+        flex-direction: column;
+
+        @include mobile {
+          display: flex;
+          flex-direction: row;
+        }
+      }
+    }
+
+    .customer-list {
+      width: 100% !important;
+      margin-left: 0px !important;
+    }
+  }
+
+  .customer-detail {
+    width: calc(100% - 470px);
+  }
+
+  .customer-list {
+    width: 450px;
+    margin-left: 20px;
+
+    .resident-list {
+      margin-top: 20px;
+
+      .resident-item {
+        border: solid 1px #ccc;
+        border-radius: 3px;
+        padding: 8px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+
+        &.selected {
+          border-color: #d35e16;
+        }
+
+        .name {
+          font-weight: 500;
+
+          .isax-man1 {
+            color: #363333;
+          }
+
+          .isax-woman1 {
+            color: #db3e3e;
+          }
+        }
+
+        .birth {
+          color: #144e9f;
+
+          i {
+            color: #144e9f;
+          }
+        }
+      }
+    }
+  }
+}
+
+.warning {
+  width: 300px;
+  color: red;
+}
+
+.price-type {
+  padding-right: 20px;
+  position: relative;
+
+  .price-type-info {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 3px solid yellow;
-    pointer-events: none;
-    /* Để khung không can thiệp vào sự kiện của video */
-    box-sizing: border-box;
-    display: none;
-    /* Ẩn khung quét khi không có mã QR */
+    top: 6px;
+    right: 0px;
+  }
 }
 
-.qr-scanner-container.active .qr-frame {
-    display: block;
-    /* Hiển thị khung quét khi có mã QR */
-    animation: flash 1s infinite;
-    /* Hiệu ứng nhấp nháy khi quét */
-}
-
-@keyframes flash {
-    0% {
-        border-color: yellow;
-    }
-
-    50% {
-        border-color: green;
-    }
-
-    100% {
-        border-color: green;
-    }
+@include mobile {
+  .list-control-footer {
+    left: 0px !important;
+  }
 }

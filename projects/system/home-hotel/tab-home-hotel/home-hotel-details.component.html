@@ -1,138 +1,193 @@
-<button aria-label="Close" class="ant-modal-close ng-star-inserted" (click)="close()">
-  <span class="ant-modal-close-x">
-    <i nz-icon nzType="close" nzTheme="outline" class="anticon ant-modal-close-icon anticon-close"></i>
-  </span>
-</button>
 <form [formGroup]="myForm">
   <ng-template #controlErrorTpl let-control>
     <app-render-errors [control]="control"></app-render-errors>
   </ng-template>
 
-  <div class="group-header">
-    <div class="title-left">
-      <div class="title-group-table">Thông tin phòng đặt</div>
+  <div class="title-group">
+    <div class="title-label">
+      <i class="isax-house-21"></i> Thông tin phòng
     </div>
+    <div class="title-control"></div>
   </div>
-
   <div class="row">
-    <div class="col-md-6">
-      <app-form-control label="Số Phòng">
-        <input-text formControlName="roomNumber"> </input-text>
-      </app-form-control>
-    </div>
-    <div class="col-md-6">
-      <app-form-control label="Tầng">
-        <input-text formControlName="floor"> </input-text>
-      </app-form-control>
-    </div>
-
-    <div class="col-md-6">
-      <app-form-control label="Loại phòng">
-        <input-text formControlName="roomType"> </input-text>
-      </app-form-control>
-    </div>
-
-    <div class="col-md-6">
-      <app-form-control label="Giá phòng">
-        <input-number formControlName="roomPrice"> </input-number>
-      </app-form-control>
-    </div>
-
-    <div class="col-md-6">
-      <app-form-control label="Check In">
-        <input-date-time formControlName="checkIn"> </input-date-time>
-      </app-form-control>
-    </div>
-
-    <div class="col-md-6">
-      <app-form-control label="Check Out">
-        <input-date-time formControlName="checkOut"> </input-date-time>
-      </app-form-control>
-    </div>
-  </div>
-
-  <div class="group-header">
-    <div class="title-left">
-      <div class="title-group-table">Thông tin khách hàng</div>
-    </div>
-
-    <div class="breadcrumb mt-2">
-      <div class="list-control-main">
-        <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog('view')">
-          <i class="isax-scan-barcode1 mr-2"></i>Mở máy quét QR
-        </button>
+    <div class="col-md-8">
+      <div class="row mt-2">
+        <div class="col-md-3">
+          <app-form-control label="Thời gian nhận phòng">
+            <input-date formControlName="checkInTime"></input-date>
+          </app-form-control>
+        </div>
+        <div class="col-md-3">
+          <app-form-control label="Thời gian trả phòng">
+            <input-date formControlName="checkOutTime"></input-date>
+          </app-form-control>
+        </div>
+       
+        <div class="col-md-3">
+          <app-form-control label="Lý do lưu trú">
+            <input-select-api formControlName="reasonStayId"></input-select-api>
+          </app-form-control>
+        </div> 
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <app-form-control label="Loại phòng">
+            <input-select [allowClear]="false" formControlName="serviceId"></input-select>
+            <div class="warning">
+              <!-- Phòng sẵn sàng đến {{ service.availableTo | datetimeFormat }} -->
+              <!-- Phòng sẵn sàng đến  -->
+            </div>
+          </app-form-control>
+        </div>
+        <div class="col-md-3">
+          <app-form-control label="Phòng">
+            <input-select [allowClear]="false" formControlName="residenceId"></input-select>
+          </app-form-control>
+        </div>
+        <div class="col-md-3">
+          <app-form-control label="Loại giá">
+            <div class="price-type">
+              <input-select [allowClear]="false" formControlName="priceId"></input-select>
+              <div class="price-type-info" nz-tooltip [nzTooltipTitle]="priceDetailTemplate">
+                <ng-template #priceDetailTemplate>
+                  <div style="white-space: pre-line">
+                    <!-- {{ priceDetail }} -->
+                  </div>
+                </ng-template>
+                <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+              </div>
+            </div>
+          </app-form-control>
+        </div>
+        <div class="col-md-3">
+          <app-form-control label="Giá phòng">
+            <nz-spin>
+              <input-number formControlName="totalAmount"></input-number>
+            </nz-spin>
+          </app-form-control>
+        </div>
+        <div class="col-md-12">
+          <app-form-control label="Ghi chú">
+            <input-textarea [rows]="1" formControlName="note"></input-textarea>
+          </app-form-control>
+        </div>
       </div>
     </div>
-  </div>
-
-  <div class="hearder-table">
-    <nz-tabset>
-      <nz-tab nzTitle="Kết quả tìm kiếm">
-        <ng-template [ngTemplateOutlet]="tab1"></ng-template>
-      </nz-tab>
-    </nz-tabset>
-    <div class="lst-controls">
-      <div class="breadcrumb">
-        <div class="list-control-main">
+    <div class="col-md-4">
+      <div class="card my-2">
+        <h1>Tóm tắt hoá đơn</h1>
+        <div class="pay-data">
+          <div class="pay-item">
+            <div class="name">Tổng tiền phòng</div>
+            <div class="value">
+              <!-- {{ this.myForm.get("totalAmount")?.value | moneyFormat }} -->
+            </div>
+          </div>
+          <div class="pay-item">
+            <div class="name">Thuế</div>
+            <!-- <div class="value">{{ taxAmount | moneyFormat }}</div> -->
+          </div>
+          <div class="pay-item">
+            <div class="name">Cần thanh toán</div>
+            <!-- <div class="value">{{ totalAmount | moneyFormat }}</div> -->
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-7">Trả trước</div>
+          <div class="col-md-5">
+            <app-form-control>
+              <!-- <input-number formControlName="prepayment" (ngModelChange)="updateInvoice()"></input-number> -->
+            </app-form-control>
+          </div>
+        </div>
+        <div class="return-money">
+          <div class="name">Còn lại</div>
+          <!-- <div class="value">{{ remainingAmount | moneyFormat }}</div> -->
+          <div class="value">...AMOUNT</div>
         </div>
       </div>
     </div>
   </div>
-
-  <ng-template #tab1>
-    <app-table [columns]="columns" [items]="items" [loading]="loading">
-      <ng-template [appCellTemplate]="'action'" let-item>
-        <div class="list-icons list-icons-extended text-center">
-          <a class="list-icons-item action-edit" (click)="handlerOpenDialog('view', item)">
-            <span nz-tooltip nzTooltipTitle="Xem thông tin khách hàng" class="isax-eye1"></span>
-          </a>
+  <div class="customer-data">
+    <div class="customer-detail">
+      <div class="title-group">
+        <div class="title-label">
+          <i class="isax-house-21"></i> Thông tin khách
         </div>
-      </ng-template>
-    </app-table>
-    <app-paging [data]="paging" [changeListPage]="0" (onChange)="getData($event)"></app-paging>
-  </ng-template>
-
-  <!-- <div class="row">
-    <div class="col-md-6">
-      <app-form-control label="Họ và tên">
-        <input-text formControlName="fullName"> </input-text>
-      </app-form-control>
+        <div class="title-control">
+          <button nz-button type="button" class="btn btn-default mr-2">
+            <i class="isax-rotate-left1 mr-2"></i>Làm mới
+          </button>
+          <!-- <button nz-button type="button" class="btn btn-default mr-2">
+            <i class="isax-rotate-left1 mr-2"></i>Hủy
+          </button> -->
+          <!-- <button nz-button type="button" class="btn btn-primary mr-2">
+            <i class="isax-import-11 mr-2"></i>Cập nhật
+          </button> -->
+          <button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
+            <i class="isax-scan-barcode1 mr-2"></i>Quét mã
+          </button>
+          
+          <!-- <app-customer-scanner-button (success)="data = $event"></app-customer-scanner-button> -->
+        </div>
+      </div>
+      <app-customer-data [(form)]="resident" [data]="items"></app-customer-data>
     </div>
-    <div class="col-md-6">
-      <app-form-control label="Ngày sinh">
-        <input-text formControlName="birthDay"> </input-text>
-      </app-form-control>
+    <div class="customer-list">
+      <div class="title-group">
+        <div class="title-label">
+          <i class="isax-house-21"></i> Danh sách khách
+        </div>
+        <div class="title-control">
+          <!-- <button  type="button" class="btn btn-default" >
+            <i class="isax-trash1 mr-2"></i>Xóa khách
+          </button> -->
+          <button type="button" class="btn btn-primary">
+            <i class="isax-add-circle1 mr-2"></i>Thêm khách
+          </button>
+        </div>
+      </div>
+
+      <div class="resident-list">
+        <div class="resident-item selected">
+          <div class="name">
+            <!-- <i class="mr-1" [ngClass]="{
+                'isax-man1': resident.get('gender')?.value === 5,
+                'isax-woman1': resident.get('gender')?.value === 6
+              }"></i> -->
+            Đang nhập thông tin khách...
+            <!-- {{
+            resident.get("fullName")?.value?.toUpperCase() ?? "Đang nhập thông tin khách..."
+            birthDate
+            }} -->
+          </div>
+          <div class="birth">
+            <i class="isax-cake1 mr-1"></i>
+            birthDate
+          </div>
+        </div>
+        <div class="resident-item" [ngClass]="">
+          <div class="name">
+            <!-- <i class="mr-1" [ngClass]="{
+                'isax-man1': item.gender === 5,
+                'isax-woman1': item.gender === 6
+              }"></i> -->
+            fullName
+          </div>
+          <div class="birth">
+            <i class="isax-cake1 mr-1"></i>
+            birthDate
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="col-md-12">
-      <app-form-control label="Số CCCD">
-        <input-text formControlName="idNumber"> </input-text>
-      </app-form-control>
-    </div>
-
-    <div class="col-md-6">
-      <app-form-control label="Giới tính">
-        <input-text formControlName="gender"> </input-text>
-      </app-form-control>
-    </div>
-
-    <div class="col-md-6">
-      <app-form-control label="Địa chỉ">
-        <input-text formControlName="address"> </input-text>
-      </app-form-control>
-    </div>
-
-    
-  </div> -->
-
+  </div>
   <div class="list-control-footer">
     <button nz-button type="button" class="btn btn-default" (click)="close()">
-      <i nz-icon nzType="close" nzTheme="outline"></i>Hủy
+      <i nz-icon nzType="close" nzTheme="outline"></i>Đóng
     </button>
-    <!-- lưu và đóng -->
-    <button nz-button type="button" class="btn btn-primary" (click)="handlerSubmit()">
-      <i class="icon-plus-circle2 mr-2"></i>
-      Lưu và đóng
+    <button nz-button [nzLoading]="loading" type="submit" class="btn btn-primary">
+      <i nz-icon nzType="login" nzTheme="outline"></i>Nhận phòng
     </button>
   </div>
 </form>
