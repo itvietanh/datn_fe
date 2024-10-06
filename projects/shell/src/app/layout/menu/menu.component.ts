@@ -216,6 +216,15 @@ export class MenuComponent implements OnInit {
             level: 1,
             child: [],
           },
+          {
+            icon: 'isax-pen-tool-2-1',
+            name: 'QUẢN LÝ KHÁCH HÀNG ',
+            url: '/he-thong/khach-hang',
+            isOpen: false,
+            exact: false,
+            level: 1,
+            child: [],
+          },
         ],
       },
       {

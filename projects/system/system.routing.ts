@@ -68,6 +68,13 @@ const routes: Routes = [
           import('./employee/employee.module').then(
             (x) => x.EmployeeModule
           ),
+      },
+      {
+        path: 'khach-hang',
+        loadChildren: () =>
+          import('./guest/guest.module').then(
+            (x) => x.GuestModule
+          ),
       }
     ],
   },
