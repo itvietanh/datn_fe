@@ -1,4 +1,3 @@
-import { DiaBanService } from './../../../../common/share/src/service/application/categories/diaban.service';
 import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, OnDestroy } from "@angular/core";
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { ExtentionService } from "common/base/service/extention.service";
@@ -8,17 +7,17 @@ import { ValidatorExtension } from "common/validator-extension";
 import { DialogService, DialogMode, PagingModel, DialogSize } from "share";
 
 @Component({
-  selector: 'app-facility-details',
-  templateUrl: './facility-details.component.html',
-  styleUrls: ['./facility-details.component.scss'],
+  selector: 'app-guest-details',
+  templateUrl: './guest-details.component.html',
+  styleUrls: ['./guest-details.component.scss'],
 })
-export class FacilityDetailsComponent implements OnInit {
+export class GuestDetailsComponent implements OnInit {
   @Input() id: any;
   @Input() uuid: any;
   @Input() mode: any;
   @Output() onClose = new EventEmitter<any | null>();
-  public isLoading?: boolean;
   myForm: FormGroup;
+  loading = true;
   public paging: any;
 
   constructor(
@@ -27,34 +26,30 @@ export class FacilityDetailsComponent implements OnInit {
     private dialogService: DialogService,
     public hotelService: HotelService,
     private ex: ExtentionService,
-    public diaBanService: DiaBanService,
   ) {
     this.myForm = this.fb.group({
-      uuid: [ex.newGuid()],
       name: [null, ValidatorExtension.required()],
-      province_code: [null, ValidatorExtension.required()],
-      district_code: [null, ValidatorExtension.required()],
-      ward_code: [null, ValidatorExtension.required()],
-      address: [null, ValidatorExtension.required()]
+      address: [null, ValidatorExtension.required()],
     })
   }
 
   async ngOnInit() {
-    this.isLoading = true;
-    if (this.uuid) this.getData(); 
+    this.loading = true;
+    this.getData();
+    if (this.id) this.getData();
     if (this.mode === DialogMode.view) {
       this.myForm.disable();
     };
-    this.isLoading = false;
+    this.loading = false;
   }
 
   async getData() {
-    this.dialogService.openLoading();
+    this.dialogService.openLoading;
     const rs = await this.hotelService.findOne(this.uuid).firstValueFrom();
     if (rs) {
       this.myForm.patchValue(rs.data);
     }
-    this.dialogService.closeLoading();
+    this.dialogService.closeLoading;
   }
 
   async handlerSubmitData() {
@@ -84,4 +79,4 @@ export class FacilityDetailsComponent implements OnInit {
     this.onClose.emit(data);
   }
 
-} 
+}

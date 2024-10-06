@@ -9,17 +9,15 @@
   </ng-template>
 
   <div class="row">
-    <div class="col-md-12">
-      <app-form-control label="Tên khách sạn">
-        <input-text formControlName="name" placeholder="Tên khách sạn..."> </input-text>
+    <div class="col-md-6">
+      <app-form-control label="Tên Cơ Sở">
+        <input-text formControlName="name"> </input-text>
       </app-form-control>
     </div>
-    <div class="col-md-12">
-      <input-diaban [apiService]="diaBanService" 
-        [city]="myForm.get('province_code')"
-        [district]="myForm.get('district_code')" [village]="myForm.get('ward_code')"
-        [address]="myForm.get('address')">
-      </input-diaban>
+    <div class="col-md-6">
+      <app-form-control label="Địa Chỉ">
+        <input-text formControlName="address"> </input-text>
+      </app-form-control>
     </div>
   </div>
 
@@ -28,7 +26,8 @@
       <i nz-icon nzType="close" nzTheme="outline"></i>Hủy
     </button>
     <!-- lưu và đóng -->
-    <button nz-button type="button" class="btn btn-primary" (click)="handlerSubmitData()" *ngIf="mode !== 'view'">
+    <button nz-button type="button" class="btn btn-primary" (click)="handlerSubmitData()" 
+    *ngIf="mode !== 'view'">
       <i class="icon-plus-circle2 mr-2"></i>
       Lưu và đóng
     </button>

@@ -16,37 +16,27 @@ const routes: Routes = [
       {
         path: 'co-so',
         loadChildren: () =>
-          import('./facility/facility.module').then(
-            (x) => x.FacilityModule
-          ),
+          import('./facility/facility.module').then((x) => x.FacilityModule),
       },
       {
         path: 'danh-sach-tang',
         loadChildren: () =>
-          import('./building/building.module').then(
-            (x) => x.BuildingModule
-          ),
+          import('./building/building.module').then((x) => x.BuildingModule),
       },
       {
         path: 'danh-sach-loai-phong',
         loadChildren: () =>
-          import('./roomtype/roomtype.module').then(
-            (x) => x.RoomTypeModule
-          ),
+          import('./roomtype/roomtype.module').then((x) => x.RoomTypeModule),
       },
       {
         path: 'danh-sach-phong',
         loadChildren: () =>
-          import('./room/room.module').then(
-            (x) => x.RoomModule
-          ),
+          import('./room/room.module').then((x) => x.RoomModule),
       },
       {
         path: 'dich-vu',
         loadChildren: () =>
-          import('./service/service.module').then(
-            (x) => x.ServiceModule
-          ),
+          import('./service/service.module').then((x) => x.ServiceModule),
       },
       {
         path: 'giao-dich',
@@ -65,10 +55,20 @@ const routes: Routes = [
       {
         path: 'nhan-vien',
         loadChildren: () =>
-          import('./employee/employee.module').then(
-            (x) => x.EmployeeModule
+          import('./employee/employee.module').then((x) => x.EmployeeModule),
+      },
+      {
+        path: 'khach-hang',
+        loadChildren: () =>
+          import('./guest/guest.module').then((x) => x.GuestModule),
+      },
+      {
+        path: 'bao-cao',
+        loadChildren: () =>
+          import('./statistical/statistical.module').then(
+            (x) => x.StatisticalModule
           ),
-      }
+      },
     ],
   },
 ];

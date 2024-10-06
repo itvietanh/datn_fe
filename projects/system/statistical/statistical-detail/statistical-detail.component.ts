@@ -8,21 +8,19 @@ import { ValidatorExtension } from 'common/validator-extension';
 import { DialogService, DialogMode } from 'share';
 
 @Component({
-  selector: 'app-service-detail',
-  templateUrl: './service-detail.component.html',
-  styleUrls: ['./service-detail.component.scss']
+  selector: 'app-statistical-detail',
+  templateUrl: './statistical-detail.component.html',
+  styleUrls: ['./statistical-detail.component.scss']
 })
-export class ServiceDetailComponent implements OnInit {
+export class StatisticalDetailComponent implements OnInit {
 
   @Input() id: any;
   @Input() uuid: any;
-  @Input() item: any;
   @Input() mode: any;
   @Output() onClose = new EventEmitter<any | null>();
   myForm: FormGroup;
   loading = true;
   public paging: any;
-  public hotelName: string = ''; 
 
   constructor(
     private messageService: MessageService,
@@ -36,7 +34,6 @@ export class ServiceDetailComponent implements OnInit {
       hotel_id: [null, ValidatorExtension.required()],
       service_name: [null, ValidatorExtension.required()],
       service_price: [null, ValidatorExtension.required()],
-      hotel_name: [{ value: '', disabled: true }]
     });
   }
 
@@ -47,9 +44,6 @@ export class ServiceDetailComponent implements OnInit {
     if (this.mode === DialogMode.view) {
       this.myForm.disable();
     };
-    if (this.item.hotel_id) {
-        this.myForm.get('hotel_id')?.setValue(this.item.hotel_id);
-    }
     this.loading = false;
   }
 
@@ -58,20 +52,10 @@ export class ServiceDetailComponent implements OnInit {
     const rs = await this.service.findOne(this.uuid).firstValueFrom();
     console.log(rs);
     if (rs) {
-      this.myForm.patchValue({
-        hotel_id: rs.data.hotel_id,
-        service_name: rs.data.service_name,
-        service_price: rs.data.service_price,
-        hotel_name: rs.data.hotel.name  
-      });
-      const hotelInfo = rs.data.hotel;
-      if (hotelInfo) {
-        console.log(`Hotel Name: ${hotelInfo.name}`);
-        this.hotelName = hotelInfo.name;
-      }
+      this.myForm.patchValue(rs.data);
     }
-    this.dialogService.closeLoading();
-  }  
+    this.dialogService.closeLoading;
+  }
 
   async handlerSubmitData() {
     this.myForm.markAllAsDirty();

@@ -30,7 +30,7 @@ export class FacilityComponent implements OnInit {
   columns: ColumnConfig[] = [
     {
       key: 'name',
-      header: 'Tên Cơ Sở',
+      header: 'Tên Khách Sạn',
     },
     {
       key: 'address',
@@ -108,7 +108,7 @@ export class FacilityComponent implements OnInit {
       async (option) => {
         option.title = mode === 'view' ? 'Xem Chi Tiết Cơ Sở' : 'Thêm Mới Cơ Sở';
         if (mode === 'edit') option.title = 'Cập Nhật Cơ Sở';
-        option.size = DialogSize.xlarge;
+        option.size = DialogSize.large;
         option.component = FacilityDetailsComponent;// open component;
         option.inputs = {
           uuid: item?.uuid,
