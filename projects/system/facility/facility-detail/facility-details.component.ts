@@ -17,8 +17,8 @@ export class FacilityDetailsComponent implements OnInit {
   @Input() uuid: any;
   @Input() mode: any;
   @Output() onClose = new EventEmitter<any | null>();
+  public isLoading?: boolean;
   myForm: FormGroup;
-  loading = true;
   public paging: any;
 
   constructor(
@@ -30,6 +30,7 @@ export class FacilityDetailsComponent implements OnInit {
     public diaBanService: DiaBanService,
   ) {
     this.myForm = this.fb.group({
+      uuid: [ex.newGuid()],
       name: [null, ValidatorExtension.required()],
       province_code: [null, ValidatorExtension.required()],
       district_code: [null, ValidatorExtension.required()],
@@ -39,21 +40,21 @@ export class FacilityDetailsComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.loading = true;
-    if (this.id) this.getData(); 
+    this.isLoading = true;
+    if (this.uuid) this.getData(); 
     if (this.mode === DialogMode.view) {
       this.myForm.disable();
     };
-    this.loading = false;
+    this.isLoading = false;
   }
 
   async getData() {
-    this.dialogService.openLoading;
+    this.dialogService.openLoading();
     const rs = await this.hotelService.findOne(this.uuid).firstValueFrom();
     if (rs) {
       this.myForm.patchValue(rs.data);
     }
-    this.dialogService.closeLoading;
+    this.dialogService.closeLoading();
   }
 
   async handlerSubmitData() {
