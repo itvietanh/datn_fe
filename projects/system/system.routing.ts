@@ -70,10 +70,17 @@ const routes: Routes = [
           ),
       },
       {
+<<<<<<< HEAD
         path: 'khach-hang',
         loadChildren: () =>
           import('./guest/guest.module').then(
             (x) => x.GuestModule
+=======
+        path: 'bao-cao',
+        loadChildren: () =>
+          import('./statistical/statistical.module').then(
+            (x) => x.StatisticalModule
+>>>>>>> 8892f13b306f883218ed37888560416d73414678
           ),
       }
     ],

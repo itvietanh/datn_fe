@@ -1,0 +1,38 @@
+<form [formGroup]="myForm">
+  <ng-template #controlErrorTpl let-control>
+      <app-render-errors [control]="control"></app-render-errors>
+  </ng-template>
+
+  <div class="row">
+      <div class="col-md-12">
+          <nz-form-item>
+              <nz-form-label>Cơ sở khách sạn</nz-form-label>
+              <nz-form-control [nzErrorTip]="controlErrorTpl">
+                  <input-select-api [apiService]="hotelService" [actionName]="'getCombobox'" formControlName="hotel_id"></input-select-api>
+              </nz-form-control>
+          </nz-form-item>
+      </div>
+
+      <div class="col-md-6">
+          <app-form-control label="Tên Dịch Vụ">
+              <input-text formControlName="service_name"></input-text>
+          </app-form-control>
+      </div>
+
+      <div class="col-md-6">
+          <app-form-control label="Giá dịch vụ">
+              <input-text formControlName="service_price"></input-text>
+          </app-form-control>
+      </div>
+  </div>
+
+  <div class="list-control-search">
+      <button nz-button type="button" class="btn btn-default" (click)="close()">
+          <i nz-icon nzType="close" nzTheme="outline"></i>Hủy
+      </button>
+      <button nz-button type="button" class="btn btn-primary" (click)="handlerSubmitData()" *ngIf="mode !== 'view'">
+          <i class="icon-plus-circle2 mr-2"></i>
+          Lưu và đóng
+      </button>
+  </div>
+</form>

@@ -8,15 +8,14 @@ import { ValidatorExtension } from 'common/validator-extension';
 import { DialogService, DialogMode } from 'share';
 
 @Component({
-  selector: 'app-service-detail',
-  templateUrl: './service-detail.component.html',
-  styleUrls: ['./service-detail.component.scss']
+  selector: 'app-statistical-detail',
+  templateUrl: './statistical-detail.component.html',
+  styleUrls: ['./statistical-detail.component.scss']
 })
-export class ServiceDetailComponent implements OnInit {
+export class StatisticalDetailComponent implements OnInit {
 
   @Input() id: any;
   @Input() uuid: any;
-  @Input() item: any;
   @Input() mode: any;
   @Output() onClose = new EventEmitter<any | null>();
   myForm: FormGroup;
@@ -45,9 +44,6 @@ export class ServiceDetailComponent implements OnInit {
     if (this.mode === DialogMode.view) {
       this.myForm.disable();
     };
-    if (this.item.hotel_id) {
-        this.myForm.get('hotel_id')?.setValue(this.item.hotel_id);
-    }
     this.loading = false;
   }
 

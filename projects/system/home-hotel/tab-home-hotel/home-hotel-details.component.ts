@@ -1,15 +1,15 @@
-import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, OnDestroy, inject } from "@angular/core";
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { ExtentionService } from "common/base/service/extention.service";
 import { MessageService } from "common/base/service/message.service";
 import { ShrAccountApiService } from "common/share/src/service/application/shr/shr-account-api.service";
 
 import { ValidatorExtension } from "common/validator-extension";
-import { DialogService, DialogMode, PagingModel, DialogSize } from "share";
-import { Html5Qrcode } from 'html5-qrcode';
+import { DialogService, DialogMode, PagingModel, DialogSize, GENDERS } from "share";
 import { QrCodeDetailsComponent } from "./tab-qrcode/qrcode-details.component";
 import { ColumnConfig } from "common/base/models";
 import { DatePipe } from "@angular/common";
+import { NzModalRef, NZ_MODAL_DATA } from "ng-zorro-antd/modal";
 
 
 @Component({
@@ -21,39 +21,73 @@ export class HomeHotelDetailsComponent implements OnInit {
   @Input() id: any;
   @Input() mode: any;
   @Output() onClose = new EventEmitter<any | null>();
+  resident = new FormGroup<any>({});
   myForm: FormGroup;
   loading = true;
   public paging: any;
   items: any[] = [];
+  data: any;
 
   columns: ColumnConfig[] = [
     {
-      key: 'fullName',
-      header: 'Họ và tên',
+      key: 'room',
+      header: 'Phòng',
+      pipe: 'template',
     },
     {
-      key: 'birthDay',
-      header: 'Ngày sinh',
+      key: 'residentName',
+      header: 'Họ tên',
     },
     {
-      key: 'idNumber',
-      header: 'Số CCCD/ID Passport',
+      key: 'identityNo',
+      header: 'Số giấy tờ',
     },
     {
-      key: 'gender',
-      header: 'Giới tính',
+      key: 'phoneNumber',
+      header: 'Số điện thoại',
     },
     {
-      key: 'address',
-      header: 'Địa chỉ',
+      key: 'time',
+      header: 'Thời gian lưu trú',
+      nzWidth: '350px',
+      pipe: 'template',
     },
     {
       key: 'action',
-      header: 'Thao tác',
-      tdClass: 'text-center',
+      header: '',
       pipe: 'template',
+      nzWidth: '50px',
     },
   ];
+
+  // columns: ColumnConfig[] = [
+  //   {
+  //     key: 'fullName',
+  //     header: 'Họ và tên',
+  //   },
+  //   {
+  //     key: 'birthDay',
+  //     header: 'Ngày sinh',
+  //   },
+  //   {
+  //     key: 'idNumber',
+  //     header: 'Số CCCD/ID Passport',
+  //   },
+  //   {
+  //     key: 'gender',
+  //     header: 'Giới tính',
+  //   },
+  //   {
+  //     key: 'address',
+  //     header: 'Địa chỉ',
+  //   },
+  //   {
+  //     key: 'action',
+  //     header: 'Thao tác',
+  //     tdClass: 'text-center',
+  //     pipe: 'template',
+  //   },
+  // ];
 
   constructor(
     private messageService: MessageService,
@@ -65,12 +99,26 @@ export class HomeHotelDetailsComponent implements OnInit {
   ) {
     this.myForm = this.fb.group({
       // Room Info
-      roomNumber: [null, ValidatorExtension.required()],
-      floor: [null, ValidatorExtension.required()],
-      roomType: [null, ValidatorExtension.required()],
-      roomPrice: [null, ValidatorExtension.required()],
-      checkIn: [null, ValidatorExtension.required()],
-      checkOut: [null, ValidatorExtension.required()],
+      // roomNumber: [null, ValidatorExtension.required()],
+      // floor: [null, ValidatorExtension.required()],
+      // roomType: [null, ValidatorExtension.required()],
+      // roomPrice: [null, ValidatorExtension.required()],
+      // checkIn: [null, ValidatorExtension.required()],
+      // checkOut: [null, ValidatorExtension.required()],
+      // contractType: [],
+      checkInTime: [
+        ValidatorExtension.required(),
+      ],
+      checkOutTime: [null],
+      groupName: [null],
+      note: [null],
+      numOfResidents: [0, ValidatorExtension.required()],
+      reasonStayId: [null, ValidatorExtension.required()],
+      serviceId: [ValidatorExtension.required()],
+      residenceId: [ValidatorExtension.required()],
+      priceId: [null],
+      totalAmount: [{ value: 0, disabled: true }],
+      prepayment: [0, ValidatorExtension.min(0)],
     })
   }
 
@@ -121,13 +169,14 @@ export class HomeHotelDetailsComponent implements OnInit {
     item[3] = this.datePipe.transform(parseDate, 'dd/MM/yyyy');
     const guest = [
       {
-        idNumber: item[0],
-        birthDay: item[3],
+        identityNo: item[0],
+        dateOfBirth: item[3],
         fullName: item[2],
         gender: item[4],
-        address: item[5]
+        addressDetail: item[5]
       }
     ];
+    // this.resident.patchValue(item);
     this.items = guest;
   }
 

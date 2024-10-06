@@ -1,25 +1,23 @@
-import { ShrContractService } from '../../../common/share/src/service/application/accom/shr-contract.service';
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MessageService } from 'common/base/service/message.service';
-import {
-  DialogService,
-  PagingModel,
-  DialogSize,
-  DialogMode,
-} from 'share';
-import { ValidatorExtension } from 'common/validator-extension';
-import { DatePipe } from '@angular/common';
 import { ColumnConfig } from 'common/base/models';
-import { FacilityDetailsComponent } from './facility-detail/facility-details.component';
+import { MessageService } from 'common/base/service/message.service';
 import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
+import { ValidatorExtension } from 'common/validator-extension';
+import { DialogService, PagingModel, DialogMode, DialogSize } from 'share';
+import { FacilityDetailsComponent } from '../facility/facility-detail/facility-details.component';
+import { FloorService } from 'common/share/src/service/application/hotel/floor.service';
+import { StatisticalDetailComponent } from './statistical-detail/statistical-detail.component';
+import { Service } from 'common/share/src/service/application/hotel/service.service';
 
 @Component({
-  selector: 'app-facility',
-  templateUrl: './facility.component.html',
-  styleUrls: ['./facility.component.scss'],
+  selector: 'app-statistical',
+  templateUrl: './statistical.component.html',
+  styleUrls: ['./statistical.component.scss']
 })
-export class FacilityComponent implements OnInit {
+export class StatisticalComponent implements OnInit {
+
   public formSearch: FormGroup;
   public listOfData: any[] = [];
   public isLoading?: boolean;
@@ -29,12 +27,12 @@ export class FacilityComponent implements OnInit {
 
   columns: ColumnConfig[] = [
     {
-      key: 'name',
-      header: 'Tên Khách Sạn',
+      key: 'service_name',
+      header: 'Tên dịch vụ',
     },
     {
-      key: 'address',
-      header: 'Địa chỉ',
+      key: 'service_price',
+      header: 'Giá dịch vụ',
     },
     {
       key: 'created_at',
@@ -53,11 +51,13 @@ export class FacilityComponent implements OnInit {
     private dialogService: DialogService,
     private messageService: MessageService,
     public hotelService: HotelService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    public floorService: FloorService,
+    public service: Service,
   ) {
     this.formSearch = this.fb.group({
-      name: [null],
-      address: [null]
+      service_name: [null],
+      service_price: [null]
     });
     this.formSearch
       .get('outEndDate')
@@ -91,13 +91,13 @@ export class FacilityComponent implements OnInit {
       ...this.formSearch.value
     }
     this.dialogService.openLoading();
-    const rs = await this.hotelService.getPaging(params).firstValueFrom();
+    const rs = await this.service.getPaging(params).firstValueFrom();
     const dataRaw = rs.data!.items;
-    for (const item of dataRaw) {
-      if (item.created_at) {
-        item.created_at = this.datePipe.transform(item.created_at, 'dd-MM-yyyy');
-      }
-    }
+    // for (const item of dataRaw) {
+    //   if (item.created_at) {
+    //     item.created_at = this.datePipe.transform(item.created_at, 'dd-MM-yyyy');
+    //   }
+    // }
     this.items = rs.data!.items;
     this.paging = rs.data?.meta;
     this.dialogService.closeLoading();
@@ -106,10 +106,10 @@ export class FacilityComponent implements OnInit {
   async handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
     const dialog = this.dialogService.openDialog(
       async (option) => {
-        option.title = mode === 'view' ? 'Xem Chi Tiết Cơ Sở' : 'Thêm Mới Cơ Sở';
-        if (mode === 'edit') option.title = 'Cập Nhật Cơ Sở';
-        option.size = DialogSize.large;
-        option.component = FacilityDetailsComponent;// open component;
+        option.title = mode === 'view' ? 'Xem Chi Tiết Dịch Vụ' : 'Thêm Mới Dịch Vụ';
+        if (mode === 'edit') option.title = 'Cập Nhật Dịch Vụ';
+        option.size = DialogSize.xlarge;
+        option.component = StatisticalDetailComponent; // open component; (mở component)
         option.inputs = {
           uuid: item?.uuid,
           mode: mode,
@@ -136,5 +136,4 @@ export class FacilityComponent implements OnInit {
       }
     }
   }
-
 }
