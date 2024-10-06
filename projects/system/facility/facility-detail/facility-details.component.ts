@@ -1,3 +1,4 @@
+import { DiaBanService } from './../../../../common/share/src/service/application/categories/diaban.service';
 import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, OnDestroy } from "@angular/core";
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { ExtentionService } from "common/base/service/extention.service";
@@ -26,16 +27,19 @@ export class FacilityDetailsComponent implements OnInit {
     private dialogService: DialogService,
     public hotelService: HotelService,
     private ex: ExtentionService,
+    public diaBanService: DiaBanService,
   ) {
     this.myForm = this.fb.group({
       name: [null, ValidatorExtension.required()],
-      address: [null, ValidatorExtension.required()],
+      province_code: [null, ValidatorExtension.required()],
+      district_code: [null, ValidatorExtension.required()],
+      ward_code: [null, ValidatorExtension.required()],
+      address: [null, ValidatorExtension.required()]
     })
   }
 
   async ngOnInit() {
     this.loading = true;
-    this.getData();
     if (this.id) this.getData(); 
     if (this.mode === DialogMode.view) {
       this.myForm.disable();

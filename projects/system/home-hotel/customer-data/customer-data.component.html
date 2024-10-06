@@ -1,0 +1,62 @@
+<div class="row mt-2" [formGroup]="form">
+  <div class="col-md-4">
+    <app-form-control label="Họ tên">
+      <input-text formControlName="fullName" [toUper]="true"></input-text>
+    </app-form-control>
+  </div>
+  <div class="col-md-4">
+    <app-form-control label="Giới tính">
+      <input-select [items]="genders" formControlName="gender"></input-select>
+    </app-form-control>
+  </div>
+  <div class="col-md-4">
+    <app-form-control label="Ngày sinh">
+      <input-date formControlName="dateOfBirth" [max]="maxDate"></input-date>
+    </app-form-control>
+  </div>
+  <div class="col-md-4">
+    <app-form-control label="Số điện thoại">
+      <input-text formControlName="phoneNumber"></input-text>
+    </app-form-control>
+  </div>
+  <div class="col-md-4">
+    <app-form-control label="Loại giấy tờ">
+      <input-select formControlName="identityType"></input-select>
+      <!-- <input-select
+        [items]="identityTypes"
+        [allowClear]="false"
+        formControlName="identityType"
+        (onChange)="onIdentityTypeChange()"
+      ></input-select> -->
+    </app-form-control>
+  </div>
+  <div *ngIf="form.get('identityType')?.value === 'GTK'" class="col-md-4">
+    <app-form-control label="Tên giấy tờ">
+      <input-text formControlName="identityName"></input-text>
+    </app-form-control>
+  </div>
+  <div class="col-md-4">
+    <app-form-control label="Số giấy tờ">
+      <input-text formControlName="identityNo"></input-text>
+    </app-form-control>
+  </div>
+  <!-- <div class="col-md-4">
+    <app-form-control label="Quốc tịch">
+      <input-select-api
+        formControlName="nationalityId"
+        (onChange)="onNationalityIdChange()"
+      ></input-select-api>
+    </app-form-control>
+  </div> -->
+  <ng-container>
+    <div class="col-md-12">
+      <input-diaban [city]="form.get('provinceId')" [district]="form.get('districtId')" [village]="form.get('wardId')"
+        [address]="form.get('addressDetail')"></input-diaban>
+    </div>
+    <div class="col-md-12">
+      <app-form-control label="Nơi làm việc">
+        <input-textarea [maxlength]="225" formControlName="workplace"></input-textarea>
+      </app-form-control>
+    </div>
+  </ng-container>
+</div>

@@ -12,6 +12,7 @@ import { ValidatorExtension } from 'common/validator-extension';
 import { DatePipe } from '@angular/common';
 import { ColumnConfig } from 'common/base/models';
 import { HomeHotelDetailsComponent } from './tab-home-hotel/home-hotel-details.component';
+import { FloorService } from 'common/share/src/service/application/hotel/floor.service';
 
 interface Room {
   number: string;
@@ -38,6 +39,21 @@ export class HomeHotelComponent implements OnInit {
   public paging: any;
   items: any[] = [];
   loading = false;
+  public listFloor: any;
+  public listRoomStatus: any[] = [
+    {
+      value: 1,
+      label: "Đang trống"
+    },
+    {
+      value: 2,
+      label: "Đang ở"
+    },
+    {
+      value: 3,
+      label: "Đang dọn"
+    },
+  ];
 
   rooms = [
     { name: 'P102', roomType: 'Phòng đơn', isIn: 1, maximal: 2, status: 'Phòng trống', time: '0 giờ', cleanStatus: 'Đã dọn dẹp' },
@@ -51,7 +67,8 @@ export class HomeHotelComponent implements OnInit {
     private dialogService: DialogService,
     private messageService: MessageService,
     private shrContractService: ShrContractService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private floorService: FloorService,
   ) {
     this.formSearch = this.fb.group({
 
@@ -94,8 +111,12 @@ export class HomeHotelComponent implements OnInit {
   }
 
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
+    const searchParams = {
+      ...paging
+    };
     this.dialogService.openLoading();
-
+    const res = await this.floorService.getPaging(searchParams).firstValueFrom();
+    this.listFloor = res.data?.items;
     this.dialogService.closeLoading();
   }
 

@@ -27,6 +27,10 @@ export class ServiceComponent implements OnInit {
 
   columns: ColumnConfig[] = [
     {
+      key: 'hotelName',
+      header: 'Tên khách sạn',
+    },
+    {
       key: 'service_name',
       header: 'Tên dịch vụ',
     },
@@ -80,9 +84,7 @@ export class ServiceComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.isLoading = true;
     this.getData();
-    this.isLoading = false;
   }
 
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
@@ -93,12 +95,8 @@ export class ServiceComponent implements OnInit {
     this.dialogService.openLoading();
     const rs = await this.service.getPaging(params).firstValueFrom();
     const dataRaw = rs.data!.items;
-    // for (const item of dataRaw) {
-    //   if (item.created_at) {
-    //     item.created_at = this.datePipe.transform(item.created_at, 'dd-MM-yyyy');
-    //   }
-    // }
     this.items = rs.data!.items;
+    this.items.getMapingCombobox('hotel_id', 'hotelName', this.hotelService, null, 'getCombobox');
     this.paging = rs.data?.meta;
     this.dialogService.closeLoading();
   }
@@ -112,6 +110,7 @@ export class ServiceComponent implements OnInit {
         option.component = ServiceDetailComponent;// open component; (mở component)
         option.inputs = {
           uuid: item?.uuid,
+          item: item,
           mode: mode,
         };
       },

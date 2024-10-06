@@ -16,6 +16,7 @@ export class ServiceDetailComponent implements OnInit {
 
   @Input() id: any;
   @Input() uuid: any;
+  @Input() item: any;
   @Input() mode: any;
   @Output() onClose = new EventEmitter<any | null>();
   myForm: FormGroup;
@@ -44,6 +45,9 @@ export class ServiceDetailComponent implements OnInit {
     if (this.mode === DialogMode.view) {
       this.myForm.disable();
     };
+    if (this.item.hotel_id) {
+        this.myForm.get('hotel_id')?.setValue(this.item.hotel_id);
+    }
     this.loading = false;
   }
 
