@@ -68,6 +68,13 @@ const routes: Routes = [
           import('./employee/employee.module').then(
             (x) => x.EmployeeModule
           ),
+      },
+      {
+        path: 'bao-cao',
+        loadChildren: () =>
+          import('./statistical/statistical.module').then(
+            (x) => x.StatisticalModule
+          ),
       }
     ],
   },
