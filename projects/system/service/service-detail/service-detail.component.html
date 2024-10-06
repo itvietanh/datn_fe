@@ -9,7 +9,7 @@
   </ng-template>
 
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12" *ngIf="mode !== 'view'">
       <nz-form-item>
         <nz-form-label>Cơ sở khách sạn</nz-form-label>
         <nz-form-control [nzErrorTip]="controlErrorTpl">
@@ -18,6 +18,14 @@
       </nz-form-item>
     </div>
 
+    <div class="col-md-12" *ngIf="mode !== 'add'">
+      <nz-form-item>
+        <nz-form-label>Tên khách sạn</nz-form-label>
+        <nz-form-control>
+          <input-text formControlName="hotel_name"></input-text>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
     <div class="col-md-6">
       <app-form-control label="Tên Dịch Vụ">
         <input-text formControlName="service_name"> </input-text>
