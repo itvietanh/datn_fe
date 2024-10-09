@@ -22,6 +22,7 @@ export class ServiceDetailComponent implements OnInit {
   myForm: FormGroup;
   loading = true;
   public paging: any;
+  public hotelName: string = ''; 
 
   constructor(
     private messageService: MessageService,
@@ -35,6 +36,7 @@ export class ServiceDetailComponent implements OnInit {
       hotel_id: [null, ValidatorExtension.required()],
       service_name: [null, ValidatorExtension.required()],
       service_price: [null, ValidatorExtension.required()],
+      hotel_name: [{ value: '', disabled: true }]
     });
   }
 
@@ -56,10 +58,20 @@ export class ServiceDetailComponent implements OnInit {
     const rs = await this.service.findOne(this.uuid).firstValueFrom();
     console.log(rs);
     if (rs) {
-      this.myForm.patchValue(rs.data);
+      this.myForm.patchValue({
+        hotel_id: rs.data.hotel_id,
+        service_name: rs.data.service_name,
+        service_price: rs.data.service_price,
+        hotel_name: rs.data.hotel.name  
+      });
+      const hotelInfo = rs.data.hotel;
+      if (hotelInfo) {
+        console.log(`Hotel Name: ${hotelInfo.name}`);
+        this.hotelName = hotelInfo.name;
+      }
     }
-    this.dialogService.closeLoading;
-  }
+    this.dialogService.closeLoading();
+  }  
 
   async handlerSubmitData() {
     this.myForm.markAllAsDirty();

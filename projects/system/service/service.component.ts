@@ -27,7 +27,7 @@ export class ServiceComponent implements OnInit {
 
   columns: ColumnConfig[] = [
     {
-      key: 'hotelName',
+      key: 'hotel_name',
       header: 'Tên khách sạn',
     },
     {
@@ -60,6 +60,7 @@ export class ServiceComponent implements OnInit {
     public service: Service,
   ) {
     this.formSearch = this.fb.group({
+      hotel_id: [null],
       service_name: [null],
       service_price: [null]
     });
@@ -90,15 +91,28 @@ export class ServiceComponent implements OnInit {
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
     const params = {
       ...paging,
-      ...this.formSearch.value
-    }
+      ...this.formSearch.value 
+    };
+    this.isLoading = true; 
     this.dialogService.openLoading();
-    const rs = await this.service.getPaging(params).firstValueFrom();
-    const dataRaw = rs.data!.items;
-    this.items = rs.data!.items;
-    this.items.getMapingCombobox('hotel_id', 'hotelName', this.hotelService, null, 'getCombobox');
-    this.paging = rs.data?.meta;
-    this.dialogService.closeLoading();
+
+    try {
+      const rs = await this.service.getPaging(params).firstValueFrom();
+      const dataRaw = rs.data!.items;
+      for (const item of dataRaw) {
+        if (item.created_at) {
+          item.created_at = this.datePipe.transform(item.created_at, 'dd-MM-yyyy');
+        }
+        item.hotel_name = item.hotel?.name || 'Chưa có khách sạn'; 
+      }
+      this.items = rs.data!.items;
+      this.paging = rs.data?.meta;
+    } catch (error) {
+      console.error('Error fetching data', error);
+    } finally {
+      this.dialogService.closeLoading();
+      this.isLoading = false; 
+    }
   }
 
   async handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
@@ -128,7 +142,7 @@ export class ServiceComponent implements OnInit {
   async handlerDelete(item: any) {
     const confirm = await this.messageService.confirm('Bạn có muốn xóa dữ liệu này không?');
     if (confirm) {
-      const rs = await this.hotelService.delete(item?.uuid).firstValueFrom();
+      const rs = await this.service.delete(item?.uuid).firstValueFrom();
       if (rs.data) {
         this.messageService.notiMessageSuccess('Xóa dữ liệu thành công');
         return this.getData({ ...this.paging });
