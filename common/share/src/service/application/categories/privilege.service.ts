@@ -17,7 +17,7 @@ export class PrivilegeService extends BaseService {
   }
 
   public async initPrivilege() {
-    if (!LocalStorageUtil.getFacilityId()) return;
+    // if (!LocalStorageUtil.getFacilityId()) return;
     const rs = await this.getByUser().firstValueFrom();
     this.listPrivilege = rs.data?.items!.map((x) => x.id)!;
   }

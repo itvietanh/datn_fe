@@ -29,7 +29,11 @@ export class RoomTypeDetailsComponent implements OnInit {
   ) {
     this.myForm = this.fb.group({
       type_name: [null, ValidatorExtension.required()],
-      type_price: [null, [ValidatorExtension.required(), ValidatorExtension.number()]],
+      price_per_hour: [null, [ValidatorExtension.required(), ValidatorExtension.number()]],
+      price_per_day: [null, [ValidatorExtension.required(), ValidatorExtension.number()]],
+      price_overtime: [null, [ValidatorExtension.required(), ValidatorExtension.number()]],
+      vat: [null, [ValidatorExtension.required(), ValidatorExtension.number()]],
+      number_of_people: [null, [ValidatorExtension.required(), ValidatorExtension.number()]],
     });
   }
 

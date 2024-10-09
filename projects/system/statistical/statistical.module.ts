@@ -20,4 +20,3 @@ import { StatisticalRoutes } from './statistical.routing';
   ]
 })
 export class StatisticalModule { }
-//nhu the la duoc 

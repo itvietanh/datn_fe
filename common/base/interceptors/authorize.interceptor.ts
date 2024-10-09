@@ -4,13 +4,13 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ACCESS_TOKEN_KEY, FACILITY_ID_KEY, LocalStorageUtil } from '../utils';
+import { ACCESS_TOKEN_KEY, HOTEL_ID_KEY, LocalStorageUtil } from '../utils';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthorizeInterceptor implements HttpInterceptor {
-  constructor() {}
+  constructor() { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     let authReq = req;
@@ -21,10 +21,10 @@ export class AuthorizeInterceptor implements HttpInterceptor {
       authReq = authReq.clone({ headers: headers });
     }
 
-    if (LocalStorageUtil.getFacilityId()) {
+    if (LocalStorageUtil.getHotelId()) {
       let headers = authReq.headers.set(
-        FACILITY_ID_KEY,
-        LocalStorageUtil.getFacilityId().toString()
+        HOTEL_ID_KEY,
+        LocalStorageUtil.getHotelId().toString()
       );
       authReq = authReq.clone({ headers: headers });
     }

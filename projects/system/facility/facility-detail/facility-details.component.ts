@@ -41,7 +41,7 @@ export class FacilityDetailsComponent implements OnInit {
 
   async ngOnInit() {
     this.isLoading = true;
-    if (this.uuid) this.getData(); 
+    if (this.uuid) this.getData();
     if (this.mode === DialogMode.view) {
       this.myForm.disable();
     };
@@ -58,24 +58,18 @@ export class FacilityDetailsComponent implements OnInit {
   }
 
   async handlerSubmitData() {
-    this.dialogService.openLoading;
     this.myForm.markAllAsDirty();
     if (this.myForm.invalid) return;
     const formData = this.myForm.getRawValue();
-
+    this.dialogService.openLoading();
     if (this.uuid) {
       //Update
-      this.dialogService.openLoading();
       await this.hotelService.edit(this.uuid, formData).firstValueFrom();
-      this.dialogService.closeLoading();
     } else {
       //Create
-      this.dialogService.openLoading();
       await this.hotelService.add(formData).firstValueFrom();
-      this.dialogService.closeLoading();
     }
-
-    this.dialogService.closeLoading;
+    this.dialogService.closeLoading();
     this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
     this.close(true);
   }

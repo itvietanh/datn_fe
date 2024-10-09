@@ -1,6 +1,6 @@
 export const ACCESS_TOKEN_KEY = 'token';
 export const REFRESH_TOKEN_KEY = 'refresh-token';
-export const FACILITY_ID_KEY = 'x-facility-id';
+export const HOTEL_ID_KEY = 'hotel-id';
 export const QR_CODE_ID_KEY = 'qr-code-id';
 export const CUSTOMER_SCANNER_SELECTED_INDEX_KEY =
   'customer-scanner-selected-index';
@@ -53,18 +53,18 @@ export class LocalStorageUtil {
     LocalStorageUtil.removeItems([
       ACCESS_TOKEN_KEY,
       REFRESH_TOKEN_KEY,
-      FACILITY_ID_KEY,
+      HOTEL_ID_KEY,
     ]);
   }
 
-  static getFacilityId() {
-    return this.getItem<number>(FACILITY_ID_KEY, 'number');
+  static getHotelId() {
+    return this.getItem<number>(HOTEL_ID_KEY, 'number');
   }
 
-  static setFacilityId(value: number) {
+  static setHotelId(value: number) {
     if (value === 0) {
-      return localStorage.removeItem(FACILITY_ID_KEY);
+      return localStorage.removeItem(HOTEL_ID_KEY);
     }
-    this.setItem(FACILITY_ID_KEY, value);
+    this.setItem(HOTEL_ID_KEY, value);
   }
 }

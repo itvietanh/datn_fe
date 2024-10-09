@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
   }
 
   selectItem(item: any) {
-    LocalStorageUtil.setFacilityId(item.id);
+    // LocalStorageUtil.setFacilityId(item.id);
     location.reload();
   }
 
