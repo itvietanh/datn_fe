@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { UserProfile } from 'share';
 import { API_BASE_URL } from '../../tokens/api-base-url.token';
@@ -14,10 +14,31 @@ export class AutService {
     private http: HttpClient,
     @Inject(API_BASE_URL) private baseUrl: string,
     private location: Location
-  ) {}
+  ) { }
+
+  protected stringifyParams(query: any) {
+    let params: HttpParams = new HttpParams();
+    if (!query) return undefined;
+    for (const key of Object.keys(query)) {
+      if (query[key] !== null && query[key] !== undefined) {
+        if (query[key] instanceof Array) {
+          query[key].forEach((item: any) => {
+            params = params.append(`${key.toString()}`, item);
+          });
+        } else {
+          params = params.append(key.toString(), query[key]);
+        }
+      }
+    }
+    return params;
+  }
 
   public login(body: any) {
     return this.http.post<any>(`${this.baseUrl}auth/login`, body);
+  }
+
+  public authToken() {
+    return this.http.get<any>(`${this.baseUrl}auth/token`);
   }
 
   public profile() {

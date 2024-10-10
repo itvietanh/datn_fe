@@ -1,6 +1,9 @@
+import { DialogService } from './../../common/share/src/service/base/dialog.service';
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { MessageService } from 'common/base/service/message.service';
+import { ACCESS_TOKEN_KEY, LocalStorageUtil } from 'common/base/utils';
+import { AutService } from 'common/share/src/service/application/auth/aut.service';
 import { SettingService } from 'share';
 
 @Component({
@@ -12,7 +15,7 @@ export class SystemComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     private settingService: SettingService,
-    private title: Title
+    private title: Title,
   ) {}
 
   ngOnInit() {
