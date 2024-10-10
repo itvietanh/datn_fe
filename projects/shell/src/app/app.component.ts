@@ -25,9 +25,9 @@ export class AppComponent implements OnInit {
     if (token) {
       this.dialogService.openLoading();
       const res = await this.autService.authToken().firstValueFrom();
-      if (res.message === "Isvalid") {
-        this.router.navigateByUrl("he-thong");
-      }
+      // if (res.message === "Isvalid") {
+      //   this.router.navigateByUrl("he-thong");
+      // }
 
       if (res.error === "Unauthorized") {
         this.router.navigateByUrl("dang-nhap");
