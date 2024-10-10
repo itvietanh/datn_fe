@@ -28,6 +28,7 @@ export class RoomTypeDetailsComponent implements OnInit {
     private ex: ExtentionService,
   ) {
     this.myForm = this.fb.group({
+      uuid: [ex.newGuid()],
       type_name: [null, ValidatorExtension.required()],
       price_per_hour: [null, [ValidatorExtension.required(), ValidatorExtension.number()]],
       price_per_day: [null, [ValidatorExtension.required(), ValidatorExtension.number()]],
@@ -39,8 +40,7 @@ export class RoomTypeDetailsComponent implements OnInit {
 
   async ngOnInit() {
     this.loading = true;
-    this.getData();
-    if (this.id) this.getData();
+    if (this.uuid) this.getData();
     if (this.mode === DialogMode.view) {
       this.myForm.disable();
     };
@@ -48,34 +48,25 @@ export class RoomTypeDetailsComponent implements OnInit {
   }
 
   async getData() {
-    this.dialogService.openLoading;
+    this.dialogService.openLoading();
     const rs = await this.RoomTypeService.findOne(this.uuid).firstValueFrom();
-    console.log(rs);
     if (rs) {
       this.myForm.patchValue(rs.data);
     }
-    this.dialogService.closeLoading;
+    this.dialogService.closeLoading();
   }
 
   async handlerSubmitData() {
-    this.dialogService.openLoading;
     this.myForm.markAllAsDirty();
     if (this.myForm.invalid) return;
     const formData = this.myForm.getRawValue();
-
+    this.dialogService.openLoading();
     if (this.uuid) {
-      //Update
-      this.dialogService.openLoading();
       await this.RoomTypeService.edit(this.uuid, formData).firstValueFrom();
-      this.dialogService.closeLoading();
     } else {
-      //Create
-      this.dialogService.openLoading();
       await this.RoomTypeService.add(formData).firstValueFrom();
-      this.dialogService.closeLoading();
     }
-
-    this.dialogService.closeLoading;
+    this.dialogService.closeLoading();
     this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
     this.close(true);
   }

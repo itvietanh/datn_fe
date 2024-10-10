@@ -48,13 +48,13 @@ export class StatisticalDetailComponent implements OnInit {
   }
 
   async getData() {
-    this.dialogService.openLoading;
+    this.dialogService.openLoading();
     const rs = await this.service.findOne(this.uuid).firstValueFrom();
     console.log(rs);
     if (rs) {
       this.myForm.patchValue(rs.data);
     }
-    this.dialogService.closeLoading;
+    this.dialogService.closeLoading();
   }
 
   async handlerSubmitData() {
@@ -69,7 +69,7 @@ export class StatisticalDetailComponent implements OnInit {
     } else {
       await this.service.add(formData).firstValueFrom();
     }
-    this.dialogService.closeLoading;
+    this.dialogService.closeLoading();
     this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
     this.close(true);
   }

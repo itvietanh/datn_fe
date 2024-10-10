@@ -71,7 +71,7 @@ export class BuildingDetailsComponent implements OnInit {
     if (rs) {
       this.myForm.patchValue(rs.data);
     }
-    this.dialogService.closeLoading;
+    this.dialogService.closeLoading();
   }
 
   async handlerSubmitData() {
@@ -98,23 +98,17 @@ export class BuildingDetailsComponent implements OnInit {
       };
     }
 
-    this.dialogService.openLoading;
+    this.dialogService.openLoading();
     if (this.uuid) {
-      //Update
-      this.dialogService.openLoading();
       await this.roomService.edit(this.uuid, dataReq).firstValueFrom();
-      this.dialogService.closeLoading();
     } else {
-      //Create
-      this.dialogService.openLoading();
       if (this.mode === 'add-floor') {
         await this.floorService.add(dataReq).firstValueFrom();
       } else {
         await this.roomService.add(dataReq).firstValueFrom();
       }
-      this.dialogService.closeLoading();
     }
-    this.dialogService.closeLoading;
+    this.dialogService.closeLoading();
     this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
     this.close(true);
   }
@@ -122,7 +116,7 @@ export class BuildingDetailsComponent implements OnInit {
   clearValidator() {
     if (this.mode === 'add-room') {
       this.myForm.get('floorNumber')?.clearValidators();
-    } 
+    }
 
     if (this.mode === 'add-floor') {
       debugger

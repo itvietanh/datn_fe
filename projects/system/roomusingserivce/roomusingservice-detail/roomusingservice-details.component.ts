@@ -44,33 +44,27 @@ export class RoomUsingServiceDetailsComponent implements OnInit {
   }
 
   async getData() {
-    this.dialogService.openLoading;
+    this.dialogService.openLoading();
     const rs = await this.hotelService.findOne(this.uuid).firstValueFrom();
     if (rs) {
       this.myForm.patchValue(rs.data);
     }
-    this.dialogService.closeLoading;
+    this.dialogService.closeLoading();
   }
 
   async handlerSubmitData() {
-    this.dialogService.openLoading;
     this.myForm.markAllAsDirty();
     if (this.myForm.invalid) return;
     const formData = this.myForm.getRawValue();
+    this.dialogService.openLoading();
 
     if (this.uuid) {
-      //Update
-      this.dialogService.openLoading();
       await this.hotelService.edit(this.uuid, formData).firstValueFrom();
-      this.dialogService.closeLoading();
     } else {
-      //Create
-      this.dialogService.openLoading();
       await this.hotelService.add(formData).firstValueFrom();
-      this.dialogService.closeLoading();
     }
 
-    this.dialogService.closeLoading;
+    this.dialogService.closeLoading();
     this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
     this.close(true);
   }

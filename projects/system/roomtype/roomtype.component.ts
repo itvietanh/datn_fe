@@ -5,11 +5,13 @@ import { MessageService } from 'common/base/service/message.service';
 import { RoomTypeService } from 'common/share/src/service/application/hotel/room-type.service';
 import { ColumnConfig } from 'common/base/models';
 import { RoomTypeDetailsComponent } from './roomtype-detail/roomtype-details.component';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-roomtype',
   templateUrl: './roomtype.component.html',
   styleUrls: ['./roomtype.component.scss'],
+  providers: [CurrencyPipe]
 })
 export class RoomTypeComponent implements OnInit {
   public formSearch: FormGroup;
@@ -25,11 +27,27 @@ export class RoomTypeComponent implements OnInit {
       header: 'Tên Loại Phòng',
     },
     {
-      key: 'type_price',
-      header: 'Giá',
+      key: 'number_of_people',
+      header: 'Số người ở',
     },
     {
-      key: 'created_at',
+      key: 'pricePerHourTxt',
+      header: 'Giá theo giờ',
+    },
+    {
+      key: 'pricePerDayTxt',
+      header: 'Giá theo ngày',
+    },
+    {
+      key: 'priceOvertimeTxt',
+      header: 'Giá trội',
+    },
+    {
+      key: 'vatTxt',
+      header: 'Thuế',
+    },
+    {
+      key: 'createdTxt',
       header: 'Ngày tạo',
     },
     {
@@ -44,7 +62,9 @@ export class RoomTypeComponent implements OnInit {
     private fb: FormBuilder,
     private dialogService: DialogService,
     private messageService: MessageService,
-    public roomTypeService: RoomTypeService
+    public roomTypeService: RoomTypeService,
+    private datePipe: DatePipe,
+    private currencyPipe: CurrencyPipe,
   ) {
     this.formSearch = this.fb.group({
       type_name: [null],
@@ -53,15 +73,35 @@ export class RoomTypeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.isLoading = true;
     this.getData();
-    this.isLoading = false;
   }
 
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
-    const params = { ...paging, ...this.formSearch.value };
+    const params = { ...paging, ...this.formSearch.getRawValue() };
     this.dialogService.openLoading();
     const rs = await this.roomTypeService.getPaging(params).firstValueFrom();
+    const dataRaw = rs.data!.items;
+    for (const item of dataRaw) {
+      if (item.created_at) {
+        item.createdTxt = this.datePipe.transform(item.created_at, "dd-MM-yyyy");
+      }
+
+      if (item.vat) {
+        item.vatTxt = item.vat + "%";
+      }
+
+      if (item.price_per_hour) {
+        item.pricePerHourTxt = this.currencyPipe.transform(item.price_per_hour, 'VND', 'symbol', '1.0-0')?.replace('₫', '') + ' VNĐ'
+      }
+
+      if (item.price_per_day) {
+        item.pricePerDayTxt = this.currencyPipe.transform(item.price_per_day, 'VND', 'symbol', '1.0-0')?.replace('₫', '') + ' VNĐ'
+      }
+
+      if (item.price_overtime) {
+        item.priceOvertimeTxt = this.currencyPipe.transform(item.price_overtime, 'VND', 'symbol', '1.0-0')?.replace('₫', '') + ' VNĐ'
+      }
+    }
     this.items = rs.data!.items;
     this.paging = rs.data?.meta;
     this.dialogService.closeLoading();

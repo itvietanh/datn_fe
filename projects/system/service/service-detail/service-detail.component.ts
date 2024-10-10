@@ -54,7 +54,7 @@ export class ServiceDetailComponent implements OnInit {
   }
 
   async getData() {
-    this.dialogService.openLoading;
+    this.dialogService.openLoading();
     const rs = await this.service.findOne(this.uuid).firstValueFrom();
     console.log(rs);
     if (rs) {
@@ -85,7 +85,7 @@ export class ServiceDetailComponent implements OnInit {
     } else {
       await this.service.add(formData).firstValueFrom();
     }
-    this.dialogService.closeLoading;
+    this.dialogService.closeLoading();
     this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
     this.close(true);
   }

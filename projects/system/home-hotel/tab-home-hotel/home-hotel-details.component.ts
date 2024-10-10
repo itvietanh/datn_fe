@@ -133,9 +133,9 @@ export class HomeHotelDetailsComponent implements OnInit {
   }
 
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
-    this.dialogService.openLoading;
+    this.dialogService.openLoading();
     // this.listAccom = rs.data?.items;
-    this.dialogService.closeLoading;
+    this.dialogService.closeLoading();
   }
 
   handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
@@ -181,7 +181,7 @@ export class HomeHotelDetailsComponent implements OnInit {
   }
 
   async handlerSubmit() {
-    this.dialogService.openLoading;
+    this.dialogService.openLoading();
     this.myForm.markAllAsDirty();
     if (this.myForm.invalid) return;
     const formData = this.myForm.getRawValue();
@@ -192,7 +192,7 @@ export class HomeHotelDetailsComponent implements OnInit {
       await this.shrAccountApiService.add(formData).firstValueFrom();
     }
 
-    this.dialogService.closeLoading;
+    this.dialogService.closeLoading();
     this.messageService.alert("Lưu dữ liệu thành công!");
     this.close(true);
   }
