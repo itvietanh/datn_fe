@@ -9,7 +9,7 @@ import { ACCESS_TOKEN_KEY, HOTEL_ID_KEY, LocalStorageUtil } from 'common/base/ut
 import { AutService } from 'common/share/src/service/application/auth/aut.service';
 import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
 import { ValidatorExtension } from 'common/validator-extension';
-import { finalize } from 'rxjs';
+import { catchError, finalize } from 'rxjs';
 import { DialogService } from 'share';
 
 @Component({
@@ -45,10 +45,10 @@ export class LoginComponent implements OnInit {
   }
 
   async submit() {
-    this.dialogService.openLoading();
     this.myForm.markAllAsDirty();
     if (this.myForm.invalid) return;
     const data = this.myForm.getRawValue();
+    this.dialogService.openLoading();
     const res = await this.autService.login(data).firstValueFrom();
     if (res && res.access_token) {
       LocalStorageUtil.setItem(ACCESS_TOKEN_KEY, res.access_token);

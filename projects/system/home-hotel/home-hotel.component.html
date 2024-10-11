@@ -61,8 +61,11 @@
                       <div class="room-left">
                           <h5>Phòng {{room.roomNumber}}</h5>
                           <p>
+                            {{floor.typeName}}
+                        </p>
+                          <p>
                               <span nz-icon nzType="user" nzTheme="outline"></span>
-                              {{room.maxCapacity}} / 0
+                              0 / {{room.numberOfPeople}}
                           </p>
                       </div>
 
