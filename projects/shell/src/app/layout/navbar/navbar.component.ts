@@ -75,4 +75,10 @@ export class NavbarComponent implements OnInit {
     this.isLoading = true;
     this.paging!.page!++;
   };
+
+  logout() {
+    LocalStorageUtil.removeItem('token');
+    LocalStorageUtil.removeItem('hotel_id');
+    location.reload();
+  }
 }

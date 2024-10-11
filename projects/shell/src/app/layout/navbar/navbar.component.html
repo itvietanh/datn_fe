@@ -85,7 +85,7 @@
           </a>
 
           <div class="dropdown-menu dropdown-menu-right">
-            <a [routerLink]="['/auth', 'logout']" class="dropdown-item"><i class="isax-logout-11"></i> Đăng xuất</a>
+            <a (click)="logout()" class="dropdown-item"><i class="isax-logout-11"></i> Đăng xuất</a>
           </div>
         </li>
       </ng-container>
