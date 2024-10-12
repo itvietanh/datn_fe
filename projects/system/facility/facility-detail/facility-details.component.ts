@@ -35,7 +35,7 @@ export class FacilityDetailsComponent implements OnInit {
       province_code: [null, ValidatorExtension.required()],
       district_code: [null, ValidatorExtension.required()],
       ward_code: [null, ValidatorExtension.required()],
-      address: [null, ValidatorExtension.required()]
+      address: [null, ValidatorExtension.required()],
     })
   }
 

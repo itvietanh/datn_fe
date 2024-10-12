@@ -4,27 +4,10 @@
 </nz-date-picker> -->
 
 <nz-input-group [nzAddOnAfter]="suffixControlNumber" [nzSuffix]="inputClearTpl">
-  <input
-    type="text"
-    nz-input
-    [class]="class"
-    [(ngModel)]="controlValue"
-    [disabled]="disabled"
-    [readonly]="readonly"
-    [hidden]="hidden"
-    [placeholder]="!disabled ? placeholder : ''"
-    (change)="onChange()"
-    #myInputDate
-  />
-  <nz-date-picker
-    [nzShowTime]="{ nzFormat: 'HH:mm' }"
-    [(ngModel)]="controlValueDate"
-    (nzOnOk)="onChangePicker()"
-    #dateTimePicker
-    [nzAllowClear]="false"
-    [nzDisabled]="disabled"
-    [nzDisabledDate]="disabledDate"
-  >
+  <input type="text" nz-input [class]="class" [(ngModel)]="controlValue" [disabled]="disabled" [readonly]="readonly"
+    [hidden]="hidden" [placeholder]="!disabled ? placeholder : ''" (change)="onChange()" #myInputDate />
+  <nz-date-picker [nzShowTime]="{ nzFormat: 'HH:mm' }" [(ngModel)]="controlValueDate" (nzOnOk)="onChangePicker()"
+    #dateTimePicker [nzAllowClear]="false" [nzDisabled]="disabled" [nzDisabledDate]="disabledDate">
   </nz-date-picker>
 </nz-input-group>
 <ng-template #suffixControlNumber>
@@ -32,12 +15,6 @@
 </ng-template>
 
 <ng-template #inputClearTpl>
-  <i
-    nz-icon
-    class="ant-input-clear-icon"
-    nzTheme="fill"
-    nzType="close-circle"
-    *ngIf="controlValue && !disabled"
-    (click)="onClear()"
-  ></i>
+  <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="controlValue && !disabled"
+    (click)="onClear()"></i>
 </ng-template>

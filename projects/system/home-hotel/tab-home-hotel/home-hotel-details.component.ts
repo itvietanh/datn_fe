@@ -1,3 +1,5 @@
+import { DiaBanService } from './../../../../common/share/src/service/application/categories/diaban.service';
+import { RoomTypeService } from 'common/share/src/service/application/hotel/room-type.service';
 import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, OnDestroy, inject } from "@angular/core";
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { ExtentionService } from "common/base/service/extention.service";
@@ -10,6 +12,8 @@ import { QrCodeDetailsComponent } from "./tab-qrcode/qrcode-details.component";
 import { ColumnConfig } from "common/base/models";
 import { DatePipe } from "@angular/common";
 import { NzModalRef, NZ_MODAL_DATA } from "ng-zorro-antd/modal";
+import { RoomService } from "common/share/src/service/application/hotel/room.service";
+import { OrderRoomService } from 'common/share/src/service/application/hotel/order-room.service';
 
 
 @Component({
@@ -18,15 +22,20 @@ import { NzModalRef, NZ_MODAL_DATA } from "ng-zorro-antd/modal";
   styleUrls: ['./home-hotel-details.component.scss'],
 })
 export class HomeHotelDetailsComponent implements OnInit {
-  @Input() id: any;
+  @Input() uuid: any;
   @Input() mode: any;
   @Output() onClose = new EventEmitter<any | null>();
-  resident = new FormGroup<any>({});
+  // resident = new FormGroup<any>({});
   myForm: FormGroup;
   loading = true;
   public paging: any;
   items: any[] = [];
   data: any;
+
+  whereRoom: any;
+  now = new Date() as any;
+  remainingAmount: any;
+  dataRoom: any;
 
   columns: ColumnConfig[] = [
     {
@@ -60,81 +69,79 @@ export class HomeHotelDetailsComponent implements OnInit {
     },
   ];
 
-  // columns: ColumnConfig[] = [
-  //   {
-  //     key: 'fullName',
-  //     header: 'Họ và tên',
-  //   },
-  //   {
-  //     key: 'birthDay',
-  //     header: 'Ngày sinh',
-  //   },
-  //   {
-  //     key: 'idNumber',
-  //     header: 'Số CCCD/ID Passport',
-  //   },
-  //   {
-  //     key: 'gender',
-  //     header: 'Giới tính',
-  //   },
-  //   {
-  //     key: 'address',
-  //     header: 'Địa chỉ',
-  //   },
-  //   {
-  //     key: 'action',
-  //     header: 'Thao tác',
-  //     tdClass: 'text-center',
-  //     pipe: 'template',
-  //   },
-  // ];
-
   constructor(
     private messageService: MessageService,
     private fb: FormBuilder,
     private dialogService: DialogService,
-    public shrAccountApiService: ShrAccountApiService,
+    public roomService: RoomService,
+    public roomTypeService: RoomTypeService,
     private ex: ExtentionService,
     private datePipe: DatePipe,
+    private orderRoomService: OrderRoomService,
+    public diaBanService: DiaBanService
   ) {
     this.myForm = this.fb.group({
-      // Room Info
-      // roomNumber: [null, ValidatorExtension.required()],
-      // floor: [null, ValidatorExtension.required()],
-      // roomType: [null, ValidatorExtension.required()],
-      // roomPrice: [null, ValidatorExtension.required()],
-      // checkIn: [null, ValidatorExtension.required()],
-      // checkOut: [null, ValidatorExtension.required()],
-      // contractType: [],
-      checkInTime: [
-        ValidatorExtension.required(),
+      checkInTime: [{ value: this.now.toNumberYYYYMMDDHHmmss(), disabled: true },
+      ValidatorExtension.required(),
       ],
       checkOutTime: [null],
       groupName: [null],
       note: [null],
-      numOfResidents: [0, ValidatorExtension.required()],
-      reasonStayId: [null, ValidatorExtension.required()],
-      serviceId: [ValidatorExtension.required()],
-      residenceId: [ValidatorExtension.required()],
+      numOfResidents: [0],
+      reasonStayId: [null],
+      roomTypeId: [null],
+      roomId: [null],
       priceId: [null],
-      totalAmount: [{ value: 0, disabled: true }],
+      totalPrice: [{ value: 0, disabled: true }],
+      finalPrice: [{ value: 0, disabled: true }],
+      vat: [{ value: 0, disabled: true }],
       prepayment: [0, ValidatorExtension.min(0)],
+
+      guests: this.fb.group({
+        uuid: [ex.newGuid()],
+        identityNo: [null],
+        fullName: [
+          null,
+          [
+            ValidatorExtension.required('Họ và tên không được để trống'),
+            ValidatorExtension.validNameVN(
+              "Họ và tên chỉ được sử dụng chữ cái, dấu khoảng trắng và dấu '"
+            ),
+            ValidatorExtension.validateUnicode(
+              'Bạn đang sử dụng bảng mã Unicode tổ hợp! Vui lòng sử dụng bảng mã Unicode dựng sẵn'
+            ),
+            ValidatorExtension.maxLength(40, 'Họ tên tối đa 40 ký tự'),
+          ],
+        ],
+        gender: [null],
+        phoneNumber: [null, ValidatorExtension.phoneNumber()],
+        dateOfBirth: [null],
+        addressDetail: [null],
+        provinceId: [null],
+        districtId: [null],
+        wardId: [null],
+        workplace: [null],
+      })
     })
   }
 
   async ngOnInit() {
-    this.loading = true;
-    this.getData();
-    if (this.id) this.getData();
+    if (this.uuid) this.getData();
     if (this.mode === DialogMode.view) {
       this.myForm.disable();
     };
-    this.loading = false;
   }
 
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
     this.dialogService.openLoading();
-    // this.listAccom = rs.data?.items;
+    const res = await this.roomService.findOne(this.uuid).firstValueFrom();
+    const test = {
+      roomTypeId: res.data.room_type_id,
+      roomId: res.data.id,
+    }
+    this.dataRoom = res.data;
+    this.myForm.patchValue(test);
+    this.whereRoom = res.data.hotel_id;
     this.dialogService.closeLoading();
   }
 
@@ -176,21 +183,85 @@ export class HomeHotelDetailsComponent implements OnInit {
         addressDetail: item[5]
       }
     ];
-    // this.resident.patchValue(item);
+
+    this.myForm.get('guests.fullName')?.setValue(item[2]);
+    this.myForm.get('guests.identityNo')?.setValue(item[0]);
+    this.myForm.get('guests.dateOfBirth')?.setValue(item[3]);
+    this.myForm.get('guests.gender')?.setValue(item[4]);
+    this.myForm.get('guests.addressDetail')?.setValue(item[5]);
+    debugger;
     this.items = guest;
   }
 
-  async handlerSubmit() {
+  async onDate() {
     this.dialogService.openLoading();
+    const req = {
+      room_uuid: this.uuid,
+      check_in: this.myForm.get("checkInTime")?.value,
+      check_out: this.myForm.get("checkOutTime")?.value
+    }
+    const res = await this.orderRoomService.calculator(req).firstValueFrom();
+
+    const data = {
+      totalPrice: res.data.total_price,
+      finalPrice: res.data.final_price,
+      vat: res.data.vat
+    }
+
+    this.myForm.patchValue(data);
+
+    this.dialogService.closeLoading();
+  }
+
+  updateInvoice() {
+    const prepayment = this.myForm.get('prepayment')?.value;
+    if (prepayment) {
+      let finalPrice = this.myForm.get('finalPrice')?.value;
+      finalPrice = (+finalPrice - +prepayment);
+      // this.myForm.get('finalPrice')?.setValue(finalPrice);
+      this.remainingAmount = finalPrice;
+      // debugger;
+    }
+  }
+
+  async handlerSubmit() {
+    // debugger;
     this.myForm.markAllAsDirty();
     if (this.myForm.invalid) return;
-    const formData = this.myForm.getRawValue();
+    this.dialogService.openLoading();
+    const guestData = this.myForm.get('guests')?.getRawValue();
+    const formData = {
+      guest: {
+        uuid: this.ex.newGuid(),
+        name: guestData.fullName,
+        id_number: guestData.identityNo,
+        phone_number: guestData.phoneNumber,
+        province_id: guestData.provinceId,
+        district_id: guestData.districtId,
+        ward_id: guestData.wardId,
+      },
+      transition: {
+        uuid: this.ex.newGuid(),
+        guest_id: null,
+        transition_date: this.myForm.get('checkInTime')?.value,
+        payment_status: 1,
+        total_amout: this.remainingAmount
+      },
+      roomUsing: {
+        uuid: this.ex.newGuid(),
+        trans_id: null,
+        room_id: this.dataRoom.id,
+        check_in: this.myForm.get('checkInTime')?.value,
+        check_out: this.myForm.get('checkOutTime')?.value,
+      },
+      roomUsingGuest: {
+        uuid: this.ex.newGuid(),
+        check_in: this.myForm.get('checkInTime')?.value,
+        check_out: this.myForm.get('checkOutTime')?.value,
+      }
+    };
 
-    if (this.id) {
-
-    } else {
-      await this.shrAccountApiService.add(formData).firstValueFrom();
-    }
+    await this.orderRoomService.add(formData).firstValueFrom();
 
     this.dialogService.closeLoading();
     this.messageService.alert("Lưu dữ liệu thành công!");

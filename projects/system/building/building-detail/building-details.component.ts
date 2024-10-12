@@ -89,12 +89,12 @@ export class BuildingDetailsComponent implements OnInit {
       };
     } else {
       dataReq = {
+        uuid: this.ex.newGuid(),
         hotel_id: formData.facility,
         floor_id: formData.floor,
-        room_type: formData.roomType,
+        room_type_id: formData.roomType,
         room_number: formData.roomNumber,
         status: formData.status,
-        max_capacity: formData.maxCapacity,
       };
     }
 

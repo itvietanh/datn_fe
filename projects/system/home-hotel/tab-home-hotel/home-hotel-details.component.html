@@ -12,58 +12,31 @@
   <div class="row">
     <div class="col-md-8">
       <div class="row mt-2">
-        <div class="col-md-3">
+        <div class="col-md-6">
           <app-form-control label="Thời gian nhận phòng">
-            <input-date formControlName="checkInTime"></input-date>
+            <input-date-time formControlName="checkInTime"></input-date-time>
           </app-form-control>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-6">
           <app-form-control label="Thời gian trả phòng">
-            <input-date formControlName="checkOutTime"></input-date>
+            <input-date-time formControlName="checkOutTime" (onChange)="onDate()" [min]="now"></input-date-time>
           </app-form-control>
         </div>
-       
-        <div class="col-md-3">
-          <app-form-control label="Lý do lưu trú">
-            <input-select-api formControlName="reasonStayId"></input-select-api>
-          </app-form-control>
-        </div> 
       </div>
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-4">
           <app-form-control label="Loại phòng">
-            <input-select [allowClear]="false" formControlName="serviceId"></input-select>
-            <div class="warning">
-              <!-- Phòng sẵn sàng đến {{ service.availableTo | datetimeFormat }} -->
-              <!-- Phòng sẵn sàng đến  -->
-            </div>
+            <input-select-api [apiService]="roomTypeService" [actionName]="'getCombobox'" formControlName="roomTypeId"></input-select-api>
           </app-form-control>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
           <app-form-control label="Phòng">
-            <input-select [allowClear]="false" formControlName="residenceId"></input-select>
+            <input-select-api [apiService]="roomService" [actionName]="'getCombobox'" formControlName="roomId" [allowSearch]="false"></input-select-api>
           </app-form-control>
         </div>
-        <div class="col-md-3">
-          <app-form-control label="Loại giá">
-            <div class="price-type">
-              <input-select [allowClear]="false" formControlName="priceId"></input-select>
-              <div class="price-type-info" nz-tooltip [nzTooltipTitle]="priceDetailTemplate">
-                <ng-template #priceDetailTemplate>
-                  <div style="white-space: pre-line">
-                    <!-- {{ priceDetail }} -->
-                  </div>
-                </ng-template>
-                <span nz-icon nzType="info-circle" nzTheme="outline"></span>
-              </div>
-            </div>
-          </app-form-control>
-        </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
           <app-form-control label="Giá phòng">
-            <nz-spin>
-              <input-number formControlName="totalAmount"></input-number>
-            </nz-spin>
+            <input-number formControlName="totalPrice"></input-number>
           </app-form-control>
         </div>
         <div class="col-md-12">
@@ -80,30 +53,29 @@
           <div class="pay-item">
             <div class="name">Tổng tiền phòng</div>
             <div class="value">
-              <!-- {{ this.myForm.get("totalAmount")?.value | moneyFormat }} -->
+              {{ this.myForm.get("totalPrice")?.value | moneyFormat }}
             </div>
           </div>
           <div class="pay-item">
             <div class="name">Thuế</div>
-            <!-- <div class="value">{{ taxAmount | moneyFormat }}</div> -->
+            <div class="value">{{ this.myForm.get("vat")?.value | moneyFormat }}</div>
           </div>
           <div class="pay-item">
             <div class="name">Cần thanh toán</div>
-            <!-- <div class="value">{{ totalAmount | moneyFormat }}</div> -->
+            <div class="value">{{ this.myForm.get("finalPrice")?.value | moneyFormat }}</div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-7">Trả trước</div>
           <div class="col-md-5">
             <app-form-control>
-              <!-- <input-number formControlName="prepayment" (ngModelChange)="updateInvoice()"></input-number> -->
+              <input-number formControlName="prepayment" (ngModelChange)="updateInvoice()"></input-number>
             </app-form-control>
           </div>
         </div>
         <div class="return-money">
           <div class="name">Còn lại</div>
-          <!-- <div class="value">{{ remainingAmount | moneyFormat }}</div> -->
-          <div class="value">...AMOUNT</div>
+          <div class="value">{{ remainingAmount | moneyFormat }}</div>
         </div>
       </div>
     </div>
@@ -115,7 +87,7 @@
           <i class="isax-house-21"></i> Thông tin khách
         </div>
         <div class="title-control">
-          <button nz-button type="button" class="btn btn-default mr-2">
+          <button nz-button type="button" class="btn btn-default mr-2" (click)="myForm.reset()">
             <i class="isax-rotate-left1 mr-2"></i>Làm mới
           </button>
           <!-- <button nz-button type="button" class="btn btn-default mr-2">
@@ -125,13 +97,62 @@
             <i class="isax-import-11 mr-2"></i>Cập nhật
           </button> -->
           <button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
-            <i class="isax-scan-barcode1 mr-2"></i>Quét mã
+            <i class="isax-scan-barcode1 mr-2"></i>Quét CCCD
           </button>
-          
+
           <!-- <app-customer-scanner-button (success)="data = $event"></app-customer-scanner-button> -->
         </div>
       </div>
-      <app-customer-data [(form)]="resident" [data]="items"></app-customer-data>
+      
+      <!-- <app-customer-data [(form)]="resident" [data]="items"></app-customer-data> -->
+      <div class="row mt-2" formGroupName="guests">
+        <div class="col-md-4">
+          <app-form-control label="Họ tên">
+            <input-text formControlName="fullName" [toUper]="true"></input-text>
+          </app-form-control>
+        </div>
+        <div class="col-md-4">
+          <app-form-control label="Giới tính">
+            <input-text formControlName="gender"></input-text>
+          </app-form-control>
+        </div>
+        <div class="col-md-4">
+          <app-form-control label="Ngày sinh">
+            <input-date formControlName="dateOfBirth"></input-date>
+          </app-form-control>
+        </div>
+        <div class="col-md-4">
+          <app-form-control label="Số điện thoại">
+            <input-text formControlName="phoneNumber"></input-text>
+          </app-form-control>
+        </div>
+        <!-- <div class="col-md-4">
+          <app-form-control label="Loại giấy tờ">
+            <input-select formControlName="identityType"></input-select>
+          </app-form-control>
+        </div> -->
+        <!-- <div *ngIf="form.get('identityType')?.value === 'GTK'" class="col-md-4">
+          <app-form-control label="Tên giấy tờ">
+            <input-text formControlName="identityName"></input-text>
+          </app-form-control>
+        </div> -->
+        <div class="col-md-4">
+          <app-form-control label="Số giấy tờ">
+            <input-text formControlName="identityNo"></input-text>
+          </app-form-control>
+        </div>
+        <ng-container>
+          <div class="col-md-12">
+            <input-diaban [apiService]="diaBanService" [city]="myForm.get('provinceId')" [district]="myForm.get('districtId')" [village]="myForm.get('wardId')"
+              [address]="myForm.get('addressDetail')"></input-diaban>
+          </div>
+          <div class="col-md-12">
+            <app-form-control label="Nơi làm việc">
+              <input-textarea [maxlength]="225" formControlName="workplace"></input-textarea>
+            </app-form-control>
+          </div>
+        </ng-container>
+      </div>
     </div>
     <div class="customer-list">
       <div class="title-group">
@@ -151,34 +172,30 @@
       <div class="resident-list">
         <div class="resident-item selected">
           <div class="name">
-            <!-- <i class="mr-1" [ngClass]="{
-                'isax-man1': resident.get('gender')?.value === 5,
-                'isax-woman1': resident.get('gender')?.value === 6
-              }"></i> -->
-            Đang nhập thông tin khách...
-            <!-- {{
-            resident.get("fullName")?.value?.toUpperCase() ?? "Đang nhập thông tin khách..."
-            birthDate
-            }} -->
+            <i class="mr-1" [ngClass]="{
+                'isax-man1': myForm.get('guests.gender')?.value === 'Nam',
+                'isax-woman1': myForm.get('guests.gender')?.value === 'Nữ'
+              }"></i>
+            {{myForm.get("guests.fullName")?.value?.toUpperCase() ?? "Đang nhập thông tin khách..."}}
           </div>
           <div class="birth">
             <i class="isax-cake1 mr-1"></i>
-            birthDate
+            {{myForm.get("guests.dateOfBirth")?.value}}
           </div>
         </div>
-        <div class="resident-item" [ngClass]="">
-          <div class="name">
+        <!-- <div class="resident-item" [ngClass]=""> -->
+          <!-- <div class="name"> -->
             <!-- <i class="mr-1" [ngClass]="{
                 'isax-man1': item.gender === 5,
                 'isax-woman1': item.gender === 6
               }"></i> -->
-            fullName
-          </div>
-          <div class="birth">
+            <!-- fullName -->
+          <!-- </div> -->
+          <!-- <div class="birth">
             <i class="isax-cake1 mr-1"></i>
             birthDate
-          </div>
-        </div>
+          </div> -->
+        <!-- </div> -->
       </div>
     </div>
   </div>
@@ -186,7 +203,7 @@
     <button nz-button type="button" class="btn btn-default" (click)="close()">
       <i nz-icon nzType="close" nzTheme="outline"></i>Đóng
     </button>
-    <button nz-button [nzLoading]="loading" type="submit" class="btn btn-primary">
+    <button nz-button type="submit" class="btn btn-primary" (click)="handlerSubmit()">
       <i nz-icon nzType="login" nzTheme="outline"></i>Nhận phòng
     </button>
   </div>

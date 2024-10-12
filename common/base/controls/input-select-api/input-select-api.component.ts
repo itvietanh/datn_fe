@@ -33,8 +33,7 @@ import { debounceTime } from 'rxjs/operators';
   ],
 })
 export class InputSelectApiComponent
-  implements OnInit, OnDestroy, ControlValueAccessor, OnChanges
-{
+  implements OnInit, OnDestroy, ControlValueAccessor, OnChanges {
   @Input() classControl: any = '';
   @Input() placeholder: any = '';
   @Input() apiService: any;
@@ -78,10 +77,10 @@ export class InputSelectApiComponent
   private refeshDataChange: any;
   public apiParamsJSon: string = '';
 
-  eventBaseChange = (_: any) => {};
-  eventBaseTouched = () => {};
+  eventBaseChange = (_: any) => { };
+  eventBaseTouched = () => { };
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) { }
 
   getApiCombobox(param: any): Observable<ResponseModel<PagedListModel>> {
     return this.apiService[this.actionName!](param);
