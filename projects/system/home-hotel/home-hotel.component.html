@@ -6,11 +6,11 @@
       </div>
       <div class="d-flex hd-room">
         <div class="breadcrumb-title ">
-          <!-- <nz-segmented [nzOptions]="viewOptions" [ngModel]="viewSelectedIndex"
-            (nzValueChange)="onViewSelectedChange($event)"></nz-segmented> -->
+          <nz-segmented [nzOptions]="viewOptions" [ngModel]="[0]"
+            (nzValueChange)="onViewSelectedChange($event)"></nz-segmented>
 
           <div class="chon-tang">
-            <input-select placeholder="Tầng..."></input-select>
+            <input-select-api [apiService]="floorService" placeholder="Tầng..."></input-select-api>
           </div>
 
           <ng-container>

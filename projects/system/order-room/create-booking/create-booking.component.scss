@@ -1,0 +1,330 @@
+@import "variables";
+
+app-create-booking {
+
+  @include mobile {
+    .d-flex {
+      padding-bottom: 5px;
+
+      .breadcrumb-title {
+        padding-left: 0px !important;
+      }
+
+      .breadcrumb {
+        .contract-time {
+          width: 100%;
+          position: static !important;
+        }
+
+
+      }
+    }
+
+    .info-circle {
+      margin-top: 25px;
+    }
+
+
+
+    .content {
+      padding: 100px 6px 20px 6px;
+      position: relative;
+
+      .booking-search {
+        position: absolute;
+        width: 46%;
+        top: 21px;
+      }
+
+      @include mobile {
+        padding-top: 270px !important;
+      }
+
+      .title-group {
+        .title-label {
+          span {
+            display: none !important;
+          }
+        }
+      }
+    }
+
+
+
+    .list-control-footer {
+      left: 0px !important;
+    }
+  }
+
+
+  nz-input-group input-select {
+    width: 100px !important;
+  }
+
+  .breadcrumb-title {
+    padding-left: 36px;
+    position: relative;
+
+    .acction-back {
+      position: absolute;
+      font-size: 25px;
+      color: #2d78d7;
+      left: 0;
+      top: 6px;
+      cursor: pointer;
+    }
+  }
+
+  .contract-time {
+    position: absolute;
+    width: 55%;
+    top: 4px;
+    right: 300px;
+    text-align: center;
+    z-index: 10;
+
+    .ant-picker {
+      border-color: #2d78d7;
+      border-radius: 5px;
+    }
+  }
+
+  .contract-type {
+    text-align: center;
+    border-radius: 5px;
+    padding: 3px 10px;
+    border: solid 1px #2d78d791;
+  }
+
+  .card {
+    border-color: #e8e8e8;
+    // background-color: #ffe1ca;
+    padding: 10px 10px;
+    min-height: 215px;
+    margin-bottom: 0;
+
+    h1 {
+      // border-bottom: solid 1px #ccc;
+    }
+
+    .pay-data {
+      background-color: #e8e8e8;
+      margin: -10px -10px 10px -10px;
+      padding: 5px 10px 10px 10px;
+
+      .pay-item {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 5px;
+
+        .name {}
+
+        .value {
+          color: #db3e3e;
+        }
+      }
+    }
+
+    .return-money {
+      display: flex;
+      justify-content: space-between;
+      border-top: solid 1px #e8e8e8;
+      margin: 0 -10px -10px -10px;
+      padding: 10px;
+
+      .name {
+        font-weight: 500px;
+      }
+
+      .value {
+        color: #db3e3e;
+      }
+    }
+  }
+
+  .count-member {
+    position: absolute;
+    width: 200px;
+    top: 0px;
+    right: 100px;
+    text-align: center;
+    z-index: 10;
+    display: flex;
+    line-height: 32px;
+
+    nz-input-number {
+      width: 80px;
+      margin-left: 8px;
+    }
+  }
+
+  .price-type {
+    padding-right: 20px;
+    position: relative;
+
+    .price-type-info {
+      position: absolute;
+      top: 6px;
+      right: 0px;
+    }
+  }
+
+
+
+  .ux-pc {
+    display: block;
+
+    @include mobile {
+      display: none;
+    }
+  }
+
+  .ux-mobile {
+    display: none;
+
+    @include mobile {
+      display: block;
+
+      .title-card {
+        font-weight: 800;
+        font-size: 18px;
+      }
+    }
+  }
+
+  .mb-title-room {
+    @include mobile {
+      position: absolute;
+      right: 0px;
+      bottom: 187px;
+      width: auto;
+    }
+  }
+}
+
+.customer-data {
+  display: flex;
+  padding-bottom: 25px;
+
+  @include mobile {
+    display: flex;
+    flex-direction: column;
+
+    .customer-detail {
+      width: 100% !important;
+
+      .title-control {
+        display: flex;
+        flex-direction: column;
+
+        @include mobile {
+          display: flex;
+          flex-direction: row;
+        }
+      }
+    }
+
+    .customer-list {
+      width: 100% !important;
+      margin-left: 0px !important;
+    }
+  }
+
+  .customer-detail {
+    width: calc(100% - 470px);
+  }
+
+  .customer-list {
+    width: 450px;
+    margin-left: 20px;
+
+    .resident-list {
+      margin-top: 20px;
+
+      .resident-item {
+        border: solid 1px #ccc;
+        border-radius: 3px;
+        padding: 8px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+
+        &.selected {
+          border-color: #d35e16;
+        }
+
+        .name {
+          font-weight: 500;
+
+          .isax-man1 {
+            color: #363333;
+          }
+
+          .isax-woman1 {
+            color: #db3e3e;
+          }
+        }
+
+        .birth {
+          color: #144e9f;
+
+          i {
+            color: #144e9f;
+          }
+        }
+      }
+    }
+  }
+
+  @include mobile {
+    .title-group {
+      display: flex;
+      border-radius: 4px;
+      background-color: rgba(50, 123, 199, 0.1);
+      color: #2d78d7;
+      font-weight: 600;
+      font-size: 14px;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 30px;
+      flex-direction: column;
+    }
+  }
+
+  .title-group2 {
+    display: flex;
+    border-radius: 4px;
+    background-color: rgba(50, 123, 199, 0.1);
+    color: #2d78d7;
+    font-weight: 600;
+    font-size: 14px;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 30px;
+    flex-direction: column;
+  }
+}
+
+.resident-list {
+  height: auto;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.header-content{
+  display: flex;
+
+  @include mobile{
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@include mobile{
+  .download-header{
+    text-align: center;
+    margin-top: -7px;
+    margin-bottom: 8px;
+  }
+}

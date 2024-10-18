@@ -1,0 +1,115 @@
+app-edit-booking {
+  nz-input-group input-select {
+    width: 100px !important;
+  }
+
+  .breadcrumb-title {
+    padding-left: 36px;
+    position: relative;
+
+    .acction-back {
+      position: absolute;
+      font-size: 25px;
+      color: #2d78d7;
+      left: 0;
+      top: 6px;
+      cursor: pointer;
+    }
+  }
+
+  .contract-time {
+    position: absolute;
+    width: 55%;
+    top: 7px;
+    right: 300px;
+    text-align: center;
+    z-index: 10;
+
+    .ant-picker {
+      border-color: #2d78d7;
+      border-radius: 5px;
+    }
+  }
+
+  .contract-type {
+    position: absolute;
+    right: 27px;
+    text-align: center;
+    border-radius: 5px;
+    padding: 3px 10px;
+    border: solid 1px #2d78d791;
+  }
+
+  .card {
+    border-color: #e8e8e8;
+    // background-color: #ffe1ca;
+    padding: 10px 10px;
+    min-height: 215px;
+    margin-bottom: 0;
+
+    h1 {
+      // border-bottom: solid 1px #ccc;
+    }
+
+    .pay-data {
+      background-color: #e8e8e8;
+      margin: -10px -10px 10px -10px;
+      padding: 5px 10px 10px 10px;
+
+      .pay-item {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 5px;
+
+        .name {}
+
+        .value {
+          color: #db3e3e;
+        }
+      }
+    }
+
+    .return-money {
+      display: flex;
+      justify-content: space-between;
+      border-top: solid 1px #e8e8e8;
+      margin: 0 -10px -10px -10px;
+      padding: 10px;
+
+      .name {
+        font-weight: 500px;
+      }
+
+      .value {
+        color: #db3e3e;
+      }
+    }
+  }
+
+  .count-member {
+    position: absolute;
+    width: 200px;
+    top: 0px;
+    right: 100px;
+    text-align: center;
+    z-index: 10;
+    display: flex;
+    line-height: 32px;
+
+    nz-input-number {
+      width: 80px;
+      margin-left: 8px;
+    }
+  }
+
+  .price-type {
+    padding-right: 20px;
+    position: relative;
+
+    .price-type-info {
+      position: absolute;
+      top: 6px;
+      right: 0px;
+    }
+  }
+}

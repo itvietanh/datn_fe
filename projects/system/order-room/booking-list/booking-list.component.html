@@ -1,0 +1,138 @@
+<div class="page-header page-header-light">
+  <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
+    <div class="d-flex">
+      <div class="breadcrumb-title">Danh sách đặt phòng</div>
+    </div>
+    <div class="breadcrumb">
+      <div class="list-control-main">
+        <button nz-button type="button" class="btn btn-primary" [routerLink]="['dat-phong']">
+          <i class="isax-add-circle1 mr-2"></i>Đặt phòng
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="header-elements-inline">
+    <div class="navbar-expand-md w-100">
+      <div class="navbar-collapse collapse" id="search-list"></div>
+    </div>
+  </div>
+
+  <div class="hearder-table mt-m-15">
+    <nz-tabset>
+      <nz-tab nzTitle="Tất cả"></nz-tab>
+      <nz-tab nzTitle="Nhận phòng hôm nay"></nz-tab>
+      <nz-tab nzTitle="Quá giờ nhận"> </nz-tab>
+    </nz-tabset>
+    <div class="lst-controls d-flex justify-content-between">
+      <app-filter></app-filter>
+      <button *ngIf="selectedIndex === 0" type="button" class="loc-nang-cao btn btn-default ml-1">
+        <span nz-icon nzType="filter" nzTheme="outline"></span> Lọc nâng cao
+      </button>
+    </div>
+    <!-- <nz-tabset
+      [(nzSelectedIndex)]="selectedIndex"
+      (nzSelectedIndexChange)="onTabChange($event)"
+    >
+      <nz-tab nzTitle="Tất cả"></nz-tab>
+      <nz-tab nzTitle="Nhận phòng hôm nay"></nz-tab>
+      <nz-tab nzTitle="Quá giờ nhận"> </nz-tab>
+    </nz-tabset>
+    <div class="lst-controls d-flex justify-content-between">
+      <app-filter
+        [filters]="qFilters"
+        [params]="params"
+        (search)="getData($event)"
+      ></app-filter>
+      <button
+        *ngIf="selectedIndex === 0"
+        type="button"
+        class="loc-nang-cao btn btn-default ml-1"
+        (click)="openFilter()"
+      >
+        <span nz-icon nzType="filter" nzTheme="outline"></span> Lọc nâng cao
+      </button>
+    </div> -->
+
+    <div class="ux-pc">
+      <app-table [columns]="columns" [items]="items" [loading]="loading" [showIndex]="false" >
+        <ng-template [appCellTemplate]="'contractType'" let-item>
+          <!-- {{ contractTypesDict[item.contractType] }} -->gggg
+        </ng-template>
+        <ng-template [appCellTemplate]="'action'" let-item>
+          <div *ngIf="item.status === contractStatus.RESERVE" class="list-icons list-icons-extended text-center">
+            <a class="list-icons-item action-edit">
+              <i nz-tooltip nzTooltipTitle="Nhận phòng" nz-icon nzType="login" nzTheme="outline"></i>
+            </a>
+            <a class="list-icons-item action-delete">
+              <span nz-tooltip nzTooltipTitle="Hủy đặt phòng" class="isax-trash1"></span>
+            </a>
+          </div>
+        </ng-template>
+      </app-table>
+      <!-- <app-table [columns]="columns" [items]="items" [loading]="loading" [showIndex]="false" [pagination]="pagination">
+        <ng-template [appCellTemplate]="'contractType'" let-item>
+          {{ contractTypesDict[item.contractType] }}
+        </ng-template>
+        <ng-template [appCellTemplate]="'action'" let-item>
+          <div *ngIf="item.status === contractStatus.RESERVE" class="list-icons list-icons-extended text-center">
+            <a class="list-icons-item action-edit">
+              <i nz-tooltip nzTooltipTitle="Nhận phòng" nz-icon nzType="login" nzTheme="outline"></i>
+            </a>
+            <a class="list-icons-item action-delete">
+              <span nz-tooltip nzTooltipTitle="Hủy đặt phòng" class="isax-trash1"></span>
+            </a>
+          </div>
+        </ng-template>
+      </app-table> -->
+    </div>
+
+    <div class="ux-mobile card-container" [class.loading]="loading">
+      <div class="custom-card" *ngFor="let item of items">
+        <div class="card-body">
+          <ul>
+            <li>
+              <strong>Người đại diện:</strong> {{ item.representativeName }}
+            </li>
+            <li><strong>Đoàn:</strong> {{ item.groupName }}</li>
+            <li>
+              <!-- <strong>Khách:</strong> {{ contractTypesDict[item.contractType] }} -->
+              <strong>Khách:</strong> {{ 333 }}
+            </li>
+            <li>
+              <strong>Ngày đặt:</strong>
+              {{ item.reservationTime | datetimeFormat }}
+            </li>
+            <li>
+              <strong>Ngày nhận phòng:</strong>
+              {{ item.checkInTime | datetimeFormat }}
+            </li>
+            <li>
+              <strong>Ngày trả phòng:</strong>
+              {{ item.checkOutTime | datetimeFormat }}
+            </li>
+            <li><strong>Số lượng phòng:</strong> {{ item.numOfResidences }}</li>
+            <li><strong>Số lượng người:</strong> {{ item.numOfResidents }}</li>
+            <li>
+              <strong>Trạng thái:</strong>
+              1
+              <!-- {{ item.status | labelValue : listStatus }} -->
+            </li>
+          </ul>
+        </div>
+        <div class="list-icons list-icons-extended text-center round" *ngIf="item.status === contractStatus.RESERVE">
+          <a class="list-icons-item action-edit rounded-btn" >
+            <i nz-tooltip nzTooltipTitle="Nhận phòng" nz-icon nzType="login" nzTheme="outline"></i>
+          </a>
+          <a class="list-icons-item action-delete rounded-btn" >
+            <span nz-tooltip nzTooltipTitle="Hủy đặt phòng" class="isax-trash1"></span>
+          </a>
+
+        </div>
+      </div>
+      <!-- <app-paging [data]="pagination" (onChange)="getData($event)" [temp]="2"></app-paging> -->
+    </div>
+  </div>
+</div>

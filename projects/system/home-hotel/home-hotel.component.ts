@@ -1,5 +1,5 @@
 import { ShrContractService } from '../../../common/share/src/service/application/accom/shr-contract.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MessageService } from 'common/base/service/message.service';
 import {
@@ -31,6 +31,7 @@ interface Floor {
   selector: 'app-home-hotel',
   templateUrl: './home-hotel.component.html',
   styleUrls: ['./home-hotel.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class HomeHotelComponent implements OnInit {
   public formSearch: FormGroup;
@@ -57,13 +58,19 @@ export class HomeHotelComponent implements OnInit {
 
   filterRoomStatus: any;
 
+  viewOptions = [
+    { value: 'infrastructure', label: 'Tầng' },
+    { value: 'service', label: 'Loại phòng' },
+    { value: 'contract', label: 'Đoàn khách' },
+  ];
+
   constructor(
     private fb: FormBuilder,
     private dialogService: DialogService,
     private messageService: MessageService,
     private shrContractService: ShrContractService,
     private datePipe: DatePipe,
-    private floorService: FloorService,
+    public floorService: FloorService,
   ) {
     this.formSearch = this.fb.group({
 
@@ -138,6 +145,10 @@ export class HomeHotelComponent implements OnInit {
         }
       }
     );
+  }
+
+  onViewSelectedChange(index: number) {
+
   }
 
 }

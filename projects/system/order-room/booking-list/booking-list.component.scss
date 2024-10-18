@@ -1,0 +1,75 @@
+@import "variables";
+
+.breadcrumb-line {
+
+  @include mobile {
+    display: flex !important;
+  }
+}
+
+.breadcrumb-title {
+
+  @include mobile {
+    text-align: left;
+  }
+}
+
+.loc-nang-cao {
+  @include mobile {
+    font-size: 10px;
+  }
+}
+
+.breadcrumb {
+
+  .list-control-main {
+
+    @include mobile {
+
+      button {
+        width: 0px;
+        border-radius: 70px;
+
+        i {
+          left: -6.8px
+        }
+      }
+
+      span {
+        display: none !important;
+      }
+    }
+  }
+}
+
+.content {
+  @include mobile {
+    padding-top: 33px;
+  }
+}
+
+.lst-controls {
+  width: calc(100% - 350px);
+
+  @include mobile {
+    position: static;
+    padding-bottom: 2px;
+    width: 100% !important;
+
+    .btn {
+      width: 40%
+    }
+  }
+
+  app-filter {
+    width: 300px;
+  }
+}
+
+.ux-pc {
+  display: block;
+
+  @include mobile {
+    display: none;
+  }
+}

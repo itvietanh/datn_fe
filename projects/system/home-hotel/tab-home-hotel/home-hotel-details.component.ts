@@ -269,7 +269,7 @@ export class HomeHotelDetailsComponent implements OnInit {
   }
 
   close(data?: any) {
-    this.onClose.emit();
+    this.onClose.emit(data);
   }
 
 } 

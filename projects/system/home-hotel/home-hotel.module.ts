@@ -6,11 +6,13 @@ import { HomeHotelDetailsComponent } from './tab-home-hotel/home-hotel-details.c
 import { HomeHotelComponent } from './home-hotel.component';
 import { QrCodeDetailsComponent } from './tab-home-hotel/tab-qrcode/qrcode-details.component';
 import { CustomerDataComponent } from './customer-data/customer-data.component';
+import { NzSegmentedModule } from 'ng-zorro-antd/segmented';
 
 @NgModule({
   imports:
     [CommonModule,
       FormModule,
+      NzSegmentedModule,
       HomeHotelRoutes
     ],
   declarations: [HomeHotelComponent, HomeHotelDetailsComponent, QrCodeDetailsComponent, CustomerDataComponent],
