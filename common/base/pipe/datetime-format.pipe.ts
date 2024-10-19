@@ -12,6 +12,6 @@ export class DatetimeFormatPipe extends DatePipe implements PipeTransform {
     } else if (typeof value === 'number') {
       date = value.convertIntegerToDate();
     }
-    return super.transform(date, 'HH:mm:ss dd/MM/yyyy');
+    return super.transform(date, args ?? 'HH:mm dd/MM/yyyy');
   }
 }

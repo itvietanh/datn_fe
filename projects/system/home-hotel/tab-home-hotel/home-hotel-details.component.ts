@@ -29,13 +29,13 @@ export class HomeHotelDetailsComponent implements OnInit {
   myForm: FormGroup;
   loading = true;
   public paging: any;
-  items: any[] = [];
   data: any;
 
   whereRoom: any;
   now = new Date() as any;
   remainingAmount: any;
   dataRoom: any;
+  listGuest: any[] = [];
 
   columns: ColumnConfig[] = [
     {
@@ -189,8 +189,7 @@ export class HomeHotelDetailsComponent implements OnInit {
     this.myForm.get('guests.dateOfBirth')?.setValue(item[3]);
     this.myForm.get('guests.gender')?.setValue(item[4]);
     this.myForm.get('guests.addressDetail')?.setValue(item[5]);
-    debugger;
-    this.items = guest;
+    this.listGuest = guest;
   }
 
   async onDate() {
@@ -221,6 +220,8 @@ export class HomeHotelDetailsComponent implements OnInit {
       // this.myForm.get('finalPrice')?.setValue(finalPrice);
       this.remainingAmount = finalPrice;
       // debugger;
+    } else {
+      this.remainingAmount = 0;
     }
   }
 
@@ -245,14 +246,14 @@ export class HomeHotelDetailsComponent implements OnInit {
         guest_id: null,
         transition_date: this.myForm.get('checkInTime')?.value,
         payment_status: 1,
-        total_amout: this.remainingAmount
+        total_amout: this.remainingAmount ? this.remainingAmount : this.myForm.get('finalPrice')?.value
       },
       roomUsing: {
         uuid: this.ex.newGuid(),
         trans_id: null,
         room_id: this.dataRoom.id,
         check_in: this.myForm.get('checkInTime')?.value,
-        check_out: this.myForm.get('checkOutTime')?.value,
+        // check_out: this.myForm.get('checkOutTime')?.value,
       },
       roomUsingGuest: {
         uuid: this.ex.newGuid(),
@@ -264,8 +265,14 @@ export class HomeHotelDetailsComponent implements OnInit {
     await this.orderRoomService.add(formData).firstValueFrom();
 
     this.dialogService.closeLoading();
-    this.messageService.alert("Lưu dữ liệu thành công!");
+    this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
     this.close(true);
+  }
+
+  handleAddGuest() {
+    const guest = this.myForm.get('guests')?.getRawValue();
+    this.listGuest = [...this.listGuest, guest];
+    this.myForm.get('guests')?.reset();
   }
 
   close(data?: any) {

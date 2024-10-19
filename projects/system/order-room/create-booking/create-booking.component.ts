@@ -17,6 +17,7 @@ import {
   StayingReasonService,
 } from 'share';
 import { ImportBookingComponent } from './import-booking/import-booking.component';
+import { ExtentionService } from 'common/base/service/extention.service';
 
 @Component({
   selector: 'app-create-booking',
@@ -85,6 +86,17 @@ export class CreateBookingComponent implements OnInit {
 
   toDay = new Date();
 
+  types: any[] = [
+    {
+      value: 1,
+      label: "Khách lẻ"
+    },
+    {
+      value: 2,
+      label: "Khách đoàn"
+    },
+  ]
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -93,7 +105,7 @@ export class CreateBookingComponent implements OnInit {
     private messageService: MessageService,
     private contractService: ContractService,
     private dialogService: DialogService,
-
+    private ex: ExtentionService
 
   ) {
     this.myForm = this.fb.group({
@@ -126,6 +138,32 @@ export class CreateBookingComponent implements OnInit {
         [ValidatorExtension.required(), ValidatorExtension.phoneNumber()],
       ],
       prepayment: [0, ValidatorExtension.min(0)],
+
+      guests: this.fb.group({
+        uuid: [ex.newGuid()],
+        identityNo: [null],
+        fullName: [
+          null,
+          [
+            ValidatorExtension.required('Họ và tên không được để trống'),
+            ValidatorExtension.validNameVN(
+              "Họ và tên chỉ được sử dụng chữ cái, dấu khoảng trắng và dấu '"
+            ),
+            ValidatorExtension.validateUnicode(
+              'Bạn đang sử dụng bảng mã Unicode tổ hợp! Vui lòng sử dụng bảng mã Unicode dựng sẵn'
+            ),
+            ValidatorExtension.maxLength(40, 'Họ tên tối đa 40 ký tự'),
+          ],
+        ],
+        gender: [null],
+        phoneNumber: [null, ValidatorExtension.phoneNumber()],
+        dateOfBirth: [null],
+        addressDetail: [null],
+        provinceId: [null],
+        districtId: [null],
+        wardId: [null],
+        workplace: [null],
+      })
     });
 
     this.myForm
@@ -156,7 +194,7 @@ export class CreateBookingComponent implements OnInit {
       this.myForm.get('checkOutTimeHour')?.setValue('1200');
     }
 
-    this.getPrices();
+    // this.getPrices();
   }
 
   onChangeStartDate() {
@@ -581,8 +619,8 @@ export class CreateBookingComponent implements OnInit {
     setTimeout(() => {
       this.resident.markAllAsDirty();
       if (this.resident.invalid) return;
-        this.addResident();
-        // this.btnScaner.openScanner();
+      this.addResident();
+      // this.btnScaner.openScanner();
     }, 300);
   }
 }
