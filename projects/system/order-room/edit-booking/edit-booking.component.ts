@@ -162,7 +162,7 @@ export class EditBookingComponent implements OnInit {
       });
     }
     // this.onTypeChange(this.myForm.get('contractType')?.value);
-    this.getPrices();
+    // this.getPrices();
   }
 
   submit() {

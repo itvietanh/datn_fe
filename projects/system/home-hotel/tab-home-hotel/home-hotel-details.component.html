@@ -160,27 +160,28 @@
           <i class="isax-house-21"></i> Danh sách khách
         </div>
         <div class="title-control">
-          <!-- <button  type="button" class="btn btn-default" >
+          <button  type="button" class="btn btn-default" >
             <i class="isax-trash1 mr-2"></i>Xóa khách
-          </button> -->
-          <button type="button" class="btn btn-primary">
+          </button>
+
+          <button type="button" class="btn btn-primary ml-2" (click)="handleAddGuest()">
             <i class="isax-add-circle1 mr-2"></i>Thêm khách
           </button>
         </div>
       </div>
 
       <div class="resident-list">
-        <div class="resident-item selected">
+        <div class="resident-item selected" *ngFor="let item of listGuest">
           <div class="name">
             <i class="mr-1" [ngClass]="{
-                'isax-man1': myForm.get('guests.gender')?.value === 'Nam',
-                'isax-woman1': myForm.get('guests.gender')?.value === 'Nữ'
+                'isax-man1': item.gender === 'Nam',
+                'isax-woman1': item.gender === 'Nữ'
               }"></i>
-            {{myForm.get("guests.fullName")?.value?.toUpperCase() ?? "Đang nhập thông tin khách..."}}
+            {{item.fullName.toUpperCase() ?? "Đang nhập thông tin khách..."}}
           </div>
           <div class="birth">
             <i class="isax-cake1 mr-1"></i>
-            {{myForm.get("guests.dateOfBirth")?.value}}
+            {{item.dateOfBirth}}
           </div>
         </div>
         <!-- <div class="resident-item" [ngClass]=""> -->
