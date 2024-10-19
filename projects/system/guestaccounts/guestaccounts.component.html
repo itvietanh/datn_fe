@@ -1,0 +1,124 @@
+<div class="page-header page-header-light">
+  <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
+    <div class="d-flex">
+      <div class="breadcrumb-title">
+        Quản lý tài khoản
+      </div>
+      <div class="breadcrumb">
+        <div class="list-control-main">
+          <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
+            <i class="isax-add-circle1 mr-2"></i>Thêm cơ sở
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="header-elements-inline">
+    <div class="navbar-expand-md w-100">
+      <div class="padding-left-15 text-right d-md-none w-100 row">
+        <button class="navbar-toggler" data-target="#search-list" data-toggle="collapse" type="button">
+          <i nz-icon nzType="menu" nzTheme="outline"></i>
+        </button>
+      </div>
+      <!-- search -->
+      <div class="navbar-collapse collapse" id="search-list" *ngIf="!isLoading">
+        <form *ngIf="formSearch" [formGroup]="formSearch" class="w-100" (ngSubmit)="getData()">
+          <ng-template #controlErrorTpl let-control>
+            <app-render-errors [control]="control"></app-render-errors>
+          </ng-template>
+          <div class="row">
+            <div class="col-md-6">
+              <nz-form-item>
+                <nz-form-label>Tên Cơ Sở</nz-form-label>
+                <nz-form-control [nzErrorTip]="controlErrorTpl">
+                  <input-text placeholder="Tên cơ sở..." formControlName="name"></input-text>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div class="col-md-6">
+              <nz-form-item>
+                <nz-form-label>Địa chỉ</nz-form-label>
+                <nz-form-control [nzErrorTip]="controlErrorTpl">
+                  <input-text placeholder="Địa chỉ..." formControlName="address"></input-text>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <!-- <div class="col-md-4">
+              <nz-form-item>
+                <nz-form-label>Trạng thái hoạt động</nz-form-label>
+                <nz-form-control [nzErrorTip]="controlErrorTpl">
+                  <input-select formControlName="status">
+                  </input-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div> -->
+
+            <div class="col-md-6">
+              <nz-form-item>
+                <nz-form-label>Từ ngày</nz-form-label>
+                <nz-form-control [nzErrorTip]="controlErrorTpl">
+                  <input-date formControlName="dateFrom">
+                  </input-date>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div class="col-md-6">
+              <nz-form-item>
+                <nz-form-label>Đến ngày</nz-form-label>
+                <nz-form-control [nzErrorTip]="controlErrorTpl">
+                  <input-date formControlName="dateTo">
+                  </input-date>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+
+          <div class="text-center mt-3">
+            <button nz-button type="submit" class="btn btn-primary ml-2">
+              <span nz-icon nzType="search" nzTheme="outline"></span>Tìm kiếm
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="hearder-table mt-1">
+    <nz-tabset>
+      <nz-tab nzTitle="Kết quả tìm kiếm">
+        <ng-template [ngTemplateOutlet]="tab1"></ng-template>
+      </nz-tab>
+    </nz-tabset>
+    <div class="lst-controls">
+      <div class="breadcrumb">
+        <div class="list-control-main">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #tab1>
+    <app-table [columns]="columns" [items]="items" [loading]="loading">
+      <ng-template [appCellTemplate]="'action'" let-item>
+        <div class="list-icons list-icons-extended text-center">
+          <a class="list-icons-item action-view" (click)="handlerOpenDialog('view', item)">
+            <span nz-tooltip nzTooltipTitle="Xem thông tin cơ sở" class="isax-eye1"></span>
+          </a>
+          <a class="list-icons-item action-delete" (click)="handlerDelete(item)">
+            <span nz-tooltip nzTooltipTitle="Xóa cơ sở" class="isax-trash1"></span>
+          </a>
+          <a class="list-icons-item action-edit" (click)="handlerOpenDialog('edit', item)">
+            <span nz-tooltip nzTooltipTitle="Sửa thông tin cơ sở" class="isax-edit-21"></span>
+          </a>
+        </div>
+      </ng-template>
+    </app-table>
+    <app-paging [data]="paging" [changeListPage]="0" (onChange)="getData($event)"></app-paging>
+  </ng-template>
+</div>

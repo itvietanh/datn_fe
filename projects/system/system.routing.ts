@@ -46,6 +46,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'tai-khoan',
+        loadChildren: () =>
+          import('./guestaccounts/guestaccounts.module').then(
+            (x) => x.GuestAccountModule
+          ),
+      },
+      {
         path: 'dich-vu-khach-dat',
         loadChildren: () =>
           import('./roomusingserivce/roomusingservice.module').then(
