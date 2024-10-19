@@ -60,6 +60,7 @@ import { ConfirmationComponent } from './confirmation/confirmation.component';
 import { ModalDataComponent } from './modal-data/modal-data.component';
 import { PrinterComponent } from './printer/printer.component';
 import { NgxMaskDirective } from 'ngx-mask';
+import { InputDateRangePickerComponent } from '../controls/input-date-range-picker/input-date-range-picker.component';
 
 @NgModule({
   imports: [
@@ -144,6 +145,7 @@ import { NgxMaskDirective } from 'ngx-mask';
     ModalDataComponent,
     PrinterComponent,
     NzInputModule,
+    InputDateRangePickerComponent
   ],
   declarations: [
     EventEnterDirective,
@@ -180,6 +182,7 @@ import { NgxMaskDirective } from 'ngx-mask';
     ConfirmationComponent,
     ModalDataComponent,
     PrinterComponent,
+    InputDateRangePickerComponent
   ],
 })
 export class FormModule {}

@@ -127,6 +127,15 @@ export class MenuComponent implements OnInit {
     this.menuData = [
       {
         icon: 'isax-pen-tool-2-1',
+        name: 'ĐẶT PHÒNG',
+        url: '/he-thong/dat-phong',
+        isOpen: false,
+        exact: false,
+        level: 1,
+        child: [],
+      },
+      {
+        icon: 'isax-pen-tool-2-1',
         name: 'SƠ ĐỒ KHÁCH SẠN',
         url: '/he-thong/trang-chu',
         isOpen: false,

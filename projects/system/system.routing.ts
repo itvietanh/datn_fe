@@ -76,6 +76,13 @@ const routes: Routes = [
             (x) => x.StatisticalModule
           ),
       },
+      {
+        path: 'dat-phong',
+        loadChildren: () =>
+          import('./order-room/order-room.module').then(
+            (x) => x.OrderRoomModule
+          ),
+      },
     ],
   },
 ];

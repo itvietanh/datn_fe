@@ -1,0 +1,190 @@
+<form [formGroup]="myForm" (ngSubmit)="submit()">
+  <div class="page-header page-header-light">
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline" style="height: 46px">
+      <div class="d-flex">
+        <div class="breadcrumb-title">Sửa đặt phòng</div>
+        <div class="breadcrumb">
+          <div class="list-control-main">
+            <div class="contract-time">
+              <nz-spin [nzSpinning]="loading">
+                <app-form-control>
+                  <input-date-range-picker></input-date-range-picker>
+                  <!-- <input-date-range-picker
+                    [placeholder]="['Từ ngày', 'Tới ngày']"
+                    formControlName="dateRange"
+                    [disabledDate]="disabledDate"
+                    [disabledTime]="disabledTime"
+                    (ngModelChange)="onDateRangeChange($event)"
+                  ></input-date-range-picker> -->
+                </app-form-control>
+              </nz-spin>
+            </div>
+            <div class="contract-type">
+              <input-radio formControlName="contractType"></input-radio>
+              <!-- <input-radio
+                formControlName="contractType"
+                [items]="types"
+                (ngModelChange)="onTypeChange($event)"
+              ></input-radio> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="row">
+      <div class="col-md-9">
+        <div class="title-group">
+          <div class="title-label">
+            <i class="isax-house-21"></i> Thông tin đặt phòng
+          </div>
+          <div class="title-control">
+            <span>Số lượng phòng: {{ numOfRooms }}</span>
+            <div class="count-member">
+              <span>Số khách: </span>
+              <nz-input-number formControlName="numOfResidents" (ngModelChange)="onQuantityChange()" [nzMin]="0"
+                [nzStep]="1"></nz-input-number>
+            </div>
+          </div>
+        </div>
+        <div class="mt-1">
+          <app-table [showIndex]="false" [showPagination]="false" [columns]="columns" [items]="items"
+            [loading]="loading">
+            <ng-template [appCellTemplate]="'name'" let-item>
+              {{ item.name }}
+            </ng-template>
+            <ng-template [appCellTemplate]="'room'" let-item>
+              <div class="row">
+                <div class="col-md-6">
+                  <nz-input-number [ngModelOptions]="{ standalone: true }" [(ngModel)]="item.quantity"
+                    (ngModelChange)="onQuantityChange()" [nzMin]="0" [nzMax]="item.available"
+                    [nzStep]="1"></nz-input-number>
+                </div>
+                <div class="col-md-6 m-auto" nz-tooltip nzTooltipTitle="Trống/Tổng">
+                  {{ item.available - item.quantity }}/{{ item.total }}
+                </div>
+              </div>
+            </ng-template>
+            <ng-template [appCellTemplate]="'priceId'" let-item>
+              <div class="price-type">
+                <input-select [allowClear]="false" [items]="pricesDict[item.id]" [(ngModel)]="item.priceId"
+                  (onChange)="onInputSelectChange(item)" [ngModelOptions]="{ standalone: true }"></input-select>
+                <div class="price-type-info" nz-tooltip [nzTooltipTitle]="priceDetail">
+                  <ng-template #priceDetail>
+                    <div style="white-space: pre-line">
+                      {{ item.description }}
+                    </div>
+                  </ng-template>
+                  <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template [appCellTemplate]="'totalAmount'" let-item>
+              <nz-spin [nzSpinning]="item.loading">
+                <input-number [(ngModel)]="item.totalAmount" [ngModelOptions]="{ standalone: true }"
+                  (ngModelChange)="updateInvoice()" [min]="0" [integerLimit]="10"></input-number>
+              </nz-spin>
+            </ng-template>
+            <ng-template [appCellTemplate]="'total'" let-item>
+              {{ item.totalAmount * item.quantity | moneyFormat }}
+            </ng-template>
+          </app-table>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card">
+          <h1>Tóm tắt hoá đơn</h1>
+          <div class="pay-data">
+            <div class="pay-item">
+              <div class="name">Tổng tiền phòng</div>
+              <div class="value">
+                {{ this.totalAmountSum | moneyFormat }}
+              </div>
+            </div>
+            <div class="pay-item">
+              <div class="name">Thuế</div>
+              <div class="value">{{ taxAmount | moneyFormat }}</div>
+            </div>
+            <div class="pay-item">
+              <div class="name">Cần thanh toán</div>
+              <div class="value">{{ totalAmount | moneyFormat }}</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-7">Trả trước</div>
+            <div class="col-md-5">
+              <app-form-control>
+                <input-number [min]="0" [integerLimit]="10" formControlName="prepayment"
+                  (ngModelChange)="updateInvoice()"></input-number>
+              </app-form-control>
+            </div>
+          </div>
+          <div class="return-money">
+            <div class="name">Còn lại</div>
+            <div class="value">{{ remainingAmount | moneyFormat }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-2">
+      <ng-container>
+        <div class="title-group">
+          <div class="title-label">
+            <i class="isax-crown-11"></i> Thông tin lưu trú
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div *ngIf="isCustomerGroup" class="col-md-3">
+            <app-form-control label="Tên đoàn">
+              <input-text formControlName="groupName" [toUper]="true"></input-text>
+            </app-form-control>
+          </div>
+          <div class="col-md-3">
+            <app-form-control label="Lý do lưu trú">
+              <input-select-api [apiService]="stayingReasonService" formControlName="reasonStayId"></input-select-api>
+            </app-form-control>
+          </div>
+          <div class="col-md-6">
+            <app-form-control label="Ghi chú">
+              <input-text formControlName="note"></input-text>
+            </app-form-control>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="title-group">
+        <div class="title-label">
+          <i class="isax-user-tick1"></i> Thông tin người đại diện
+        </div>
+        <div class="title-control"></div>
+      </div>
+
+      <div class="row mt-2 mb-3">
+        <div class="col-md-3">
+          <app-form-control label="Họ tên">
+            <input-text formControlName="representativeName" [toUper]="true"></input-text>
+          </app-form-control>
+        </div>
+        <div class="col-md-3">
+          <app-form-control label="Số điện thoại">
+            <input-text formControlName="phoneNumber"></input-text>
+          </app-form-control>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="list-control-footer">
+    <button (click)="close()" nz-button type="button" class="btn btn-default mr-2">
+      <i nz-icon nzType="close" nzTheme="outline"></i>
+      Đóng
+    </button>
+    <button [nzLoading]="loading" nz-button type="submit" class="btn btn-primary ml-2">
+      <i nz-icon nzType="save" nzTheme="outline"></i>
+      Cập nhật
+    </button>
+  </div>
+</form>

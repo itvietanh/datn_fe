@@ -1,0 +1,13 @@
+<nz-range-picker
+  [nzShowTime]="showTime"
+  [nzFormat]="format[type]"
+  [nzShowTime]="{ nzFormat: 'HH:mm' }"
+  [nzPlaceHolder]="placeholder"
+  [disabled]="disabled"
+  [nzDisabledDate]="disabledDate"
+  [nzDisabledTime]="disabledTime"
+  [(ngModel)]="value"
+  (ngModelChange)="onChange($event)"
+  (nzOnCalendarChange)="onCalendarChange($event)"
+  (nzOnOk)="onOk($event)"
+></nz-range-picker>
