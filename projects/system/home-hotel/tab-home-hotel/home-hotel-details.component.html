@@ -4,9 +4,7 @@
   </ng-template>
 
   <div class="title-group">
-    <div class="title-label">
-      <i class="isax-house-21"></i> Thông tin phòng
-    </div>
+    <div class="title-label"><i class="isax-house-21"></i> Thông tin phòng</div>
     <div class="title-control"></div>
   </div>
   <div class="row">
@@ -19,24 +17,37 @@
         </div>
         <div class="col-md-6">
           <app-form-control label="Thời gian trả phòng">
-            <input-date-time formControlName="checkOutTime" (onChange)="onDate()" [min]="now"></input-date-time>
+            <input-date-time
+              formControlName="checkOutTime"
+              (onChange)="onDate()"
+              [min]="now"
+            ></input-date-time>
           </app-form-control>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4">
           <app-form-control label="Loại phòng">
-            <input-select-api [apiService]="roomTypeService" [actionName]="'getCombobox'" formControlName="roomTypeId"></input-select-api>
+            <input-select-api
+              [apiService]="roomTypeService"
+              [actionName]="'getCombobox'"
+              formControlName="roomTypeId"
+            ></input-select-api>
           </app-form-control>
         </div>
         <div class="col-md-4">
           <app-form-control label="Phòng">
-            <input-select-api [apiService]="roomService" [actionName]="'getCombobox'" formControlName="roomId" [allowSearch]="false"></input-select-api>
+            <input-select-api
+              [apiService]="roomService"
+              [actionName]="'getCombobox'"
+              formControlName="roomId"
+              [allowSearch]="false"
+            ></input-select-api>
           </app-form-control>
         </div>
         <div class="col-md-4">
           <app-form-control label="Giá phòng">
-            <input-number formControlName="totalPrice"></input-number>
+            <input-number formControlName="totalPrice" ></input-number>
           </app-form-control>
         </div>
         <div class="col-md-12">
@@ -51,25 +62,33 @@
         <h1>Tóm tắt hoá đơn</h1>
         <div class="pay-data">
           <div class="pay-item">
-            <div class="name">Tổng tiền phòng</div>
-            <div class="value">
-              {{ this.myForm.get("totalPrice")?.value | moneyFormat }}
-            </div>
+              <div class="name">Tổng tiền phòng</div>
+              <div class="value">
+                  {{ this.myForm.get("totalPrice")?.value | moneyFormat }}
+              </div>
           </div>
           <div class="pay-item">
-            <div class="name">Thuế</div>
-            <div class="value">{{ this.myForm.get("vat")?.value | moneyFormat }}</div>
+              <div class="name">Thuế</div>
+              <div class="value">
+                  {{ this.myForm.get("vat")?.value | moneyFormat }}
+              </div>
           </div>
           <div class="pay-item">
-            <div class="name">Cần thanh toán</div>
-            <div class="value">{{ this.myForm.get("finalPrice")?.value | moneyFormat }}</div>
+              <div class="name">Cần thanh toán</div>
+              <div class="value">
+                  {{ this.myForm.get("finalPrice")?.value | moneyFormat }}
+              </div>
           </div>
-        </div>
+      </div>
+
         <div class="row">
           <div class="col-md-7">Trả trước</div>
           <div class="col-md-5">
             <app-form-control>
-              <input-number formControlName="prepayment" (ngModelChange)="updateInvoice()"></input-number>
+              <input-number
+                formControlName="prepayment"
+                (ngModelChange)="updateInvoice()"
+              ></input-number>
             </app-form-control>
           </div>
         </div>
@@ -87,7 +106,12 @@
           <i class="isax-house-21"></i> Thông tin khách
         </div>
         <div class="title-control">
-          <button nz-button type="button" class="btn btn-default mr-2" (click)="myForm.reset()">
+          <button
+            nz-button
+            type="button"
+            class="btn btn-default mr-2"
+            (click)="myForm.reset()"
+          >
             <i class="isax-rotate-left1 mr-2"></i>Làm mới
           </button>
           <!-- <button nz-button type="button" class="btn btn-default mr-2">
@@ -96,14 +120,18 @@
           <!-- <button nz-button type="button" class="btn btn-primary mr-2">
             <i class="isax-import-11 mr-2"></i>Cập nhật
           </button> -->
-          <button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="handlerOpenDialog()"
+          >
             <i class="isax-scan-barcode1 mr-2"></i>Quét CCCD
           </button>
 
           <!-- <app-customer-scanner-button (success)="data = $event"></app-customer-scanner-button> -->
         </div>
       </div>
-      
+
       <!-- <app-customer-data [(form)]="resident" [data]="items"></app-customer-data> -->
       <div class="row mt-2" formGroupName="guests">
         <div class="col-md-4">
@@ -143,12 +171,20 @@
         </div>
         <ng-container>
           <div class="col-md-12">
-            <input-diaban [apiService]="diaBanService" [city]="myForm.get('provinceId')" [district]="myForm.get('districtId')" [village]="myForm.get('wardId')"
-              [address]="myForm.get('addressDetail')"></input-diaban>
+            <input-diaban
+              [apiService]="diaBanService"
+              [city]="myForm.get('provinceId')"
+              [district]="myForm.get('districtId')"
+              [village]="myForm.get('wardId')"
+              [address]="myForm.get('addressDetail')"
+            ></input-diaban>
           </div>
           <div class="col-md-12">
             <app-form-control label="Nơi làm việc">
-              <input-textarea [maxlength]="225" formControlName="workplace"></input-textarea>
+              <input-textarea
+                [maxlength]="225"
+                formControlName="workplace"
+              ></input-textarea>
             </app-form-control>
           </div>
         </ng-container>
@@ -173,6 +209,23 @@
       <div class="resident-list">
         <div class="resident-item selected" *ngFor="let item of listGuest">
           <div class="name">
+<<<<<<< HEAD
+            <i
+              class="mr-1"
+              [ngClass]="{
+                'isax-man1': myForm.get('guests.gender')?.value === 'Nam',
+                'isax-woman1': myForm.get('guests.gender')?.value === 'Nữ'
+              }"
+            ></i>
+            {{
+              myForm.get("guests.fullName")?.value?.toUpperCase() ??
+                "Đang nhập thông tin khách..."
+            }}
+          </div>
+          <div class="birth">
+            <i class="isax-cake1 mr-1"></i>
+            {{ myForm.get("guests.dateOfBirth")?.value }}
+=======
             <i class="mr-1" [ngClass]="{
                 'isax-man1': item.gender === 'Nam',
                 'isax-woman1': item.gender === 'Nữ'
@@ -182,17 +235,18 @@
           <div class="birth">
             <i class="isax-cake1 mr-1"></i>
             {{item.dateOfBirth}}
+>>>>>>> 46ad2aa7f51fcb8a88141caf9f2e441c12130f9c
           </div>
         </div>
         <!-- <div class="resident-item" [ngClass]=""> -->
-          <!-- <div class="name"> -->
-            <!-- <i class="mr-1" [ngClass]="{
+        <!-- <div class="name"> -->
+        <!-- <i class="mr-1" [ngClass]="{
                 'isax-man1': item.gender === 5,
                 'isax-woman1': item.gender === 6
               }"></i> -->
-            <!-- fullName -->
-          <!-- </div> -->
-          <!-- <div class="birth">
+        <!-- fullName -->
+        <!-- </div> -->
+        <!-- <div class="birth">
             <i class="isax-cake1 mr-1"></i>
             birthDate
           </div> -->
@@ -204,7 +258,12 @@
     <button nz-button type="button" class="btn btn-default" (click)="close()">
       <i nz-icon nzType="close" nzTheme="outline"></i>Đóng
     </button>
-    <button nz-button type="submit" class="btn btn-primary" (click)="handlerSubmit()">
+    <button
+      nz-button
+      type="submit"
+      class="btn btn-primary"
+      (click)="handlerSubmit()"
+    >
       <i nz-icon nzType="login" nzTheme="outline"></i>Nhận phòng
     </button>
   </div>
