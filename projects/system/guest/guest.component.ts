@@ -30,7 +30,7 @@ export class GuestComponent implements OnInit {
     },
     {
       key: 'contact_details',
-      header: 'Thông tin liên lạc', 
+      header: 'Thông tin liên lạc',
     },
     {
       key: 'created_at',
@@ -107,8 +107,8 @@ export class GuestComponent implements OnInit {
     const dialog = this.dialogService.openDialog(
       async (option) => {
         option.title =
-          mode === 'view' ? 'Xem Chi Tiết Cơ Sở' : 'Thêm Mới Cơ Sở';
-        if (mode === 'edit') option.title = 'Cập Nhật Cơ Sở';
+          mode === 'view' ? 'Xem Chi Tiết Tài Khoản' : 'Thêm Mới Tài Khoản';
+        if (mode === 'edit') option.title = 'Cập Nhật Tài Khoản';
         option.size = DialogSize.xlarge;
         option.component = GuestDetailsComponent; // open component;
         option.inputs = {

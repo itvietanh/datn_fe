@@ -1,23 +1,27 @@
-import { DatePipe } from '@angular/common';
+// import { EmployeeService } from './../../../common/share/src/service/application/hotel/employee.service';
+import { ShrContractService } from '../../../common/share/src/service/application/accom/shr-contract.service';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { ColumnConfig } from 'common/base/models';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MessageService } from 'common/base/service/message.service';
-import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
+import { DialogService, PagingModel, DialogSize, DialogMode } from 'share';
 import { ValidatorExtension } from 'common/validator-extension';
-import { DialogService, PagingModel, DialogMode, DialogSize } from 'share';
-import { FacilityDetailsComponent } from '../facility/facility-detail/facility-details.component';
-import { TransactionService } from 'common/share/src/service/application/hotel/transaction.service';
+import { DatePipe } from '@angular/common';
+import { ColumnConfig } from 'common/base/models';
+import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
+// import { GuestDetailsComponent } from './guest-detail/guestaccounts-details.component';
 import { GuestService } from 'common/share/src/service/application/hotel/guest.service';
+// import { GuestAccountsDetailComponent } from './guestaccounts-detail/guestaccounts-details.component';
+// import { EmployeeService } from 'common/share/src/service/application/hotel/employee.service';
+import { EmployeeDetailComponent } from './employee-detail/employee-detail.component';
 import { EmployeeService } from 'common/share/src/service/application/hotel/employee.service';
+
 
 @Component({
   selector: 'app-employee',
   templateUrl: './employee.component.html',
-  styleUrls: ['./employee.component.scss']
+  styleUrls: ['./employee.component.scss'],
 })
 export class EmployeeComponent implements OnInit {
-
   public formSearch: FormGroup;
   public listOfData: any[] = [];
   public isLoading?: boolean;
@@ -31,12 +35,8 @@ export class EmployeeComponent implements OnInit {
       header: 'Tên nhân viên',
     },
     {
-      key: 'email',
-      header: 'Email',
-    },
-    {
-      key: 'phone',
-      header: 'Số điện thoại',
+      key: 'contact_details',
+      header: 'Tên tài khoản',
     },
     {
       key: 'created_at',
@@ -55,14 +55,14 @@ export class EmployeeComponent implements OnInit {
     private dialogService: DialogService,
     private messageService: MessageService,
     public hotelService: HotelService,
-    private transactionService: TransactionService,
-    private guestService: GuestService,
-    private employeeService: EmployeeService,
+    private employeeService:EmployeeService,
+    private guestService : GuestService,
+
     private datePipe: DatePipe
   ) {
     this.formSearch = this.fb.group({
       name: [null],
-      address: [null]
+      address: [null],
     });
     this.formSearch
       .get('outEndDate')
@@ -93,11 +93,19 @@ export class EmployeeComponent implements OnInit {
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
     const params = {
       ...paging,
-      ...this.formSearch.value
-    }
+      ...this.formSearch.value,
+    };
     this.dialogService.openLoading();
     const rs = await this.employeeService.getPaging(params).firstValueFrom();
     const dataRaw = rs.data!.items;
+    for (const item of dataRaw) {
+      if (item.created_at) {
+        item.created_at = this.datePipe.transform(
+          item.created_at,
+          'dd-MM-yyyy'
+        );
+      }
+    }
     this.items = rs.data!.items;
     this.paging = rs.data?.meta;
     this.dialogService.closeLoading();
@@ -106,10 +114,11 @@ export class EmployeeComponent implements OnInit {
   async handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
     const dialog = this.dialogService.openDialog(
       async (option) => {
-        option.title = mode === 'view' ? 'Xem Chi Tiết Cơ Sở' : 'Thêm Mới Cơ Sở';
-        if (mode === 'edit') option.title = 'Cập Nhật Cơ Sở';
+        option.title =
+          mode === 'view' ? 'Xem Chi Tiết Tài khoản' : 'Thêm Mới Tài Khoản';
+        if (mode === 'edit') option.title = 'Cập Nhật Tài Khoản';
         option.size = DialogSize.xlarge;
-        option.component = FacilityDetailsComponent;// open component;
+        option.component = EmployeeDetailComponent; // open component;
         option.inputs = {
           uuid: item?.uuid,
           mode: mode,
@@ -127,7 +136,9 @@ export class EmployeeComponent implements OnInit {
   }
 
   async handlerDelete(item: any) {
-    const confirm = await this.messageService.confirm('Bạn có muốn xóa dữ liệu này không?');
+    const confirm = await this.messageService.confirm(
+      'Bạn có muốn xóa dữ liệu này không?'
+    );
     if (confirm) {
       const rs = await this.hotelService.delete(item?.uuid).firstValueFrom();
       if (rs.data) {
@@ -136,5 +147,4 @@ export class EmployeeComponent implements OnInit {
       }
     }
   }
-
 }

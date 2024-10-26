@@ -10,13 +10,18 @@
 
   <div class="row">
     <div class="col-md-6">
-      <app-form-control label="Tên Cơ Sở">
+      <app-form-control label="Tên Khách hàng">
         <input-text formControlName="name"> </input-text>
       </app-form-control>
     </div>
     <div class="col-md-6">
       <app-form-control label="Địa Chỉ">
         <input-text formControlName="address"> </input-text>
+      </app-form-control>
+    </div>
+    <div class="col-md-6">
+      <app-form-control label="Tên tài khoản">
+        <input-text formControlName="account_name"> </input-text>
       </app-form-control>
     </div>
   </div>
@@ -26,7 +31,7 @@
       <i nz-icon nzType="close" nzTheme="outline"></i>Hủy
     </button>
     <!-- lưu và đóng -->
-    <button nz-button type="button" class="btn btn-primary" (click)="handlerSubmitData()" 
+    <button nz-button type="button" class="btn btn-primary" (click)="handlerSubmitData()"
     *ngIf="mode !== 'view'">
       <i class="icon-plus-circle2 mr-2"></i>
       Lưu và đóng

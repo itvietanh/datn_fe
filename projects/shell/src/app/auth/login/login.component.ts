@@ -46,7 +46,12 @@ export class LoginComponent implements OnInit {
 
   async submit() {
     this.myForm.markAllAsDirty();
-    if (this.myForm.invalid) return;
+    if(this.myForm.invalid){
+      alert("sai thông tin đăng nhập");
+      return;
+
+    };
+
     const data = this.myForm.getRawValue();
     this.dialogService.openLoading();
     const res = await this.autService.login(data).firstValueFrom();
