@@ -35,12 +35,24 @@ export class EmployeeComponent implements OnInit {
       header: 'Tên nhân viên',
     },
     {
-      key: 'contact_details',
+      key: 'account',
       header: 'Tên tài khoản',
     },
     {
       key: 'created_at',
       header: 'Ngày tạo',
+    },
+    {
+      key:"phone",
+      header:"Số điện thoại",
+    },
+    {
+      key:"Email",
+      header:"Email",
+    },
+    {
+      key:"pass",
+      header:"Mật khẩu",
     },
     {
       key: 'action',
@@ -56,13 +68,18 @@ export class EmployeeComponent implements OnInit {
     private messageService: MessageService,
     public hotelService: HotelService,
     private employeeService:EmployeeService,
-    private guestService : GuestService,
+    // private guestService : GuestService,
 
     private datePipe: DatePipe
   ) {
     this.formSearch = this.fb.group({
-      name: [null],
-      address: [null],
+      name:[null, ValidatorExtension.required()],
+      email: [null, ValidatorExtension.required()],
+      account:[null,ValidatorExtension.required()],
+      password:['',ValidatorExtension.required()],
+      phone:[null,ValidatorExtension.required()],
+      address:[null,ValidatorExtension.required()],
+      hotel_id:[null,ValidatorExtension.required()]
     });
     this.formSearch
       .get('outEndDate')
@@ -140,7 +157,7 @@ export class EmployeeComponent implements OnInit {
       'Bạn có muốn xóa dữ liệu này không?'
     );
     if (confirm) {
-      const rs = await this.hotelService.delete(item?.uuid).firstValueFrom();
+      const rs = await this.employeeService.delete(item?.uuid).firstValueFrom();
       if (rs.data) {
         this.messageService.notiMessageSuccess('Xóa dữ liệu thành công');
         return this.getData({ ...this.paging });

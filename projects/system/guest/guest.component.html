@@ -7,7 +7,7 @@
       <div class="breadcrumb">
         <div class="list-control-main">
           <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
-            <i class="isax-add-circle1 mr-2"></i>Thêm cơ sở
+            <i class="isax-add-circle1 mr-2"></i>Thêm Khách Hàng
           </button>
         </div>
       </div>
@@ -34,7 +34,7 @@
               <nz-form-item>
                 <nz-form-label>Tên tài khoản</nz-form-label>
                 <nz-form-control [nzErrorTip]="controlErrorTpl">
-                  <input-text placeholder="Tên cơ sở..." formControlName="name"></input-text>
+                  <input-text placeholder="Tên tài khoản..." formControlName="name"></input-text>
                 </nz-form-control>
               </nz-form-item>
             </div>
@@ -43,7 +43,7 @@
               <nz-form-item>
                 <nz-form-label>Tên Khách Hàng</nz-form-label>
                 <nz-form-control [nzErrorTip]="controlErrorTpl">
-                  <input-text placeholder="Địa chỉ..." formControlName="address"></input-text>
+                  <input-text placeholder="Tên khách hàng..." formControlName="address"></input-text>
                 </nz-form-control>
               </nz-form-item>
             </div>
@@ -108,13 +108,13 @@
       <ng-template [appCellTemplate]="'action'" let-item>
         <div class="list-icons list-icons-extended text-center">
           <a class="list-icons-item action-view" (click)="handlerOpenDialog('view', item)">
-            <span nz-tooltip nzTooltipTitle="Xem thông tin cơ sở" class="isax-eye1"></span>
+            <span nz-tooltip nzTooltipTitle="Xem thông tin khách hàng " class="isax-eye1"></span>
           </a>
           <a class="list-icons-item action-delete" (click)="handlerDelete(item)">
-            <span nz-tooltip nzTooltipTitle="Xóa cơ sở" class="isax-trash1"></span>
+            <span nz-tooltip nzTooltipTitle="Xóa khách hàng" class="isax-trash1"></span>
           </a>
           <a class="list-icons-item action-edit" (click)="handlerOpenDialog('edit', item)">
-            <span nz-tooltip nzTooltipTitle="Sửa thông tin cơ sở" class="isax-edit-21"></span>
+            <span nz-tooltip nzTooltipTitle="Sửa thông tin khách hàng" class="isax-edit-21"></span>
           </a>
         </div>
       </ng-template>

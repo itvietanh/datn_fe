@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, OnDestro
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { ExtentionService } from "common/base/service/extention.service";
 import { MessageService } from "common/base/service/message.service";
+import { GuestService } from "common/share/src/service/application/hotel/guest.service";
 import { HotelService } from "common/share/src/service/application/hotel/hotel.service";
 import { ValidatorExtension } from "common/validator-extension";
 import { DialogService, DialogMode, PagingModel, DialogSize } from "share";
@@ -25,13 +26,12 @@ export class GuestDetailsComponent implements OnInit {
     private fb: FormBuilder,
     private dialogService: DialogService,
     public hotelService: HotelService,
+    private guestService: GuestService,
     private ex: ExtentionService,
   ) {
     this.myForm = this.fb.group({
       name: [null, ValidatorExtension.required()],
-      address: [null, ValidatorExtension.required()],
-      uuid:[ex.newGuid()],
-      account_name:[null, ValidatorExtension.required()]
+      contact_details: [null, ValidatorExtension.required()],
     })
   }
 
@@ -47,7 +47,7 @@ export class GuestDetailsComponent implements OnInit {
 
   async getData() {
     this.dialogService.openLoading();
-    const rs = await this.hotelService.findOne(this.uuid).firstValueFrom();
+    const rs = await this.guestService.findOne(this.uuid).firstValueFrom();
     if (rs) {
       this.myForm.patchValue(rs.data);
     }
@@ -62,10 +62,10 @@ export class GuestDetailsComponent implements OnInit {
 
     if (this.uuid) {
       //Update
-      await this.hotelService.edit(this.uuid, formData).firstValueFrom();
+      await this.guestService.edit(this.uuid, formData).firstValueFrom();
     } else {
       //Create
-      await this.hotelService.add(formData).firstValueFrom();
+      await this.guestService.add(formData).firstValueFrom();
     }
 
     this.dialogService.closeLoading();

@@ -31,9 +31,14 @@ export class EmployeeDetailComponent implements OnInit {
   ) {
     this.myForm = this.fb.group({
       name:[null, ValidatorExtension.required()],
-      email: [null, ValidatorExtension.required(),ValidatorExtension.email()],
-      pass: [null, ValidatorExtension.required(),ValidatorExtension.min(6)],
-      account: [null, ValidatorExtension.required()],
+      email: [null, ValidatorExtension.required()],
+      account:[null,ValidatorExtension.required()],
+      password:[null,ValidatorExtension.required()],
+      phone:[null,ValidatorExtension.required()],
+      address:[null,ValidatorExtension.required()],
+      hotel_id:[null,ValidatorExtension.required()]
+      // pass: [null, ValidatorExtension.required(),ValidatorExtension.min(6)],
+
     })
   }
 
@@ -71,9 +76,10 @@ export class EmployeeDetailComponent implements OnInit {
     }
 
     this.dialogService.closeLoading();
-    this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
+    this.messageService.notiMessageSuccess("Thêm dữ liệu thành công!");
     this.close(true);
   }
+
 
   close(data?: any) {
     this.onClose.emit(data);
