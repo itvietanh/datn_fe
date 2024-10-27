@@ -1,18 +1,18 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { ExtentionService } from 'common/base/service/extention.service';
-import { MessageService } from 'common/base/service/message.service';
-import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
-import { ValidatorExtension } from 'common/validator-extension';
-import { DialogService, DialogMode } from 'share';
+import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, OnDestroy } from "@angular/core";
+import { FormGroup, FormBuilder } from "@angular/forms";
+import { ExtentionService } from "common/base/service/extention.service";
+import { MessageService } from "common/base/service/message.service";
+import { EmployeeService } from "common/share/src/service/application/hotel/employee.service";
+import { HotelService } from "common/share/src/service/application/hotel/hotel.service";
+import { ValidatorExtension } from "common/validator-extension";
+import { DialogService, DialogMode, PagingModel, DialogSize } from "share";
 
 @Component({
-  selector: 'app-employee-detail',
+  selector: 'app-guest-details',
   templateUrl: './employee-detail.component.html',
-  styleUrls: ['./employee-detail.component.scss']
+  styleUrls: ['./employee-detail.component.scss'],
 })
 export class EmployeeDetailComponent implements OnInit {
-
   @Input() id: any;
   @Input() uuid: any;
   @Input() mode: any;
@@ -26,11 +26,14 @@ export class EmployeeDetailComponent implements OnInit {
     private fb: FormBuilder,
     private dialogService: DialogService,
     public hotelService: HotelService,
+    private employeeService:EmployeeService,
     private ex: ExtentionService,
   ) {
     this.myForm = this.fb.group({
-      name: [null, ValidatorExtension.required()],
-      address: [null, ValidatorExtension.required()],
+      name:[null, ValidatorExtension.required()],
+      email: [null, ValidatorExtension.required(),ValidatorExtension.email()],
+      pass: [null, ValidatorExtension.required(),ValidatorExtension.min(6)],
+      account: [null, ValidatorExtension.required()],
     })
   }
 
@@ -45,8 +48,8 @@ export class EmployeeDetailComponent implements OnInit {
   }
 
   async getData() {
-    this.dialogService.openLoading;
-    const rs = await this.hotelService.findOne(this.uuid).firstValueFrom();
+    this.dialogService.openLoading();
+    const rs = await this.employeeService.findOne(this.uuid).firstValueFrom();
     if (rs) {
       this.myForm.patchValue(rs.data);
     }
@@ -57,13 +60,14 @@ export class EmployeeDetailComponent implements OnInit {
     this.myForm.markAllAsDirty();
     if (this.myForm.invalid) return;
     const formData = this.myForm.getRawValue();
-    this.dialogService.openLoading;
+    this.dialogService.openLoading();
+
     if (this.uuid) {
-      //Updat
-      await this.hotelService.edit(this.uuid, formData).firstValueFrom();
+      //Update
+      await this.employeeService.edit(this.uuid, formData).firstValueFrom();
     } else {
       //Create
-      await this.hotelService.add(formData).firstValueFrom();
+      await this.employeeService.add(formData).firstValueFrom();
     }
 
     this.dialogService.closeLoading();

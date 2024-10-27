@@ -19,6 +19,11 @@ const routes: Routes = [
           import('./facility/facility.module').then((x) => x.FacilityModule),
       },
       {
+        path: 'tai-khoan',
+        loadChildren: () =>
+          import('./employee/employee.module').then((x) => x.EmployeeModule),
+      },
+      {
         path: 'danh-sach-tang',
         loadChildren: () =>
           import('./building/building.module').then((x) => x.BuildingModule),
@@ -45,13 +50,7 @@ const routes: Routes = [
             (x) => x.TransactionModule
           ),
       },
-      {
-        path: 'tai-khoan',
-        loadChildren: () =>
-          import('./guestaccounts/guestaccounts.module').then(
-            (x) => x.GuestAccountModule
-          ),
-      },
+
       {
         path: 'dich-vu-khach-dat',
         loadChildren: () =>

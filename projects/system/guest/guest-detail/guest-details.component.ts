@@ -30,6 +30,8 @@ export class GuestDetailsComponent implements OnInit {
     this.myForm = this.fb.group({
       name: [null, ValidatorExtension.required()],
       address: [null, ValidatorExtension.required()],
+      uuid:[ex.newGuid()],
+      account_name:[null, ValidatorExtension.required()]
     })
   }
 
