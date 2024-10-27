@@ -1,0 +1,66 @@
+<button aria-label="Close" class="ant-modal-close ng-star-inserted" (click)="shareData.closeDialog()">
+  <span class="ant-modal-close-x">
+    <i nz-icon nzType="close" nzTheme="outline" class="anticon ant-modal-close-icon anticon-close"></i>
+  </span>
+</button>
+
+<div class="headerInfo" *ngIf="initForm">
+  <div class="list-status">
+    <ng-container>
+      <div class="item-status" (click)="shareData.step = 0" [ngClass]="{ active: shareData.step === 0 }">
+        Thông tin chung
+        <div class="item-right"></div>
+      </div>
+      <div class="item-status" (click)="shareData.step = 1" [ngClass]="{ active: shareData.step === 1 }">
+        Phòng
+        <div class="item-right"></div>
+      </div>
+      <div class="item-status" (click)="shareData.step = 2" [ngClass]="{ active: shareData.step === 2 }">
+        Thanh toán
+        <div class="item-right"></div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<nz-tabset class="tab-main" [(nzSelectedIndex)]="shareData.step" *ngIf="initForm">
+  <nz-tab [nzTitle]="titleTab1">
+    <ng-template #titleTab1>
+      <i class="isax-profile-2user1 mr-2"></i>
+      Thông tin chung
+      <i class="isax-danger" *ngIf="false"></i>
+    </ng-template>
+    <ng-container>
+      <app-tab-contact-step1></app-tab-contact-step1>
+    </ng-container>
+  </nz-tab>
+
+  <nz-tab [nzTitle]="titleTab2">
+    <ng-template #titleTab2>
+      <i class="isax-slider-horizontal-11 mr-2"></i>
+      Phòng
+      <i class="isax-danger" *ngIf="false"></i>
+    </ng-template>
+
+    <ng-template nz-tab>
+      <app-tab-contract-step2></app-tab-contract-step2>
+    </ng-template>
+  </nz-tab>
+
+  <nz-tab [nzTitle]="titleTab4">
+    <ng-template #titleTab4>
+      <i class="isax-note-text1 mr-2"></i>
+      Thanh toán
+    </ng-template>
+    <ng-template nz-tab>
+    </ng-template>
+  </nz-tab>
+</nz-tabset>
+
+<nz-skeleton class="form-loading" [nzParagraph]="{ rows: 14 }" [nzActive]="true" *ngIf="!initForm"></nz-skeleton>
+
+<div class="list-control-footer">
+  <button nz-button type="button" class="btn btn-default" (click)="shareData.closeDialog()">
+    <i nz-icon nzType="close" nzTheme="outline"></i>Đóng
+  </button>
+</div>

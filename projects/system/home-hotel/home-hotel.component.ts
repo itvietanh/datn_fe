@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 import { ColumnConfig } from 'common/base/models';
 import { HomeHotelDetailsComponent } from './tab-home-hotel/home-hotel-details.component';
 import { FloorService } from 'common/share/src/service/application/hotel/floor.service';
+import { TabContractComponent } from './tab-contract/tab-contract.component';
 
 interface Room {
   number: string;
@@ -52,8 +53,12 @@ export class HomeHotelComponent implements OnInit {
     },
     {
       value: 3,
-      label: "Đang dọn"
+      label: "Quá giờ"
     },
+    {
+      value: 4,
+      label: "Đang dọn"
+    }
   ];
 
   filterRoomStatus: any;
@@ -95,16 +100,6 @@ export class HomeHotelComponent implements OnInit {
       );
   }
 
-  floors: Floor[] = [];
-  selectedFilter: string = 'all';
-  selectedRoom: Room | null = null;
-  showBookingPopup: boolean = false;
-  bookingDetails = {
-    guestName: '',
-    checkInDate: '',
-    checkOutDate: ''
-  };
-
   ngOnInit() {
     this.dialogService.openLoading();
     this.getData();
@@ -117,12 +112,22 @@ export class HomeHotelComponent implements OnInit {
     };
     this.dialogService.openLoading();
     const res = await this.floorService.getPaging(searchParams).firstValueFrom();
+
+    const datePipe = new DatePipe('en-US');
+    const dateNow = datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');
+
+    for (const item of res.data!.items) {
+      for (const room of item.rooms) {
+        const roomCheckOut = datePipe.transform(room.checkOut, 'yyyy-MM-dd HH:mm:ss');
+
+        if ((roomCheckOut && dateNow) && roomCheckOut < dateNow) {
+          room.status = 3; // Quá giờ
+        }
+      }
+    }
+
     this.listFloor = res.data?.items;
 
-    for (const item of this.listFloor) {
-      
-    }
-    
     this.dialogService.closeLoading();
   }
 
@@ -147,7 +152,32 @@ export class HomeHotelComponent implements OnInit {
     );
   }
 
+  handlerOpenTab(item: any = null) {
+    const dialog = this.dialogService.openDialog(
+      async (option) => {
+        option.title = 'Thông tin phòng';
+        option.size = DialogSize.tab;
+        option.component = TabContractComponent;// open component;
+        option.inputs = {
+          item: item
+        };
+      },
+      (eventName, eventValue) => {
+        if (eventName === 'onClose') {
+          this.dialogService.closeDialogById(dialog.id);
+          if (eventValue) {
+            this.getData({ ...this.paging });
+          }
+        }
+      }
+    );
+  }
+
   onViewSelectedChange(index: number) {
+
+  }
+
+  handleFilter(values: any = null) {
 
   }
 

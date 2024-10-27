@@ -1,0 +1,111 @@
+<form [formGroup]="myForm">
+
+  <div class="row">
+    <div class="col-8">
+      <div class="row">
+        <div class="col-md-6">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="false">Thời gian nhận phòng</nz-form-label>
+            <nz-form-control>
+              <input-text formControlName="checkIn"></input-text>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div class="col-md-6">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="false">Thời gian trả phòng</nz-form-label>
+            <nz-form-control>
+              <input-text formControlName="checkOut"></input-text>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div class="col-md-12">
+          <div class="group-header">
+            <div class="title-left">
+              <div class="title-group-table">Thông tin người đại diện</div>
+            </div>
+            <div class="control-right"></div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="false">Họ và tên</nz-form-label>
+            <nz-form-control>
+              <input-text formControlName="name"></input-text>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div class="col-md-6">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="false">Số điện thoại</nz-form-label>
+            <nz-form-control>
+              <input-text formControlName="phoneNumber"></input-text>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div class="col-md-6">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="false">Số giấy tờ</nz-form-label>
+            <nz-form-control>
+              <input-text formControlName="idNumber"></input-text>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div class="col-md-6">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="false">Địa chỉ</nz-form-label>
+            <nz-form-control>
+              <input-text formControlName="address"></input-text>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-4">
+      <div class="customer-list">
+        <div class="title-group">
+          <div class="title-label">
+            <i class="isax-house-21"></i> Danh sách khách
+          </div>
+        </div>
+
+        <div class="resident-list">
+          <div class="resident-item selected" *ngFor="let item of shareData.listGuest">
+            <div class="name">
+              <!-- <i class="mr-1" [ngClass]="{
+                'isax-man1': item.gender === 'Nam',
+                'isax-woman1': item.gender === 'Nữ'
+              }"></i> -->
+              {{item.name.toUpperCase() ?? "Đang nhập thông tin khách..."}}
+            </div>
+            <div class="birth">
+              <!-- <i class="isax-cake1 mr-1"></i> -->
+              {{item.phoneNumber}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="list-control-footer">
+    <button nz-button type="button" class="btn btn-default">
+      <i nz-icon nzType="close" nzTheme="outline"></i>
+      Đóng
+    </button>
+    <button nz-button type="button" class="btn btn-primary ml-2">
+      <i nz-icon nzType="save" nzTheme="outline"></i>
+      Đặt phòng
+    </button>
+  </div>
+
+</form>

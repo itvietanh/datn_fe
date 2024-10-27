@@ -1,3 +1,5 @@
+import { MoneyFormatPipe } from './../../../../common/base/pipe/money-format.pipe';
+import { DateFormatPipe } from './../../../../common/base/pipe/date-format.pipe';
 import { DiaBanService } from './../../../../common/share/src/service/application/categories/diaban.service';
 import { RoomTypeService } from 'common/share/src/service/application/hotel/room-type.service';
 import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, OnDestroy, inject } from "@angular/core";
@@ -36,6 +38,7 @@ export class HomeHotelDetailsComponent implements OnInit {
   remainingAmount: any;
   dataRoom: any;
   listGuest: any[] = [];
+  representative: boolean = false;
 
   columns: ColumnConfig[] = [
     {
@@ -78,13 +81,12 @@ export class HomeHotelDetailsComponent implements OnInit {
     private ex: ExtentionService,
     private datePipe: DatePipe,
     private orderRoomService: OrderRoomService,
-    public diaBanService: DiaBanService
+    public diaBanService: DiaBanService,
+    // private moneyFormatPipe: MoneyFormatPipe
   ) {
     this.myForm = this.fb.group({
-      checkInTime: [{ value: this.now.toNumberYYYYMMDDHHmmss(), disabled: true },
-      ValidatorExtension.required(),
-      ],
-      checkOutTime: [null],
+      checkInTime: [{ value: this.now.toNumberYYYYMMDDHHmmss(), disabled: true }, ValidatorExtension.required()],
+      checkOutTime: [null, ValidatorExtension.required()],
       groupName: [null],
       note: [null],
       numOfResidents: [0],
@@ -103,7 +105,6 @@ export class HomeHotelDetailsComponent implements OnInit {
         fullName: [
           null,
           [
-            ValidatorExtension.required('Họ và tên không được để trống'),
             ValidatorExtension.validNameVN(
               "Họ và tên chỉ được sử dụng chữ cái, dấu khoảng trắng và dấu '"
             ),
@@ -135,12 +136,12 @@ export class HomeHotelDetailsComponent implements OnInit {
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
     this.dialogService.openLoading();
     const res = await this.roomService.findOne(this.uuid).firstValueFrom();
-    const test = {
+    const data = {
       roomTypeId: res.data.room_type_id,
       roomId: res.data.id,
     }
     this.dataRoom = res.data;
-    this.myForm.patchValue(test);
+    this.myForm.patchValue(data);
     this.whereRoom = res.data.hotel_id;
     this.dialogService.closeLoading();
   }
@@ -174,6 +175,7 @@ export class HomeHotelDetailsComponent implements OnInit {
     const year = item[3].substring(4, 8);
     const parseDate = new Date(+year, +month - 1, +day);
     item[3] = this.datePipe.transform(parseDate, 'dd/MM/yyyy');
+
     const guest = [
       {
         identityNo: item[0],
@@ -189,7 +191,7 @@ export class HomeHotelDetailsComponent implements OnInit {
     this.myForm.get('guests.dateOfBirth')?.setValue(item[3]);
     this.myForm.get('guests.gender')?.setValue(item[4]);
     this.myForm.get('guests.addressDetail')?.setValue(item[5]);
-    this.listGuest = guest;
+
   }
 
   async onDate() {
@@ -201,13 +203,17 @@ export class HomeHotelDetailsComponent implements OnInit {
     }
     const res = await this.orderRoomService.calculator(req).firstValueFrom();
 
-    const data = {
-      totalPrice: res.data.total_price,
-      finalPrice: res.data.final_price,
-      vat: res.data.vat
-    }
+    if (res.data) {
+      const data = {
+        totalPrice: Math.floor(res.data.total_price),
+        finalPrice: Math.floor(res.data.final_price),
+        vat: Math.floor(res.data.vat)
+      }
 
-    this.myForm.patchValue(data);
+      this.myForm.patchValue(data);
+    } else {
+      this.resetFormInvoice();
+    }
 
     this.dialogService.closeLoading();
   }
@@ -225,22 +231,63 @@ export class HomeHotelDetailsComponent implements OnInit {
     }
   }
 
+  handleAddGuest() {
+    const guest = this.myForm.get('guests')?.getRawValue();
+    this.listGuest = [...this.listGuest, guest];
+    if (this.listGuest[0]) {
+      this.listGuest[0].representative = true;
+    }
+    this.myForm.get('guests')?.reset();
+    this.myForm.get('guests.provinceId')?.reset();
+    this.myForm.get('guests.districtId')?.reset();
+    this.myForm.get('guests.wardId')?.reset();
+  }
+
+  handleRemoveGuest() {
+
+  }
+
+  resetFormInvoice() {
+    this.myForm.get('totalPrice')?.reset();
+    this.myForm.get('finalPrice')?.reset();
+    this.myForm.get('vat')?.reset();
+    this.myForm.get('prepayment')?.reset();
+  }
+
+  handleChooseGuest(item: any) {
+    this.listGuest.filter(x => {
+      if (x.representative === true) {
+        x.representative = false;
+      }
+
+      if (x.identityNo === item.identityNo) {
+        x.representative = true;
+      }
+    });
+  }
+
   async handlerSubmit() {
     // debugger;
     this.myForm.markAllAsDirty();
     if (this.myForm.invalid) return;
     this.dialogService.openLoading();
-    const guestData = this.myForm.get('guests')?.getRawValue();
+
+    const guests = this.listGuest.map(x => ({
+      uuid: this.ex.newGuid(),
+      name: x.fullName,
+      id_number: x.identityNo,
+      phone_number: x.phoneNumber,
+      province_id: x.provinceId,
+      district_id: x.districtId,
+      ward_id: x.wardId,
+      representative: x.representative
+    }));
+
+    debugger;
+
     const formData = {
-      guest: {
-        uuid: this.ex.newGuid(),
-        name: guestData.fullName,
-        id_number: guestData.identityNo,
-        phone_number: guestData.phoneNumber,
-        province_id: guestData.provinceId,
-        district_id: guestData.districtId,
-        ward_id: guestData.wardId,
-      },
+      guests: guests,
+
       transition: {
         uuid: this.ex.newGuid(),
         guest_id: null,
@@ -267,12 +314,6 @@ export class HomeHotelDetailsComponent implements OnInit {
     this.dialogService.closeLoading();
     this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
     this.close(true);
-  }
-
-  handleAddGuest() {
-    const guest = this.myForm.get('guests')?.getRawValue();
-    this.listGuest = [...this.listGuest, guest];
-    this.myForm.get('guests')?.reset();
   }
 
   close(data?: any) {

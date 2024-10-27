@@ -16,8 +16,8 @@
           <ng-container>
             <div class="mo-ta">
               <div class="status">
-                <input-check-box formControlName="status">
-                  <span class="available">Phòng trống: </span> 
+                <input-check-box formControlName="status" (onChange)="handleFilter()">
+                  <span class="available">Phòng trống</span>
                 </input-check-box>
               </div>
             </div>
@@ -25,7 +25,7 @@
             <div class="mo-ta">
               <div class="status">
                 <input-check-box formControlName="status">
-                  <span class="occupied">Đang ở: </span> 
+                  <span class="occupied">Đang ở</span>
                 </input-check-box>
               </div>
             </div>
@@ -33,7 +33,7 @@
             <div class="mo-ta">
               <div class="phong-ban">
                 <input-check-box formControlName="status">
-                  <span class="cleaning">Cần dọn: </span> 
+                  <span class="cleaning">Cần dọn</span>
                 </input-check-box>
               </div>
             </div>
@@ -66,15 +66,16 @@
         </div>
         <div class="rooms-grid shadow-lg p-4">
           <div *ngFor="let room of floor.rooms" class="room"
-            [ngClass]="{'available': room.status === 1, 'occupied': room.status === 2, 'cleaning': room.status === 3}"
-            (click)="room.status !== 2 ? handlerOpenDialog(room) : null">
+            [ngClass]="{'available': room.status === 1, 'occupied': room.status === 2, 'overtime': room.status === 3, 'cleaning': room.status === 4 }"
+            (click)="(room.status === 2 ||room.status === 3) ? handlerOpenTab(room) : (room.status !== 2 ? handlerOpenDialog(room) : null)">
             <div class="room-left">
               <h5 class="text-center mt-2" style="font-weight: 700;">Phòng {{room.roomNumber}}</h5>
               <p class="text-center" style="font-weight: 600;">
                 {{room.typeName}}
               </p>
 
-              <span class="mt-2 ml-2" *ngIf="room.status === 2">{{room.status | labelValue: listRoomStatus}}</span>
+              <span class="mt-2 ml-2" *ngIf="room.status === 2 || room.status === 3">{{room.status | labelValue:
+                listRoomStatus}}</span>
 
               <p class="mb-2 float-right">
                 <span nz-icon nzType="user" nzTheme="outline"></span>
@@ -85,13 +86,15 @@
             <div class="room-right text-center">
               <p class="mt-2" *ngIf="room.status === 1">{{room.status | labelValue: listRoomStatus}}</p>
 
-              <div class="d-flex" *ngIf="room.status === 2">
-                <div *ngIf="room.room_using_guest && room.room_using_guest.length > 0" class="mx-auto">
-                  <p class="mt-2 mb-0" style="font-weight: 700;">{{ room.room_using_guest[0].name }}</p>
-                </div>
+              <div class="d-flex justify-content-center align-items-center" *ngIf="room.status === 2 || room.status === 3">
+                <ng-container *ngFor="let guest of room.room_using_guest">
+                  <p class="mt-2 mb-0" style="font-weight: 700;" *ngIf="guest.representative">
+                    {{ guest.name }}
+                  </p>
+                </ng-container>
               </div>
 
-              <div class="d-flex mt-4" *ngIf="room.status === 2">
+              <div class="d-flex mt-4" *ngIf="room.status === 2 || room.status === 3">
                 <div class="col">
                   <p class="m-0">{{room.checkIn | dateFormat}}</p>
                   <p class="m-0">{{room.checkIn | datetimeFormat : "HH:mm"}}</p>
