@@ -33,7 +33,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         // lỗi login
         
         if (error.status === 401) {
-          // location.href = this.location.prepareExternalUrl('/auth/login-vneid');
+          location.href = this.location.prepareExternalUrl('/dang-nhap');
           return throwError(() => null);
         }
 

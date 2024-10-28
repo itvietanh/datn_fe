@@ -23,20 +23,25 @@ export class TabContactStep2Component implements OnInit {
     {
       key: 'name',
       header: 'Họ và tên',
+      nzWidth: '120px'
     },
     {
       key: 'phoneNumber',
       header: 'Số điện thoại',
+      nzWidth: '120px'
     },
     {
       key: 'idNumber',
       header: 'Số CCCD',
+      nzWidth: '140px'
     },
     {
       key: 'action',
       header: 'Thao tác',
       tdClass: 'text-center',
       pipe: 'template',
+      alignRight: true,
+      nzWidth: '100px'
     },
   ];
 
@@ -83,7 +88,7 @@ export class TabContactStep2Component implements OnInit {
         option.size = DialogSize.medium;
         option.component = RoomChangeComponent;
         option.inputs = {
- 
+
         };
       },
       (eventName, eventValue) => {

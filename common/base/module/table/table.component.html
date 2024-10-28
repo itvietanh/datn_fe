@@ -1,39 +1,21 @@
 <div class="h-full flex flex-col justify-between">
-  <nz-table
-    nzBordered
-    [nzData]="items"
-    [nzFrontPagination]="false"
-    [nzLoading]="loading"
-    (nzQueryParams)="onQueryParams($event)"
-    [nzScroll]="scroll"
-    nzTableLayout="fixed"
-  >
+  <nz-table nzBordered [nzData]="items" [nzFrontPagination]="false" [nzLoading]="loading"
+    (nzQueryParams)="onQueryParams($event)" [nzScroll]="scroll" nzTableLayout="fixed">
     <thead>
       <tr>
-        <th
-          *ngIf="showCheckbox"
-          nzAlign="center"
-          [(nzChecked)]="checked"
-          [nzIndeterminate]="indeterminate"
-          (nzCheckedChange)="onAllChecked($event)"
-          [nzDisabled]="disableAllCheck"
-          class="w-10"
-          nzWidth="50px"
-        ></th>
-        <th *ngIf="showIndex" nzAlign="center" nzWidth="65px">STT</th>
+        <th *ngIf="showCheckbox" nzAlign="center" [(nzChecked)]="checked" [nzIndeterminate]="indeterminate"
+          (nzCheckedChange)="onAllChecked($event)" [nzDisabled]="disableAllCheck" class="w-10" nzWidth="50px"></th>
+        <th *ngIf="showIndex" nzAlign="center" nzWidth="60px">STT</th>
         <ng-container *ngFor="let column of displayedColumns">
           <ng-container *ngIf="!column.sortable; else sortableTmp">
-            <th nzAlign="center" [nzWidth]="column.nzWidth || null">
+            <th nzAlign="center" [nzWidth]="column.nzWidth || null" [nzRight]="column.alignRight ?true: false"
+              [nzLeft]="column.alignLeft ?true: false">
               {{ column.header }}
             </th>
           </ng-container>
           <ng-template #sortableTmp>
-            <th
-              nzAlign="center"
-              [nzSortFn]="true"
-              [nzColumnKey]="column.key"
-              [nzWidth]="column.nzWidth || null"
-            >
+            <th nzAlign="center" [nzSortFn]="true" [nzColumnKey]="column.key" [nzWidth]="column.nzWidth || null"
+              [nzRight]="column.alignRight ?true: false" [nzLeft]="column.alignLeft ?true: false">
               {{ column.header }}
             </th>
           </ng-template>
@@ -42,19 +24,16 @@
     </thead>
     <tbody>
       <tr *ngFor="let item of items; let i = index">
-        <td
-          *ngIf="showCheckbox"
-          [nzChecked]="setOfCheckedKeys.has(item[key])"
-          (nzCheckedChange)="onItemChecked(item[key], $event)"
-        ></td>
+        <td *ngIf="showCheckbox" [nzChecked]="setOfCheckedKeys.has(item[key])"
+          (nzCheckedChange)="onItemChecked(item[key], $event)"></td>
         <td *ngIf="showIndex" class="text-center">
           {{ (pagination.page - 1) * pagination.size + i + 1 }}
         </td>
-        <td
-          *ngFor="let column of displayedColumns"
-          [class]="column.tdClass"
-          nzEllipsis
-        >
+        <td *ngFor="let column of displayedColumns" [class]="column.tdClass" nzEllipsis [title]="
+            column.pipe !== 'tagsColor' && column.pipe !== 'boolean'
+              ? item[column.key]
+              : ''
+          " [nzRight]="column.alignRight ? true: false" [nzLeft]="column.alignLeft ? true: false">
           <ng-container [ngSwitch]="column.pipe">
             <ng-container *ngSwitchCase="'number'">
               {{ item[column.key] | number }}
@@ -78,12 +57,10 @@
               <pre>{{ item[column.key] | json }}</pre>
             </ng-container>
             <ng-container *ngSwitchCase="'template'">
-              <ng-container
-                *ngTemplateOutlet="
+              <ng-container *ngTemplateOutlet="
                   column.templateColumn!;
-                  context: { $implicit: item, key: column.key, index: i }
-                "
-              >
+                  context: { $implicit: item, key: column.key }
+                ">
               </ng-container>
             </ng-container>
             <ng-container *ngSwitchCase="'link'">
@@ -93,6 +70,10 @@
             </ng-container>
             <ng-container *ngSwitchCase="'optionLabel'">
               {{ item[column.key] }}
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'labelValue'">
+              {{ item[column.key] | labelValue: column.labelValue ? column.labelValue : [] }}
             </ng-container>
             <ng-container *ngSwitchDefault>
               {{ item[column.key] }}

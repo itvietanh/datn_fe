@@ -33,8 +33,8 @@ export class TabContractService {
   ) {
     this.myForm = this.fb.group({
       /**Tab 1 */
-      checkIn: [null],
-      checkOut: [null],
+      checkInTxt: [null],
+      checkOutTxt: [null],
       name: [null],
       phoneNumber: [null],
       idNumber: [null],
@@ -56,8 +56,8 @@ export class TabContractService {
     this.dialogService.openLoading();
     this.myForm.disable();
     const item = this.item;
-    item.checkIn = this.datePipe.transform(item.checkIn, 'dd/MM/yyyy HH:MM');
-    item.checkOut = this.datePipe.transform(item.checkOut, 'dd/MM/yyyy HH:MM');
+    item.checkInTxt = this.datePipe.transform(item.checkIn, 'dd/MM/yyyy HH:MM');
+    item.checkOutTxt = this.datePipe.transform(item.checkOut, 'dd/MM/yyyy HH:MM');
     this.myForm.patchValue(item);
     item.room_using_guest.forEach((guest: any) => {
       if (guest.representative) {

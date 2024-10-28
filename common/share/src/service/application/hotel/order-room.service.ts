@@ -18,6 +18,7 @@ export class OrderRoomService extends BaseService {
       params: this.stringifyParams(params)
     });
   }
+  
 
   public override findOne<T = any>(uuid: any) {
     return this.http.get<ResponseModel<T>>(`${this.baseUrl}`, {
@@ -34,6 +35,12 @@ export class OrderRoomService extends BaseService {
 
   public override delete<T = any>(uuid: any) {
     return this.http.delete<ResponseModel<T>>(`${this.baseUrl}`, {
+      params: this.stringifyParams({ uuid: uuid }),
+    });
+  }
+
+  public hanldeRoomOverTime<T = any>(uuid: any) {
+    return this.http.get<ResponseModel<T>>(`${this.baseUrl}/over-time`, {
       params: this.stringifyParams({ uuid: uuid }),
     });
   }
