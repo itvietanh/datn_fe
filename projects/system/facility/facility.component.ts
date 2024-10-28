@@ -137,4 +137,18 @@ export class FacilityComponent implements OnInit {
     }
   }
 
+
+  // async handlerUpdate(item: any) {
+  //   const confirm = await this.messageService.confirm('Bạn có muốn thay đổi này không?');
+  //   if (confirm) {
+  //     const rs = await this.hotelService.edit(item?.uuid).firstValueFrom();
+  //     if (rs.data) {
+  //       this.messageService.notiMessageSuccess('Thay đổi dữ liệu thành công');
+  //       return this.getData({ ...this.paging });
+  //     }
+  //   }
+  // }
+
+
+
 }

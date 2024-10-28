@@ -12,6 +12,7 @@ import { GuestService } from 'common/share/src/service/application/hotel/guest.s
 
 @Component({
   selector: 'app-guest',
+
   templateUrl: './guest.component.html',
   styleUrls: ['./guest.component.scss'],
 })
@@ -114,6 +115,7 @@ export class GuestComponent implements OnInit {
         option.inputs = {
           uuid: item?.uuid,
           mode: mode,
+          itemData: item,
         };
       },
       (eventName, eventValue) => {
@@ -132,11 +134,13 @@ export class GuestComponent implements OnInit {
       'Bạn có muốn xóa dữ liệu này không?'
     );
     if (confirm) {
-      const rs = await this.hotelService.delete(item?.uuid).firstValueFrom();
+      const rs = await this.guestService.delete(item?.uuid).firstValueFrom();
       if (rs.data) {
         this.messageService.notiMessageSuccess('Xóa dữ liệu thành công');
         return this.getData({ ...this.paging });
       }
     }
   }
+
+
 }
