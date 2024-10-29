@@ -499,6 +499,8 @@ export class CreateBookingComponent implements OnInit {
     //   });
   }
 
+
+
   onInputSelectChange(item: any) {
     item.description = this.pricesDict[item.id]?.find(
       (p: any) => p.value === item.priceId

@@ -261,7 +261,18 @@ export class MenuComponent implements OnInit {
         isOpen: false,
         exact: false,
         level: 1,
-        child: [],
+        child: [
+          {
+            icon: 'isax-pen-tool-2-1',
+            name: 'THỐNG KÊ GIAO DỊCH',
+            url: '/he-thong/thong-ke-giao-dich',
+            isOpen: false,
+            exact: false,
+            level: 2,
+            child: [],
+          },
+
+        ],
       },
     ];
   }
