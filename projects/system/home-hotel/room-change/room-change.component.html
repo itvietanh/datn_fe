@@ -1,5 +1,17 @@
 <form class="row mt-2" [formGroup]="myForm">
   <div class="col-md-4">
+    <app-form-control label="Loại phòng">
+      <input-select-api [apiService]="roomTypeService" [actionName]="'getCombobox'"
+        formControlName="roomType"></input-select-api>
+    </app-form-control>
+  </div>
+  <div class="col-md-4">
+    <app-form-control label="Phòng">
+      <input-select-api [apiService]="roomService" [actionName]="'getCombobox'" formControlName="roomNumber"
+        [allowSearch]="false"></input-select-api>
+    </app-form-control>
+  </div>
+  <div class="col-md-4">
     <app-form-control label="Thời gian nhận phòng">
       <input-date-time formControlName="checkIn"></input-date-time>
     </app-form-control>
@@ -7,16 +19,6 @@
   <div class="col-md-4">
     <app-form-control label="Thời gian trả phòng">
       <input-date-time formControlName="checkOut"></input-date-time>
-    </app-form-control>
-  </div>
-  <div class="col-md-4">
-    <app-form-control label="Loại phòng">
-      <input-select formControlName="roomType"></input-select>
-    </app-form-control>
-  </div>
-  <div class="col-md-4">
-    <app-form-control label="Phòng">
-      <input-text formControlName="roomNumber"></input-text>
     </app-form-control>
   </div>
   <div class="col-md-4">

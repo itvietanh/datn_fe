@@ -67,14 +67,8 @@ export class TabContactStep2Component implements OnInit {
       check_out: this.shareData.item.checkOut
     }
     const res = await this.orderRoomService.calculator(req).firstValueFrom();
-
+debugger
     if (res.data) {
-      // const data = {
-      //   totalPrice: Math.floor(res.data.total_price),
-      //   finalPrice: Math.floor(res.data.final_price),
-      //   vat: Math.floor(res.data.vat)
-      // }
-
       this.roomAmount = Math.floor(res.data.final_price);
     }
 
