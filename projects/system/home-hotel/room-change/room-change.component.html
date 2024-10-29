@@ -1,0 +1,46 @@
+<form class="row mt-2" [formGroup]="myForm">
+  <div class="col-md-4">
+    <app-form-control label="Loại phòng">
+      <input-select-api [apiService]="roomTypeService" [actionName]="'getCombobox'"
+        formControlName="roomType"></input-select-api>
+    </app-form-control>
+  </div>
+  <div class="col-md-4">
+    <app-form-control label="Phòng">
+      <input-select-api [apiService]="roomService" [actionName]="'getCombobox'" formControlName="roomNumber"
+        [allowSearch]="false"></input-select-api>
+    </app-form-control>
+  </div>
+  <div class="col-md-4">
+    <app-form-control label="Thời gian nhận phòng">
+      <input-date-time formControlName="checkIn"></input-date-time>
+    </app-form-control>
+  </div>
+  <div class="col-md-4">
+    <app-form-control label="Thời gian trả phòng">
+      <input-date-time formControlName="checkOut"></input-date-time>
+    </app-form-control>
+  </div>
+  <div class="col-md-4">
+    <app-form-control label="Giá phòng">
+      <input-number formControlName="roomPrice"></input-number>
+    </app-form-control>
+  </div>
+  <div class="col-md-4">
+    <app-form-control label="Phí chuyển">
+      <input-number formControlName="transferFee"></input-number>
+    </app-form-control>
+  </div>
+
+  <div class="col-md-12">
+    <div class="list-control-search">
+      <button nz-button type="button" class="btn btn-default" (click)="close()">
+        <i nz-icon nzType="close" nzTheme="outline"></i>Đóng
+      </button>
+      <button nz-button type="submit" class="btn btn-primary" (click)="saveData()">
+        <i nz-icon nzType="login" nzTheme="outline"></i>Đổi phòng
+      </button>
+    </div>
+  </div>
+
+</form>

@@ -17,22 +17,6 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.authToken();
   }
-
-  async authToken() {
-    const token = LocalStorageUtil.getItem(ACCESS_TOKEN_KEY);
-    if (token) {
-      this.dialogService.openLoading();
-      const res = await this.autService.authToken().firstValueFrom();
-      // if (res.message === "Isvalid") {
-      //   this.router.navigateByUrl("he-thong");
-      // }
-
-      if (res.error === "Unauthorized") {
-        this.router.navigateByUrl("dang-nhap");
-      }
-      this.dialogService.closeLoading();
-    }
-  }
+ 
 }

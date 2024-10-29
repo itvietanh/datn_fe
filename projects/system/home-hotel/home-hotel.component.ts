@@ -1,3 +1,4 @@
+import { OrderRoomService } from 'common/share/src/service/application/hotel/order-room.service';
 import { ShrContractService } from '../../../common/share/src/service/application/accom/shr-contract.service';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -13,6 +14,7 @@ import { DatePipe } from '@angular/common';
 import { ColumnConfig } from 'common/base/models';
 import { HomeHotelDetailsComponent } from './tab-home-hotel/home-hotel-details.component';
 import { FloorService } from 'common/share/src/service/application/hotel/floor.service';
+import { TabContractComponent } from './tab-contract/tab-contract.component';
 
 interface Room {
   number: string;
@@ -52,8 +54,12 @@ export class HomeHotelComponent implements OnInit {
     },
     {
       value: 3,
-      label: "Đang dọn"
+      label: "Quá giờ"
     },
+    {
+      value: 4,
+      label: "Đang dọn"
+    }
   ];
 
   filterRoomStatus: any;
@@ -68,9 +74,9 @@ export class HomeHotelComponent implements OnInit {
     private fb: FormBuilder,
     private dialogService: DialogService,
     private messageService: MessageService,
-    private shrContractService: ShrContractService,
     private datePipe: DatePipe,
     public floorService: FloorService,
+    private orderRoomService: OrderRoomService
   ) {
     this.formSearch = this.fb.group({
 
@@ -95,16 +101,6 @@ export class HomeHotelComponent implements OnInit {
       );
   }
 
-  floors: Floor[] = [];
-  selectedFilter: string = 'all';
-  selectedRoom: Room | null = null;
-  showBookingPopup: boolean = false;
-  bookingDetails = {
-    guestName: '',
-    checkInDate: '',
-    checkOutDate: ''
-  };
-
   ngOnInit() {
     this.dialogService.openLoading();
     this.getData();
@@ -117,13 +113,29 @@ export class HomeHotelComponent implements OnInit {
     };
     this.dialogService.openLoading();
     const res = await this.floorService.getPaging(searchParams).firstValueFrom();
+    await this.handleRoomOverTime(res.data!.items)
     this.listFloor = res.data?.items;
-
-    for (const item of this.listFloor) {
-      
-    }
-    
     this.dialogService.closeLoading();
+  }
+
+  async handleRoomOverTime(data: any) {
+    const datePipe = new DatePipe('en-US');
+    const dateNow = datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');
+    for (const item of data) {
+      for (const room of item.rooms) {
+        const roomCheckOut = datePipe.transform(room.checkOut, 'yyyy-MM-dd HH:mm:ss');
+        if (room.status !== 3) {
+          if ((roomCheckOut && dateNow) && roomCheckOut < dateNow) {
+            this.dialogService.openLoading();
+            const res = await this.orderRoomService.hanldeRoomOverTime(room.roomUuid).firstValueFrom();
+            if (res.data) {
+              this.getData(this.paging);
+            }
+            this.dialogService.closeLoading();
+          }
+        }
+      }
+    }
   }
 
   handlerOpenDialog(item: any = null) {
@@ -147,7 +159,32 @@ export class HomeHotelComponent implements OnInit {
     );
   }
 
+  handlerOpenTab(item: any = null) {
+    const dialog = this.dialogService.openDialog(
+      async (option) => {
+        option.title = 'Thông tin phòng';
+        option.size = DialogSize.tab;
+        option.component = TabContractComponent;// open component;
+        option.inputs = {
+          item: item
+        };
+      },
+      (eventName, eventValue) => {
+        if (eventName === 'onClose') {
+          this.dialogService.closeDialogById(dialog.id);
+          if (eventValue) {
+            this.getData({ ...this.paging });
+          }
+        }
+      }
+    );
+  }
+
   onViewSelectedChange(index: number) {
+
+  }
+
+  handleFilter(values: any = null) {
 
   }
 

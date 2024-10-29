@@ -1,0 +1,37 @@
+.resident-list {
+    margin-top: 20px;
+
+    .resident-item {
+        border: solid 1px #ccc;
+        border-radius: 3px;
+        padding: 8px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+
+        &.selected {
+            border-color: #d35e16;
+        }
+
+        .name {
+            font-weight: 500;
+
+            .isax-man1 {
+                color: #363333;
+            }
+
+            .isax-woman1 {
+                color: #db3e3e;
+            }
+        }
+
+        .birth {
+            color: #144e9f;
+
+            i {
+                color: #144e9f;
+            }
+        }
+    }
+}

@@ -41,16 +41,28 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.redirectLogin = this.ar.snapshot.queryParams['redirect'];
-    if (!this.redirectLogin) this.redirectLogin = 'he-thong';
+    if (!this.redirectLogin) this.redirectLogin = '/';
+    this.authToken();
+  }
+
+  async authToken() {
+    const token = LocalStorageUtil.getItem(ACCESS_TOKEN_KEY);
+    if (token) {
+      this.dialogService.openLoading();
+      const res = await this.autService.authToken().firstValueFrom();
+      // if (res.message === "Isvalid") {
+      //   this.router.navigateByUrl("he-thong");
+      // }
+      if (res.error === "Unauthorized") {
+        this.router.navigateByUrl("dang-nhap");
+      }
+      this.dialogService.closeLoading();
+    }
   }
 
   async submit() {
     this.myForm.markAllAsDirty();
-    if(this.myForm.invalid){
-      alert("sai thông tin đăng nhập");
-      return;
-
-    };
+    if (this.myForm.invalid) return;
 
     const data = this.myForm.getRawValue();
     this.dialogService.openLoading();

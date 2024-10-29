@@ -20,6 +20,9 @@ export interface ColumnConfig {
   controlName?: string;
   isDefault?: boolean;
   alwaysShow?: boolean;
+  alignRight?: boolean;
+  alignLeft?: boolean;
+  labelValue?: any[];
 }
 
 export interface FilterModel {
