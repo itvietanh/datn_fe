@@ -78,6 +78,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'menu',
+        loadChildren: () =>
+          import('./menu/menu.module').then(
+            (x) => x.MenuModule
+          ),
+      },
+      {
         path: 'dat-phong',
         loadChildren: () =>
           import('./order-room/order-room.module').then(

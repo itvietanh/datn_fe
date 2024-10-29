@@ -1,3 +1,4 @@
+// import { MenuService } from 'ng-zorro-antd/menu';
 // import { EmployeeService } from './../../../common/share/src/service/application/hotel/employee.service';
 import { ShrContractService } from '../../../common/share/src/service/application/accom/shr-contract.service';
 import { Component, OnInit } from '@angular/core';
@@ -12,16 +13,18 @@ import { HotelService } from 'common/share/src/service/application/hotel/hotel.s
 import { GuestService } from 'common/share/src/service/application/hotel/guest.service';
 // import { GuestAccountsDetailComponent } from './guestaccounts-detail/guestaccounts-details.component';
 // import { EmployeeService } from 'common/share/src/service/application/hotel/employee.service';
-import { EmployeeDetailComponent } from './employee-detail/employee-detail.component';
+// import { EmployeeDetailComponent } from './employee-detail/employee-detail.component';
 import { EmployeeService } from 'common/share/src/service/application/hotel/employee.service';
+import { MenuService } from "common/share/src/service/application/hotel/menu.service";
+import { MenuDetailsComponent } from './menu-details/menu-details.component';
 
 
 @Component({
-  selector: 'app-employee',
-  templateUrl: './employee.component.html',
-  styleUrls: ['./employee.component.scss'],
+  selector: 'app-menu',
+  templateUrl: './menu.component.html',
+  styleUrls: ['./menu.component.scss'],
 })
-export class EmployeeComponent implements OnInit {
+export class MenuComponent implements OnInit {
   public formSearch: FormGroup;
   public listOfData: any[] = [];
   public isLoading?: boolean;
@@ -32,27 +35,11 @@ export class EmployeeComponent implements OnInit {
   columns: ColumnConfig[] = [
     {
       key: 'name',
-      header: 'Tên nhân viên',
-    },
-    {
-      key: 'account',
-      header: 'Tên tài khoản',
+      header: 'Danh mục menu',
     },
     {
       key: 'created_at',
       header: 'Ngày tạo',
-    },
-    {
-      key:"phone",
-      header:"Số điện thoại",
-    },
-    {
-      key:"email",
-      header:"Email",
-    },
-    {
-      key:"password",
-      header:"Mật khẩu",
     },
     {
       key: 'action',
@@ -68,37 +55,36 @@ export class EmployeeComponent implements OnInit {
     private messageService: MessageService,
     public hotelService: HotelService,
     private employeeService:EmployeeService,
+    private menuService:MenuService,
     // private guestService : GuestService,
 
     private datePipe: DatePipe
   ) {
     this.formSearch = this.fb.group({
-      name:[null, ValidatorExtension.required()],
-      email: [null, ValidatorExtension.required()],
-      account:[null,ValidatorExtension.required()],
-      password:[null,ValidatorExtension.required()],
-      phone:[null,ValidatorExtension.required()],
-      address:[null,ValidatorExtension.required()],
-      hotel_id:[null,ValidatorExtension.required()]
+      name:[null,ValidatorExtension.required()],
+          code:[null,ValidatorExtension.required()],
+          is_show:[null,ValidatorExtension.required()]
+
+
     });
-    this.formSearch
-      .get('outEndDate')
-      ?.addValidators(
-        ValidatorExtension.gteDateValidator(
-          this.formSearch,
-          'signEndDate',
-          'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
-        )
-      );
-    this.formSearch
-      .get('outEndDate')
-      ?.addValidators(
-        ValidatorExtension.gteDateValidator(
-          this.formSearch,
-          'outStartDate',
-          'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
-        )
-      );
+    // this.formSearch
+    //   .get('outEndDate')
+    //   ?.addValidators(
+    //     ValidatorExtension.gteDateValidator(
+    //       this.formSearch,
+    //       'signEndDate',
+    //       'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
+    //     )
+    //   );
+    // this.formSearch
+    //   .get('outEndDate')
+    //   ?.addValidators(
+    //     ValidatorExtension.gteDateValidator(
+    //       this.formSearch,
+    //       'outStartDate',
+    //       'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
+    //     )
+    //   );
   }
 
   ngOnInit() {
@@ -113,7 +99,7 @@ export class EmployeeComponent implements OnInit {
       ...this.formSearch.value,
     };
     this.dialogService.openLoading();
-    const rs = await this.employeeService.getPaging(params).firstValueFrom();
+    const rs = await this.menuService.getPaging(params).firstValueFrom();
     const dataRaw = rs.data!.items;
     for (const item of dataRaw) {
       if (item.created_at) {
@@ -132,12 +118,12 @@ export class EmployeeComponent implements OnInit {
     const dialog = this.dialogService.openDialog(
       async (option) => {
         option.title =
-          mode === 'view' ? 'Xem Chi Tiết Tài khoản' : 'Thêm Mới Tài Khoản';
-        if (mode === 'edit') option.title = 'Cập Nhật Tài Khoản';
+          mode === 'view' ? 'Xem Chi Tiết Menu' : 'Thêm Mới Menu';
+        if (mode === 'edit') option.title = 'Cập Nhật Menu';
         option.size = DialogSize.xlarge;
-        option.component = EmployeeDetailComponent; // open component;
+        option.component = MenuDetailsComponent; // open component;
         option.inputs = {
-          uuid: item?.uuid,
+          id: item?.id,
           mode: mode,
         };
       },
@@ -157,7 +143,7 @@ export class EmployeeComponent implements OnInit {
       'Bạn có muốn xóa dữ liệu này không?'
     );
     if (confirm) {
-      const rs = await this.employeeService.delete(item?.uuid).firstValueFrom();
+      const rs = await this.menuService.delete(item?.id).firstValueFrom();
       if (rs.data) {
         this.messageService.notiMessageSuccess('Xóa dữ liệu thành công');
         return this.getData({ ...this.paging });
