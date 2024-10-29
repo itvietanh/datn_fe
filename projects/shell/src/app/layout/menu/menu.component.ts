@@ -274,6 +274,15 @@ export class MenuComponent implements OnInit {
 
         ],
       },
+      {
+        icon: 'isax-pen-tool-2-1',
+        name: 'QUẢN LÝ MENU',
+        url: '/he-thong/menu',
+        isOpen: false,
+        exact: false,
+        level: 1,
+        child: [],
+      },
     ];
   }
 

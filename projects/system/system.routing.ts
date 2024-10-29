@@ -1,10 +1,12 @@
 import { Routes, RouterModule } from '@angular/router';
 import { SystemComponent } from './system.component';
+import { AuthGuard } from 'common/base/service/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: SystemComponent,
+    canActivate: [AuthGuard],
     children: [
       {
         path: 'trang-chu',
@@ -73,6 +75,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('./statistical/statistical.module').then(
             (x) => x.StatisticalModule
+          ),
+      },
+      {
+        path: 'menu',
+        loadChildren: () =>
+          import('./menu/menu.module').then(
+            (x) => x.MenuModule
           ),
       },
       {

@@ -8,6 +8,8 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { RoomTypeService } from 'common/share/src/service/application/hotel/room-type.service';
+import { RoomService } from 'common/share/src/service/application/hotel/room.service';
 import { ValidatorExtension } from 'common/validator-extension';
 import {
   CountryService,
@@ -37,6 +39,8 @@ export class RoomChangeComponent implements OnInit {
     public countryService: CountryService,
     public occupationService: OccupationService,
     public stayingReasonService: StayingReasonService,
+    public roomService: RoomService,
+    public roomTypeService: RoomTypeService,
   ) {
     this.myForm = this.fb.group({
       checkIn: [{ value: this.now.toNumberYYYYMMDDHHmmss(), disabled: true }],
