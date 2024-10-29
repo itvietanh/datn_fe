@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { environment } from '@env/environment';
 import { MessageService } from 'common/base/service/message.service';
 import { LocalStorageUtil } from 'common/base/utils';
+import { AutService } from 'common/share/src/service/application/auth/aut.service';
 import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
 import { Observable } from 'rxjs';
 import {
@@ -25,8 +26,6 @@ export class NavbarComponent implements OnInit {
   public userName: Observable<string> | undefined;
   public listOffice: any[] = [];
   public listNotification: any[] = [];
-  public listAccom: any[] = [];
-  public accomId: any;
   public isLoading: boolean | null = true;
   public curentOffice: any;
   public dropdownOpen: boolean = false;
@@ -36,8 +35,9 @@ export class NavbarComponent implements OnInit {
     private messageService: MessageService,
     private notificationService: NotificationService,
     public hotelService: HotelService,
-    private local: LocationStrategy
-  ) {}
+    private local: LocationStrategy,
+    public authService: AutService,
+  ) { }
 
   async ngOnInit() {
   }
@@ -65,7 +65,7 @@ export class NavbarComponent implements OnInit {
   }
 
   async getNotify(paging: PagingModel = { page: 1, size: 20 }) {
-   
+
   }
 
   loadMore = async () => {

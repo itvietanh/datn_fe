@@ -81,7 +81,7 @@
       <ng-container>
         <li class="nav-item dropdown dropdown-user">
           <a href="#" class="navbar-nav-link d-flex align-items-center dropdown-toggle" data-toggle="dropdown">
-            <span>Vũ Việt Anh</span>
+            <span>{{authService.userInfo?.name ? authService.userInfo?.name : "Anonymous"}}</span>
           </a>
 
           <div class="dropdown-menu dropdown-menu-right">
