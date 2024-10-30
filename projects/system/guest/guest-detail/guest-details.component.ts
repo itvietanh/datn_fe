@@ -30,6 +30,7 @@ export class GuestDetailsComponent implements OnInit {
     private ex: ExtentionService,
   ) {
     this.myForm = this.fb.group({
+      uuid: [ex.newGuid()],
       name: [null, ValidatorExtension.required()],
       contact_details: [null, ValidatorExtension.required()],
     })
@@ -59,7 +60,6 @@ export class GuestDetailsComponent implements OnInit {
     if (this.myForm.invalid) return;
     const formData = this.myForm.getRawValue();
     this.dialogService.openLoading();
-
     if (this.uuid) {
       //Update
       await this.guestService.edit(this.uuid, formData).firstValueFrom();
@@ -67,7 +67,6 @@ export class GuestDetailsComponent implements OnInit {
       //Create
       await this.guestService.add(formData).firstValueFrom();
     }
-
     this.dialogService.closeLoading();
     this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
     this.close(true);
