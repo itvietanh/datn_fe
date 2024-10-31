@@ -9,21 +9,41 @@
   </ng-template>
 
   <div class="row">
+
     <div class="col-md-6">
-      <app-form-control label="Tên danh mục Menu">
-        <input-text formControlName="menu"> </input-text>
-      </app-form-control>
-    </div>
-    <div class="col-md-6">
-      <app-form-control label="Code">
+      <app-form-control label="Mã">
         <input-text formControlName="code"> </input-text>
       </app-form-control>
     </div>
     <div class="col-md-6">
-      <app-form-control label="Hiển thị">
-        <input-text formControlName="is_show"> </input-text>
+      <app-form-control label="Icon">
+        <input-text formControlName="icon"> </input-text>
       </app-form-control>
     </div>
+    <div class="col-md-6">
+      <app-form-control label="Menu cha">
+        <input-select-api [apiService]="hotelService" [actionName]="'getCombobox'"
+          formControlName="menu"></input-select-api>
+      </app-form-control>
+    </div>
+    <div class="col-md-6">
+      <app-form-control label="Tên">
+        <input-text formControlName="name"> </input-text>
+      </app-form-control>
+    </div>
+    <div class="col-md-12">
+      <app-form-control label="Xác nhận">
+        <input type="checkbox" formControlName="confirm_work_location" style="width: 20px; height: 20px; vertical-align: middle;">
+        <label for="confirm_work_location" style="font-size: 1.2em; margin-left: 5px;">Hiển thị </label>
+      </app-form-control>
+    </div>
+
+    <!-- <div class="col-md-12">
+      <app-form-control label="Cơ sở làm việc">
+        <input-select-api [apiService]="hotelService" [actionName]="'getCombobox'"
+          formControlName="hotel_id"></input-select-api>
+      </app-form-control>
+    </div> -->
 
 
   </div>
