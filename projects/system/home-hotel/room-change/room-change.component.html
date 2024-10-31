@@ -1,14 +1,14 @@
 <form class="row mt-2" [formGroup]="myForm">
   <div class="col-md-4">
     <app-form-control label="Loại phòng">
-      <input-select-api [apiService]="roomTypeService" [actionName]="'getCombobox'"
-        formControlName="roomType"></input-select-api>
+      <input-select-api [apiService]="roomTypeService" [actionName]="'getCombobox'" formControlName="roomTypeId"
+        (onChange)="onChangeRoomType()"></input-select-api>
     </app-form-control>
   </div>
   <div class="col-md-4">
     <app-form-control label="Phòng">
-      <input-select-api [apiService]="roomService" [actionName]="'getCombobox'" formControlName="roomNumber"
-        [allowSearch]="false"></input-select-api>
+      <input-select-api [apiService]="roomService" [actionName]="'getCombobox'" formControlName="roomId"
+        [allowSearch]="false" [apiParams]="whereParams" (onChange)="onChangeRoom()"></input-select-api>
     </app-form-control>
   </div>
   <div class="col-md-4">
@@ -18,12 +18,12 @@
   </div>
   <div class="col-md-4">
     <app-form-control label="Thời gian trả phòng">
-      <input-date-time formControlName="checkOut"></input-date-time>
+      <input-date-time formControlName="checkOut" (onChange)="onDate()" [min]="now"></input-date-time>
     </app-form-control>
   </div>
   <div class="col-md-4">
     <app-form-control label="Giá phòng">
-      <input-number formControlName="roomPrice"></input-number>
+      <input-number formControlName="finalPrice"></input-number>
     </app-form-control>
   </div>
   <div class="col-md-4">

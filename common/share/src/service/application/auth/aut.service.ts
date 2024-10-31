@@ -50,6 +50,8 @@ export class AutService {
   }
 
   public async initUser() {
+    let url = location.href;
+    if (url.indexOf('/dang-nhap') !== -1) return;
     const rs = await this.profile().firstValueFrom();
     this.userInfo = rs.data;
   }

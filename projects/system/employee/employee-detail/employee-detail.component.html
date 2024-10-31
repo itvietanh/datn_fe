@@ -39,9 +39,11 @@
         <input-text formControlName="address"> </input-text>
       </app-form-control>
     </div>
-    <div class="col-md-6">
-      <app-form-control label="ID khách sạn">
-        <input-text formControlName="hotel_id"> </input-text>
+
+    <div class="col-md-12">
+      <app-form-control label="Cơ sở làm việc">
+        <input-select-api [apiService]="hotelService" [actionName]="'getCombobox'"
+          formControlName="hotel_id"></input-select-api>
       </app-form-control>
     </div>
 
@@ -52,8 +54,7 @@
       <i nz-icon nzType="close" nzTheme="outline"></i>Hủy
     </button>
     <!-- lưu và đóng -->
-    <button nz-button type="button" class="btn btn-primary" (click)="handlerSubmitData()"
-    *ngIf="mode !== 'view'">
+    <button nz-button type="button" class="btn btn-primary" (click)="handlerSubmitData()" *ngIf="mode !== 'view'">
       <i class="icon-plus-circle2 mr-2"></i>
       Lưu và đóng
     </button>

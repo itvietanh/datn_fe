@@ -42,6 +42,7 @@ import { AuthGuard } from 'common/base/service/auth.guard';
 import { LoginModule } from './auth/login/login.module';
 // import { LoginComponent } from '../../../system/login/login.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AutService } from 'common/share/src/service/application/auth/aut.service';
 registerLocaleData(vi);
 
 const ngZorroConfig: any = {
@@ -60,8 +61,6 @@ const ngZorroConfig: any = {
     DialogLoadingComponent,
     DialogConfirmComponent,
     NoDataComponent,
-   
-    
   ],
   imports: [
     MatSnackBarModule,
@@ -101,25 +100,34 @@ const ngZorroConfig: any = {
     },
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeApp,
+      deps: [AutService],
+      multi: true,
+    },
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
 export function initializeApp(
- 
+  user: AutService,
 ) {
   return (): Promise<any> => {
     return new Promise<void>(async (resolve) => {
       const path = location.pathname;
       if (
-        path.indexOf('/auth/') !== -1 ||
+        path.indexOf('/dang-nhap/') !== -1 ||
         path.indexOf('/error/') !== -1 ||
         path.indexOf('/assets/') !== -1
       ) {
         resolve();
         return;
       }
+      await Promise.all([
+        user.initUser(),
+      ]);
       resolve();
     });
   };

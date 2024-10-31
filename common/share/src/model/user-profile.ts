@@ -4,5 +4,6 @@ export interface UserProfile {
   phoneNumber: string,
   units: string[],
   username: string,
+  name: string,
   id: string
 }
