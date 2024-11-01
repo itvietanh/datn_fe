@@ -172,9 +172,7 @@ export class HomeHotelComponent implements OnInit {
       (eventName, eventValue) => {
         if (eventName === 'onClose') {
           this.dialogService.closeDialogById(dialog.id);
-          if (eventValue) {
-            this.getData({ ...this.paging });
-          }
+          this.getData({ ...this.paging });
         }
       }
     );

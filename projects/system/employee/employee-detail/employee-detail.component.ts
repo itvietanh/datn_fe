@@ -26,26 +26,24 @@ export class EmployeeDetailComponent implements OnInit {
     private fb: FormBuilder,
     private dialogService: DialogService,
     public hotelService: HotelService,
-    private employeeService:EmployeeService,
+    private employeeService: EmployeeService,
     private ex: ExtentionService,
   ) {
     this.myForm = this.fb.group({
-      name:[null, ValidatorExtension.required()],
+      uuid: [ex.newGuid()],
+      name: [null, ValidatorExtension.required()],
       email: [null, ValidatorExtension.required()],
-      account:[null,ValidatorExtension.required()],
-      password:[null,ValidatorExtension.required()],
-      phone:[null,ValidatorExtension.required()],
-      address:[null,ValidatorExtension.required()],
-      hotel_id:[null,ValidatorExtension.required()]
-      // pass: [null, ValidatorExtension.required(),ValidatorExtension.min(6)],
-
+      account: [null, ValidatorExtension.required()],
+      password: [null, ValidatorExtension.required()],
+      phone: [null, ValidatorExtension.required()],
+      address: [null, ValidatorExtension.required()],
+      hotel_id: [null, ValidatorExtension.required()]
     })
   }
 
   async ngOnInit() {
     this.loading = true;
-    this.getData();
-    if (this.id) this.getData();
+    if (this.uuid) this.getData();
     if (this.mode === DialogMode.view) {
       this.myForm.disable();
     };

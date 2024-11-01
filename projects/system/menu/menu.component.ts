@@ -1,3 +1,4 @@
+import { Validator } from '@angular/forms';
 // import { MenuService } from 'ng-zorro-antd/menu';
 // import { EmployeeService } from './../../../common/share/src/service/application/hotel/employee.service';
 import { ShrContractService } from '../../../common/share/src/service/application/accom/shr-contract.service';
@@ -35,11 +36,35 @@ export class MenuComponent implements OnInit {
   columns: ColumnConfig[] = [
     {
       key: 'name',
-      header: 'Danh mục menu',
+      header: 'Tên',
     },
     {
-      key: 'created_at',
-      header: 'Ngày tạo',
+      key: 'code',
+      header: 'code',
+    },
+    {
+      key:'url',
+      header:'description'
+    },
+    {
+      key:'url',
+      header:'icon'
+    },
+    {
+      key:'url',
+      header:'idx'
+    },
+    {
+      key:'url',
+      header:'is_show'
+    },
+    {
+      key:'url',
+      header:'parent_uid'
+    },
+    {
+      key:'url',
+      header:'hotel_id'
     },
     {
       key: 'action',
@@ -61,11 +86,12 @@ export class MenuComponent implements OnInit {
     private datePipe: DatePipe
   ) {
     this.formSearch = this.fb.group({
+      code:[null,ValidatorExtension.required()],
+      icon:[null,ValidatorExtension.required()],
+      api:[null,ValidatorExtension.required()],
+      menu:[null,ValidatorExtension.required()],
       name:[null,ValidatorExtension.required()],
-          code:[null,ValidatorExtension.required()],
-          is_show:[null,ValidatorExtension.required()]
-
-
+      confirm_work_location:[null,ValidatorExtension.required()]
     });
     // this.formSearch
     //   .get('outEndDate')

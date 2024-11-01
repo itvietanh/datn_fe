@@ -267,7 +267,7 @@ export class MenuComponent implements OnInit {
         exact: false,
         level: 1,
         child: [
-         
+
         ],
       },
 
