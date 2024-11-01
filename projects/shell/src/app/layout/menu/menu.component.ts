@@ -15,10 +15,7 @@ export class MenuComponent implements OnInit {
   public isShowFullMenuMobile = false;
   public isLoading = true;
 
-  constructor(
-    private rt: Router,
-    private location: Location
-  ) { }
+  constructor(private rt: Router, private location: Location) {}
 
   async ngOnInit(): Promise<void> {
     const url = this.location.path();
@@ -93,7 +90,6 @@ export class MenuComponent implements OnInit {
     //   level: 0,
     // }));
     // if (!dataRaw) return;
-
     // dataRaw.forEach((item: any) => {
     //   item.child = dataRaw.filter((x) => x.parent === item.id);
     // });
@@ -256,24 +252,25 @@ export class MenuComponent implements OnInit {
       },
       {
         icon: 'isax-pen-tool-2-1',
-        name: 'BÁO CÁO & THỐNG KÊ',
+        name: 'BÁO CÁO',
         url: '/he-thong/bao-cao',
         isOpen: false,
         exact: false,
         level: 1,
+        child: [],
+      },
+      {
+        icon: 'isax-pen-tool-2-1',
+        name: 'THỐNG KÊ',
+        url: '/he-thong/thong-ke',
+        isOpen: false,
+        exact: false,
+        level: 1,
         child: [
-          {
-            icon: 'isax-pen-tool-2-1',
-            name: 'THỐNG KÊ GIAO DỊCH',
-            url: '/he-thong/thong-ke-giao-dich',
-            isOpen: false,
-            exact: false,
-            level: 2,
-            child: [],
-          },
-
+         
         ],
       },
+
       {
         icon: 'isax-pen-tool-2-1',
         name: 'QUẢN LÝ MENU',
