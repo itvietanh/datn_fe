@@ -33,15 +33,18 @@ export class MenuDetailsComponent implements OnInit {
     private ex: ExtentionService,
   ) {
     this.myForm = this.fb.group({
-          name:[null,ValidatorExtension.required()],
-          code:[null,ValidatorExtension.required()],
-          is_show:[null,ValidatorExtension.required()]
+      code:[null,ValidatorExtension.required()],
+      icon:[null,ValidatorExtension.required()],
+      api:[null,ValidatorExtension.required()],
+      menu:[null,ValidatorExtension.required()],
+      name:[null,ValidatorExtension.required()],
+      confirm_work_location:[null,ValidatorExtension.required()]
+
     })
   }
 
   async ngOnInit() {
     this.loading = true;
-    this.getData();
     if (this.id) this.getData();
     if (this.mode === DialogMode.view) {
       this.myForm.disable();
@@ -64,7 +67,7 @@ export class MenuDetailsComponent implements OnInit {
     const formData = this.myForm.getRawValue();
     this.dialogService.openLoading();
 
-    if (this.uuid) {
+    if (this.id) {
       //Update
       await this.menuService.edit(this.id, formData).firstValueFrom();
     } else {
