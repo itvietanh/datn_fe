@@ -38,8 +38,6 @@ export class EmployeeDetailComponent implements OnInit {
       phone: [null, ValidatorExtension.required()],
       address: [null, ValidatorExtension.required()],
       hotel_id: [null, ValidatorExtension.required()]
-      // pass: [null, ValidatorExtension.required(),ValidatorExtension.min(6)],
-
     })
   }
 
