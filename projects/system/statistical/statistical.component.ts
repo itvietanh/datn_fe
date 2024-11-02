@@ -10,6 +10,12 @@ import { FacilityDetailsComponent } from '../facility/facility-detail/facility-d
 import { FloorService } from 'common/share/src/service/application/hotel/floor.service';
 import { StatisticalDetailComponent } from './statistical-detail/statistical-detail.component';
 import { Service } from 'common/share/src/service/application/hotel/service.service';
+import { StatisticalService } from 'common/share/src/service/application/hotel/statistical.service';
+
+interface DataPoint {
+  label: string; // Type for the label
+  y: number;     // Type for the y value
+}
 
 @Component({
   selector: 'app-statistical',
@@ -17,34 +23,60 @@ import { Service } from 'common/share/src/service/application/hotel/service.serv
   styleUrls: ['./statistical.component.scss']
 })
 export class StatisticalComponent implements OnInit {
-
   public formSearch: FormGroup;
   public listOfData: any[] = [];
   public isLoading?: boolean;
   public paging: any;
   items: any[] = [];
   loading = false;
+ 
 
-  columns: ColumnConfig[] = [
-    {
-      key: 'service_name',
-      header: 'Tên dịch vụ',
+  // Update the chartOptions type
+  chartOptions = {
+    animationEnabled: true,
+    title: {
+      text: "Thống Kê Dịch Vụ Khách Sạn"
     },
-    {
-      key: 'service_price',
-      header: 'Giá dịch vụ',
+    axisX: {
+      title: "Tên Dịch Vụ",
+      labelAngle: -45
     },
-    {
-      key: 'created_at',
-      header: 'Ngày tạo',
+    axisY: {
+      title: "Số Lượng",
+      includeZero: true
     },
-    {
-      key: 'action',
-      header: 'Thao tác',
-      tdClass: 'text-center',
-      pipe: 'template',
+    axisY2: {
+      title: "Doanh Thu (VNĐ)",
+      includeZero: true
     },
-  ];
+    toolTip: {
+      shared: true
+    },
+    legend: {
+      cursor: "pointer",
+      itemclick: function (e: any) {
+        e.dataSeries.visible = typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible ? false : true;
+        e.chart.render();
+      }
+    },
+    data: [
+      {
+        type: "column",
+        name: "Số Lượng",
+        legendText: "Số Lượng",
+        showInLegend: true,
+        dataPoints: [] as DataPoint[] // Specify the type here
+      },
+      {
+        type: "column",
+        name: "Doanh Thu",
+        axisYType: "secondary",
+        legendText: "Doanh Thu (VNĐ)",
+        showInLegend: true,
+        dataPoints: [] as DataPoint[] // Specify the type here
+      }
+    ]
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -54,29 +86,26 @@ export class StatisticalComponent implements OnInit {
     private datePipe: DatePipe,
     public floorService: FloorService,
     public service: Service,
+    private statisticalService: StatisticalService
   ) {
     this.formSearch = this.fb.group({
       service_name: [null],
       service_price: [null]
     });
-    this.formSearch
-      .get('outEndDate')
-      ?.addValidators(
-        ValidatorExtension.gteDateValidator(
-          this.formSearch,
-          'signEndDate',
-          'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
-        )
-      );
-    this.formSearch
-      .get('outEndDate')
-      ?.addValidators(
-        ValidatorExtension.gteDateValidator(
-          this.formSearch,
-          'outStartDate',
-          'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
-        )
-      );
+    this.formSearch.get('outEndDate')?.addValidators(
+      ValidatorExtension.gteDateValidator(
+        this.formSearch,
+        'signEndDate',
+        'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
+      )
+    );
+    this.formSearch.get('outEndDate')?.addValidators(
+      ValidatorExtension.gteDateValidator(
+        this.formSearch,
+        'outStartDate',
+        'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
+      )
+    );
   }
 
   ngOnInit() {
@@ -93,15 +122,30 @@ export class StatisticalComponent implements OnInit {
     this.dialogService.openLoading();
     const rs = await this.service.getPaging(params).firstValueFrom();
     const dataRaw = rs.data!.items;
-    // for (const item of dataRaw) {
-    //   if (item.created_at) {
-    //     item.created_at = this.datePipe.transform(item.created_at, 'dd-MM-yyyy');
-    //   }
-    // }
+    console.log("dataRaw:", dataRaw);
+  
+    // Map data into dataPoints for chart
+    this.chartOptions.data[0].dataPoints = dataRaw.map(item => ({
+      label: item.service_name, // Tên dịch vụ
+      y: item.service_usage_count || 0     // Số lượng, sử dụng giá trị mặc định nếu không có
+    }));
+  
+    this.chartOptions.data[1].dataPoints = dataRaw.map(item => ({
+      label: item.service_name,  // Tên dịch vụ
+      y: item.service_price || 0 // Giá dịch vụ, sử dụng giá trị mặc định nếu không có
+    }));
+  
+    // Map additional data from StatisticalService
+    this.chartOptions.data[2].dataPoints = dataRaw.map(item => ({
+      label: item.service_name,  // Tên dịch vụ
+      y: item.statistical_value || 0 // Giá trị thống kê từ StatisticalService, sử dụng giá trị mặc định nếu không có
+    }));
+  
     this.items = rs.data!.items;
     this.paging = rs.data?.meta;
     this.dialogService.closeLoading();
   }
+  
 
   async handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
     const dialog = this.dialogService.openDialog(
@@ -109,7 +153,7 @@ export class StatisticalComponent implements OnInit {
         option.title = mode === 'view' ? 'Xem Chi Tiết Dịch Vụ' : 'Thêm Mới Dịch Vụ';
         if (mode === 'edit') option.title = 'Cập Nhật Dịch Vụ';
         option.size = DialogSize.xlarge;
-        option.component = StatisticalDetailComponent; // open component; (mở component)
+        option.component = StatisticalDetailComponent; // open component
         option.inputs = {
           uuid: item?.uuid,
           mode: mode,
