@@ -70,7 +70,8 @@
         Có {{shareData.item.totalGuests}}/{{shareData.item.numberOfPeople}} Khách trong phòng
       </span>
 
-      <button type="button" class="btn btn-default add-resident float-right" *ngIf="shareData.item.totalGuests < shareData.item.numberOfPeople">
+      <button type="button" class="btn btn-default add-resident float-right"
+        *ngIf="shareData.item.totalGuests < shareData.item.numberOfPeople" (click)="hanldeOpenDialog()">
         <i class="isax-add-circle1 mr-2"></i>Thêm khách
       </button>
     </div>
@@ -172,6 +173,14 @@
         <span class="mt-1 float-right cursor-pointer color-primary" nz-icon nzType="plus-circle" nzTheme="fill"></span>
       </div>
     </div>
+
+    <!-- <nz-collapse>
+      <nz-collapse-panel class="has-icon my-2" [ngClass]="" [nzHeader]="'Dịch vụ'">
+        <i class="isax-card-slash1"></i>
+        <div class="point-target" id="panel1"></div>
+      </nz-collapse-panel>
+    </nz-collapse> -->
+
     <div class="d-flex justify-content-between w-100">
       <div class="name-service-container">
       </div>

@@ -93,4 +93,27 @@ export class TabContactStep2Component implements OnInit {
     );
   }
 
+  hanldeOpenDialog(item: any = null, mode: any = 'add') {
+    const dialog = this.dialogService.openDialog(
+      async (option) => {
+        option.title = mode === 'view' ? 'Xem Chi Tiết Khách Hàng' : 'Thêm Mới Khách Hàng';
+        if (mode === 'edit') option.title = 'Cập Nhật Khách Hàng';
+        option.size = DialogSize.medium;
+        option.component = RoomChangeComponent;
+        option.inputs = {
+          uuid: this.shareData.item.roomUuid,
+          guest: this.shareData.listGuest,
+        };
+      },
+      (eventName, eventValue) => {
+        if (eventName === 'onClose') {
+          this.dialogService.closeDialogById(dialog.id);
+          if (eventValue) {
+            this.shareData.closeDialog();
+          }
+        }
+      }
+    );
+  }
+
 }

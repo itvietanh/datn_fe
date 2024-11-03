@@ -8,11 +8,11 @@ import { ValidatorExtension } from 'common/validator-extension';
 import { DialogService, DialogMode } from 'share';
 
 @Component({
-  selector: 'app-statistical-detail',
-  templateUrl: './statistical-detail.component.html',
-  styleUrls: ['./statistical-detail.component.scss']
+  selector: 'app-service-detail',
+  templateUrl: './service-detail.component.html',
+  styleUrls: ['./service-detail.component.scss']
 })
-export class StatisticalDetailComponent implements OnInit {
+export class ServiceDetailComponent implements OnInit {
 
   @Input() id: any;
   @Input() uuid: any;
