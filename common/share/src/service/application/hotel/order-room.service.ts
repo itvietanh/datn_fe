@@ -18,7 +18,7 @@ export class OrderRoomService extends BaseService {
       params: this.stringifyParams(params)
     });
   }
-  
+
 
   public override findOne<T = any>(uuid: any) {
     return this.http.get<ResponseModel<T>>(`${this.baseUrl}`, {
@@ -42,6 +42,12 @@ export class OrderRoomService extends BaseService {
   public hanldeRoomOverTime<T = any>(uuid: any) {
     return this.http.get<ResponseModel<T>>(`${this.baseUrl}/over-time`, {
       params: this.stringifyParams({ uuid: uuid }),
+    });
+  }
+
+  public handleRoomChange<T = any>(body: any) {
+    return this.http.post<ResponseModel<T>>(`${this.baseUrl}/room-change-fee`, {
+      ...body,
     });
   }
 

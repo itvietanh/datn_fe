@@ -8,6 +8,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MessageService } from 'common/base/service/message.service';
 import { OrderRoomService } from 'common/share/src/service/application/hotel/order-room.service';
 import { RoomTypeService } from 'common/share/src/service/application/hotel/room-type.service';
 import { RoomService } from 'common/share/src/service/application/hotel/room.service';
@@ -29,6 +30,8 @@ import {
   styleUrls: ['./room-change.component.scss'],
 })
 export class RoomChangeComponent implements OnInit {
+  @Input() uuid: any;
+  @Input() guest: any;
   @Input() myForm!: FormGroup;
   onClose = new EventEmitter<any | null>();
   now = new Date() as any;
@@ -40,32 +43,25 @@ export class RoomChangeComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public diaBanService: DiaBanService,
-    public nationalityService: NationalityService,
-    public countryService: CountryService,
-    public occupationService: OccupationService,
-    public stayingReasonService: StayingReasonService,
     public roomService: RoomService,
     public roomTypeService: RoomTypeService,
     private orderRoomService: OrderRoomService,
     private dialogService: DialogService,
+    private messageService: MessageService
   ) {
     this.myForm = this.fb.group({
       checkIn: [{ value: this.now.toNumberYYYYMMDDHHmmss(), disabled: true }],
       checkOut: [null, ValidatorExtension.required()],
       roomTypeId: [null, ValidatorExtension.required()],
       roomId: [null, ValidatorExtension.required()],
-      finalPrice: [null, ValidatorExtension.required()],
-      transferFee: [null, ValidatorExtension.required()],
+      totalAmount: [null, ValidatorExtension.required()],
+      transferFee: [null], // Có thể có phí phát sinh hoặc không có
     });
   }
 
   ngOnInit() {
     this.myForm.get('checkOut')?.disable();
     this.myForm.get('roomId')?.disable();
-  }
-
-  async saveData() {
-
   }
 
   async onDate() {
@@ -82,7 +78,7 @@ export class RoomChangeComponent implements OnInit {
 
     if (res.data) {
       const data = {
-        totalPrice: Math.floor(res.data.total_price),
+        totalAmount: Math.floor(res.data.total_price),
         finalPrice: Math.floor(res.data.final_price),
         vat: Math.floor(res.data.vat)
       }
@@ -112,9 +108,26 @@ export class RoomChangeComponent implements OnInit {
     }
   }
 
+  async saveData() {
+    const formData = this.myForm.getRawValue();
+    formData.guest = formData.guest || [];
+    for (const item of this.guest) {
+      formData.guest.push({
+        guestUuid: item.uuid,
+        representative: item.representative,
+      });
+    }
+    formData.uuid = this.uuid;
+    formData.roomIdNew = formData.roomId;
+    this.dialogService.openLoading();
+    const res = await this.orderRoomService.handleRoomChange(formData).firstValueFrom();
+    this.dialogService.closeLoading();
+    this.messageService.notiMessageSuccess('Đổi phòng thành công');
+    this.onClose.emit(true);
+  }
+
   async close() {
     this.onClose.emit(this.hasSaveData);
   }
-
 
 }

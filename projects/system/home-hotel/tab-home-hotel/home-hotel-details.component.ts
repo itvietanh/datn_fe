@@ -293,7 +293,6 @@ export class HomeHotelDetailsComponent implements OnInit {
         guest_id: null,
         transition_date: this.myForm.get('checkInTime')?.value,
         payment_status: 1,
-        total_amout: this.remainingAmount ? this.remainingAmount : this.myForm.get('finalPrice')?.value
       },
       roomUsing: {
         uuid: this.ex.newGuid(),
@@ -301,6 +300,7 @@ export class HomeHotelDetailsComponent implements OnInit {
         room_id: this.dataRoom.id,
         check_in: this.myForm.get('checkInTime')?.value,
         // check_out: this.myForm.get('checkOutTime')?.value,
+        total_amount: this.remainingAmount ? this.remainingAmount : this.myForm.get('finalPrice')?.value
       },
       roomUsingGuest: {
         uuid: this.ex.newGuid(),
