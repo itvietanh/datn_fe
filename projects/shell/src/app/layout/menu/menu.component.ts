@@ -15,7 +15,7 @@ export class MenuComponent implements OnInit {
   public isShowFullMenuMobile = false;
   public isLoading = true;
 
-  constructor(private rt: Router, private location: Location) {}
+  constructor(private rt: Router, private location: Location) { }
 
   async ngOnInit(): Promise<void> {
     const url = this.location.path();
@@ -186,15 +186,6 @@ export class MenuComponent implements OnInit {
           },
           {
             icon: 'isax-pen-tool-2-1',
-            name: 'QUẢN LÝ PHÒNG',
-            url: '/he-thong/danh-sach-phong',
-            isOpen: false,
-            exact: false,
-            level: 2,
-            child: [],
-          },
-          {
-            icon: 'isax-pen-tool-2-1',
             name: 'QUẢN LÝ DỊCH VỤ',
             url: '/he-thong/dich-vu',
             isOpen: false,
@@ -223,15 +214,6 @@ export class MenuComponent implements OnInit {
           },
           {
             icon: 'isax-pen-tool-2-1',
-            name: 'QUẢN LÝ GIAO DỊCH',
-            url: '/he-thong/giao-dich',
-            isOpen: false,
-            exact: false,
-            level: 1,
-            child: [],
-          },
-          {
-            icon: 'isax-pen-tool-2-1',
             name: 'QUẢN LÝ KHÁCH HÀNG ',
             url: '/he-thong/khach-hang',
             isOpen: false,
@@ -252,22 +234,30 @@ export class MenuComponent implements OnInit {
       },
       {
         icon: 'isax-pen-tool-2-1',
-        name: 'BÁO CÁO',
-        url: '/he-thong/bao-cao',
-        isOpen: false,
-        exact: false,
-        level: 1,
-        child: [],
-      },
-      {
-        icon: 'isax-pen-tool-2-1',
         name: 'THỐNG KÊ',
         url: '/he-thong/thong-ke',
         isOpen: false,
         exact: false,
         level: 1,
         child: [
-
+          {
+            icon: 'isax-pen-tool-2-1',
+            name: 'Giao dịch',
+            url: '/he-thong/thong-ke/giao-dich',
+            isOpen: false,
+            exact: false,
+            level: 2,
+            child: [],
+          },
+          {
+            icon: 'isax-pen-tool-2-1',
+            name: 'Dịch vụ',
+            url: '/he-thong/thong-ke/bao-cao',
+            isOpen: false,
+            exact: false,
+            level: 2,
+            child: [],
+          },
         ],
       },
 

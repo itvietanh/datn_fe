@@ -6,11 +6,10 @@ import { MessageService } from 'common/base/service/message.service';
 import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
 import { ValidatorExtension } from 'common/validator-extension';
 import { DialogService, PagingModel, DialogMode, DialogSize } from 'share';
-import { FacilityDetailsComponent } from '../facility/facility-detail/facility-details.component';
 import { FloorService } from 'common/share/src/service/application/hotel/floor.service';
-import { StatisticalDetailComponent } from './statistical-detail/statistical-detail.component';
 import { Service } from 'common/share/src/service/application/hotel/service.service';
 import { StatisticalService } from 'common/share/src/service/application/hotel/statistical.service';
+import { ServiceDetailComponent } from './service-detail/service-detail.component';
 
 interface DataPoint {
   label: string; // Type for the label
@@ -18,18 +17,18 @@ interface DataPoint {
 }
 
 @Component({
-  selector: 'app-statistical',
-  templateUrl: './statistical.component.html',
-  styleUrls: ['./statistical.component.scss']
+  selector: 'app-service',
+  templateUrl: './service.component.html',
+  styleUrls: ['./service.component.scss']
 })
-export class StatisticalComponent implements OnInit {
+export class ServiceComponent implements OnInit {
   public formSearch: FormGroup;
   public listOfData: any[] = [];
   public isLoading?: boolean;
   public paging: any;
   items: any[] = [];
   loading = false;
- 
+
 
   // Update the chartOptions type
   chartOptions = {
@@ -123,29 +122,29 @@ export class StatisticalComponent implements OnInit {
     const rs = await this.service.getPaging(params).firstValueFrom();
     const dataRaw = rs.data!.items;
     console.log("dataRaw:", dataRaw);
-  
+
     // Map data into dataPoints for chart
     this.chartOptions.data[0].dataPoints = dataRaw.map(item => ({
       label: item.service_name, // Tên dịch vụ
       y: item.service_usage_count || 0     // Số lượng, sử dụng giá trị mặc định nếu không có
     }));
-  
+
     this.chartOptions.data[1].dataPoints = dataRaw.map(item => ({
       label: item.service_name,  // Tên dịch vụ
       y: item.service_price || 0 // Giá dịch vụ, sử dụng giá trị mặc định nếu không có
     }));
-  
+
     // Map additional data from StatisticalService
     this.chartOptions.data[2].dataPoints = dataRaw.map(item => ({
       label: item.service_name,  // Tên dịch vụ
       y: item.statistical_value || 0 // Giá trị thống kê từ StatisticalService, sử dụng giá trị mặc định nếu không có
     }));
-  
+
     this.items = rs.data!.items;
     this.paging = rs.data?.meta;
     this.dialogService.closeLoading();
   }
-  
+
 
   async handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
     const dialog = this.dialogService.openDialog(
@@ -153,7 +152,7 @@ export class StatisticalComponent implements OnInit {
         option.title = mode === 'view' ? 'Xem Chi Tiết Dịch Vụ' : 'Thêm Mới Dịch Vụ';
         if (mode === 'edit') option.title = 'Cập Nhật Dịch Vụ';
         option.size = DialogSize.xlarge;
-        option.component = StatisticalDetailComponent; // open component
+        option.component = ServiceDetailComponent; // open component
         option.inputs = {
           uuid: item?.uuid,
           mode: mode,

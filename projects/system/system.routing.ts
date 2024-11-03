@@ -46,14 +46,6 @@ const routes: Routes = [
           import('./service/service.module').then((x) => x.ServiceModule),
       },
       {
-        path: 'giao-dich',
-        loadChildren: () =>
-          import('./transaction/transaction.module').then(
-            (x) => x.TransactionModule
-          ),
-      },
-
-      {
         path: 'dich-vu-khach-dat',
         loadChildren: () =>
           import('./roomusingserivce/roomusingservice.module').then(
@@ -71,10 +63,10 @@ const routes: Routes = [
           import('./guest/guest.module').then((x) => x.GuestModule),
       },
       {
-        path: 'bao-cao',
+        path: 'thong-ke/bao-cao',
         loadChildren: () =>
-          import('./statistical/statistical.module').then(
-            (x) => x.StatisticalModule
+          import('./statistical/service/service.module').then(
+            (x) => x.ServiceModule
           ),
       },
       {
@@ -82,6 +74,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('./menu/menu.module').then(
             (x) => x.MenuModule
+          ),
+      },
+      {
+        path: 'thong-ke/giao-dich',
+        loadChildren: () =>
+          import('./statistical/transaction/transaction.module').then(
+            (x) => x.TransactionModule
           ),
       },
       {
