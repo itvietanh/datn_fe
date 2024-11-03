@@ -5,6 +5,7 @@ import { DialogService, DialogSize } from "share";
 import { ColumnConfig } from "common/base/models";
 import { OrderRoomService } from "common/share/src/service/application/hotel/order-room.service";
 import { RoomChangeComponent } from "projects/system/home-hotel/room-change/room-change.component";
+import { GuestDetailComponent } from "./guest-detail/guest-detail.component";
 
 @Component({
   selector: 'app-tab-contract-step2',
@@ -77,6 +78,29 @@ export class TabContactStep2Component implements OnInit {
         option.title = 'Đổi phòng';
         option.size = DialogSize.medium;
         option.component = RoomChangeComponent;
+        option.inputs = {
+          uuid: this.shareData.item.roomUuid,
+          guest: this.shareData.listGuest,
+        };
+      },
+      (eventName, eventValue) => {
+        if (eventName === 'onClose') {
+          this.dialogService.closeDialogById(dialog.id);
+          if (eventValue) {
+            this.shareData.closeDialog();
+          }
+        }
+      }
+    );
+  }
+
+  hanldeOpenDialog(item: any = null, mode: any = 'add') {
+    const dialog = this.dialogService.openDialog(
+      async (option) => {
+        option.title = mode === 'view' ? 'Xem Chi Tiết Khách Hàng' : 'Thêm Mới Khách Hàng';
+        if (mode === 'edit') option.title = 'Cập Nhật Khách Hàng';
+        option.size = DialogSize.medium;
+        option.component = GuestDetailComponent;
         option.inputs = {
           uuid: this.shareData.item.roomUuid,
           guest: this.shareData.listGuest,

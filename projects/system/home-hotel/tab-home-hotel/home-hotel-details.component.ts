@@ -223,9 +223,7 @@ export class HomeHotelDetailsComponent implements OnInit {
     if (prepayment) {
       let finalPrice = this.myForm.get('finalPrice')?.value;
       finalPrice = (+finalPrice - +prepayment);
-      // this.myForm.get('finalPrice')?.setValue(finalPrice);
       this.remainingAmount = finalPrice;
-      // debugger;
     } else {
       this.remainingAmount = 0;
     }
@@ -233,10 +231,12 @@ export class HomeHotelDetailsComponent implements OnInit {
 
   handleAddGuest() {
     const guest = this.myForm.get('guests')?.getRawValue();
+
     this.listGuest = [...this.listGuest, guest];
     if (this.listGuest[0]) {
       this.listGuest[0].representative = true;
     }
+
     this.myForm.get('guests')?.reset();
     this.myForm.get('guests.provinceId')?.reset();
     this.myForm.get('guests.districtId')?.reset();
@@ -280,10 +280,10 @@ export class HomeHotelDetailsComponent implements OnInit {
       province_id: x.provinceId,
       district_id: x.districtId,
       ward_id: x.wardId,
+      gender: x.gender,
+      birth_date: x.dateOfBirth,
       representative: x.representative
     }));
-
-    debugger;
 
     const formData = {
       guests: guests,
@@ -299,7 +299,6 @@ export class HomeHotelDetailsComponent implements OnInit {
         trans_id: null,
         room_id: this.dataRoom.id,
         check_in: this.myForm.get('checkInTime')?.value,
-        // check_out: this.myForm.get('checkOutTime')?.value,
         total_amount: this.remainingAmount ? this.remainingAmount : this.myForm.get('finalPrice')?.value
       },
       roomUsingGuest: {
