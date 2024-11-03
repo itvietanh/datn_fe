@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MessageService } from 'common/base/service/message.service';
 import { DialogMode, DialogService } from 'common/share/src/service/base/dialog.service';
+import { DiaBanService } from 'share';
 
 @Component({
   selector: 'app-guest-detail',
@@ -20,6 +21,7 @@ export class GuestDetailComponent implements OnInit {
     private fb: FormBuilder,
     private dialogService: DialogService,
     private messageService: MessageService,
+    public diaBanService: DiaBanService,
 
   ) {
     this.myForm = this.fb.group({
@@ -40,7 +42,7 @@ export class GuestDetailComponent implements OnInit {
     this.dialogService.openLoading();
     // const rs = await this.hotelService.findOne(this.uuid).firstValueFrom();
     // if (rs) {
-      // this.myForm.patchValue(rs.data);
+    // this.myForm.patchValue(rs.data);
     // }
     this.dialogService.closeLoading();
   }

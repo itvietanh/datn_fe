@@ -25,107 +25,101 @@
     </div>
   </ng-container>
 
-<nz-tabset>
-  <!-- Tab 1: Dữ liệu với status = 1 -->
-  <nz-tab nzTitle="Dữ liệu đúng">
-    <nz-table [nzData]="listOfData" [nzBordered]="true" [nzFrontPagination]="false" nzSize="small"
-      [nzScroll]="{ x: 'scroll', y: 'calc(100vh - 292px)' }">
-      <thead>
-        <tr>
-          <th class="text-center" nzWidth="50px">STT</th>
-          <th class="text-center" nzWidth="180px" nzLeft>Họ và tên</th>
-          <th class="text-center" nzWidth="100px">Ngày sinh</th>
-          <th class="text-center" nzWidth="120px">Giới tính</th>
-          <th class="text-center" nzWidth="120px">Loại giấy tờ</th>
-          <th class="text-center" nzWidth="120px">Tên giấy tờ</th>
-          <th class="text-center" nzWidth="120px">Số giấy tờ</th>
-          <th class="text-center" nzWidth="120px">Số điện thoại</th>
-          <th class="text-center" nzWidth="120px">Loại cư trú</th>
-          <th class="text-center" nzWidth="120px">Tỉnh/TP</th>
-          <th class="text-center" nzWidth="120px">Quận/Huyện</th>
-          <th class="text-center" nzWidth="120px">Phường/Xã</th>
-          <th class="text-center" nzWidth="120px">Địa chỉ chi tiết</th>
-          <th class="text-center" nzWidth="120px">Số phòng</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let item of listOfData; let i = index">
-          <tr *ngIf="item.status === 1">
-            <td class="text-center">
-              {{ i + 1 | numberFormat }}
-            </td>
-            <td class="text-left" nzLeft>{{ item.fullName | toUpper }}</td>
-            <td class="text-left">{{ item.birthdayText }}</td>
-            <td class="text-left">{{ item.sexText }}</td>
-            <td class="text-left">{{ item.identityTypeText }}</td>
-            <td class="text-left">{{ item.identityName }}</td>
-            <td class="text-left">{{ item.identityNo }}</td>
-            <td class="text-left">{{ item.telephone }}</td>
-            <td class="text-left">{{ item.addressTypeText }}</td>
-            <td class="text-left">{{ item.province }}</td>
-            <td class="text-left">{{ item.district }}</td>
-            <td class="text-left">{{ item.ward }}</td>
-            <td class="text-left">{{ item.addressDetail }}</td>
-            <td class="text-left">{{ item.note }}</td>
+  <nz-tabset>
+    <!-- Tab 1: Dữ liệu với status = 1 -->
+    <nz-tab nzTitle="Dữ liệu đúng">
+      <nz-table [nzData]="listGuest" [nzBordered]="true" [nzFrontPagination]="false" nzSize="small"
+        [nzScroll]="{ x: 'scroll', y: 'calc(100vh - 292px)' }">
+        <thead>
+          <tr>
+            <th class="text-center" nzWidth="50px">STT</th>
+            <th class="text-center" nzWidth="180px" nzLeft>Họ và tên</th>
+            <th class="text-center" nzWidth="100px">Ngày sinh</th>
+            <th class="text-center" nzWidth="120px">Giới tính</th>
+            <th class="text-center" nzWidth="120px">Số giấy tờ</th>
+            <th class="text-center" nzWidth="120px">Số điện thoại</th>
+            <th class="text-center" nzWidth="120px">Địa chỉ chi tiết</th>
+            <th class="text-center" nzWidth="120px">Tỉnh/TP</th>
+            <th class="text-center" nzWidth="120px">Quận/Huyện</th>
+            <th class="text-center" nzWidth="120px">Phường/Xã</th>
+            <th class="text-center" nzWidth="120px">Ghi chú</th>
           </tr>
-        </ng-container>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let item of listGuest; let i = index">
+            <tr>
+              <td class="text-center">
+                {{ i + 1 | numberFormat }}
+              </td>
+              <td class="text-left" nzLeft>{{ item.fullName | toUpper }}</td>
+              <td class="text-left">{{ item.birthDateText }}</td>
+              <td class="text-left">{{ item.gender }}</td>
+              <td class="text-left">{{ item.idNumber }}</td>
+              <td class="text-left">{{ item.phoneNumber }}</td>
+              <td class="text-left">{{ item.addressDetail }}</td>
+              <td class="text-left">{{ item.provinceCode }}</td>
+              <td class="text-left">{{ item.districtCode }}</td>
+              <td class="text-left">{{ item.wardCode }}</td>
+              <td class="text-left">{{ item.note }}</td>
+            </tr>
+          </ng-container>
 
-      </tbody>
-    </nz-table>
-  </nz-tab>
+        </tbody>
+      </nz-table>
+    </nz-tab>
 
-  <!-- Tab 2: Dữ liệu với status = 2 -->
-  <nz-tab nzTitle="Dữ liệu lỗi">
-    <nz-table [nzData]="listOfData" [nzBordered]="true" [nzFrontPagination]="false" nzSize="small"
-      [nzScroll]="{ x: 'scroll', y: 'calc(100vh - 292px)' }">
-      <thead>
-        <tr>
-          <th class="text-center" nzWidth="50px">STT</th>
-          <th class="text-center" nzWidth="180px" nzLeft>Họ và tên</th>
-          <th class="text-center" nzWidth="100px">Ngày sinh</th>
-          <th class="text-center" nzWidth="120px">Giới tính</th>
-          <th class="text-center" nzWidth="120px">Loại giấy tờ</th>
-          <th class="text-center" nzWidth="120px">Tên giấy tờ</th>
-          <th class="text-center" nzWidth="120px">Số giấy tờ</th>
-          <th class="text-center" nzWidth="120px">Số điện thoại</th>
-          <th class="text-center" nzWidth="120px">Loại cư trú</th>
-          <th class="text-center" nzWidth="120px">Tỉnh/TP</th>
-          <th class="text-center" nzWidth="120px">Quận/Huyện</th>
-          <th class="text-center" nzWidth="120px">Phường/Xã</th>
-          <th class="text-center" nzWidth="120px">Địa chỉ chi tiết</th>
-          <th class="text-center" nzWidth="120px">Số phòng</th>
-          <th class="text-center" nzWidth="120px">Lý do lỗi</th>
-
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let item of listOfData; let i = index">
-          <tr *ngIf="item.status === 2">
-            <td class="text-center">
-              {{ i + 1 | numberFormat }}
-            </td>
-            <td class="text-left" nzLeft>{{ item.fullName | toUpper }}</td>
-            <td class="text-left">{{ item.birthdayText }}</td>
-            <td class="text-left">{{ item.sexText }}</td>
-            <td class="text-left">{{ item.identityTypeText }}</td>
-            <td class="text-left">{{ item.identityName }}</td>
-            <td class="text-left">{{ item.identityNo }}</td>
-            <td class="text-left">{{ item.telephone }}</td>
-            <td class="text-left">{{ item.addressTypeText }}</td>
-            <td class="text-left">{{ item.province }}</td>
-            <td class="text-left">{{ item.district }}</td>
-            <td class="text-left">{{ item.ward }}</td>
-            <td class="text-left">{{ item.addressDetail }}</td>
-            <td class="text-left">{{ item.note }}</td>
-            <td class="text-left">{{ item.message }}</td>
+    <!-- Tab 2: Dữ liệu với status = 2 -->
+    <nz-tab nzTitle="Dữ liệu lỗi">
+      <nz-table [nzData]="listOfData" [nzBordered]="true" [nzFrontPagination]="false" nzSize="small"
+        [nzScroll]="{ x: 'scroll', y: 'calc(100vh - 292px)' }">
+        <thead>
+          <tr>
+            <th class="text-center" nzWidth="50px">STT</th>
+            <th class="text-center" nzWidth="180px" nzLeft>Họ và tên</th>
+            <th class="text-center" nzWidth="100px">Ngày sinh</th>
+            <th class="text-center" nzWidth="120px">Giới tính</th>
+            <th class="text-center" nzWidth="120px">Loại giấy tờ</th>
+            <th class="text-center" nzWidth="120px">Tên giấy tờ</th>
+            <th class="text-center" nzWidth="120px">Số giấy tờ</th>
+            <th class="text-center" nzWidth="120px">Số điện thoại</th>
+            <th class="text-center" nzWidth="120px">Loại cư trú</th>
+            <th class="text-center" nzWidth="120px">Tỉnh/TP</th>
+            <th class="text-center" nzWidth="120px">Quận/Huyện</th>
+            <th class="text-center" nzWidth="120px">Phường/Xã</th>
+            <th class="text-center" nzWidth="120px">Địa chỉ chi tiết</th>
+            <th class="text-center" nzWidth="120px">Số phòng</th>
+            <th class="text-center" nzWidth="120px">Lý do lỗi</th>
 
           </tr>
-        </ng-container>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let item of listOfData; let i = index">
+            <tr *ngIf="item.status === 2">
+              <td class="text-center">
+                {{ i + 1 | numberFormat }}
+              </td>
+              <td class="text-left" nzLeft>{{ item.fullName | toUpper }}</td>
+              <td class="text-left">{{ item.birthdayText }}</td>
+              <td class="text-left">{{ item.sexText }}</td>
+              <td class="text-left">{{ item.identityTypeText }}</td>
+              <td class="text-left">{{ item.identityName }}</td>
+              <td class="text-left">{{ item.identityNo }}</td>
+              <td class="text-left">{{ item.telephone }}</td>
+              <td class="text-left">{{ item.addressTypeText }}</td>
+              <td class="text-left">{{ item.province }}</td>
+              <td class="text-left">{{ item.district }}</td>
+              <td class="text-left">{{ item.ward }}</td>
+              <td class="text-left">{{ item.addressDetail }}</td>
+              <td class="text-left">{{ item.note }}</td>
+              <td class="text-left">{{ item.message }}</td>
 
-      </tbody>
-    </nz-table>
-  </nz-tab>
-</nz-tabset>
+            </tr>
+          </ng-container>
+
+        </tbody>
+      </nz-table>
+    </nz-tab>
+  </nz-tabset>
 
 
 

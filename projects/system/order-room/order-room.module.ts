@@ -13,10 +13,12 @@ import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { CreateBookingComponent } from './create-booking/create-booking.component';
 import { EditBookingComponent } from './edit-booking/edit-booking.component';
 import { ImportBookingComponent } from './create-booking/import-booking/import-booking.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   imports: [
     FormModule,
+    CommonModule,
     NzSwitchModule,
     NzRadioModule,
     NzCardModule,
