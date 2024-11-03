@@ -9,22 +9,29 @@
   </ng-template>
 
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
       <app-form-control label="Tên khách hàng">
         <input-text formControlName="name" placeholder="Tên khách hàng..."> </input-text>
       </app-form-control>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-4">
       <app-form-control label="Số điện thoại">
         <input-text formControlName="phoneNumber" placeholder="Số điện thoại..."> </input-text>
       </app-form-control>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-4">
       <app-form-control label="Số CCCD">
         <input-text formControlName="phoneNumber" placeholder="Số CCCD..."> </input-text>
       </app-form-control>
+    </div>
+
+    <div class="col-md-12">
+      <div class="col-md-12">
+        <input-diaban [apiService]="diaBanService" [city]="myForm.get('guests.provinceId')"
+          [district]="myForm.get('guests.districtId')" [village]="myForm.get('guests.wardId')"></input-diaban>
+      </div>
     </div>
   </div>
 

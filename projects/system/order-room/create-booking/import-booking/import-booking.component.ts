@@ -20,6 +20,7 @@ export class ImportBookingComponent implements OnInit {
   rows: any[] = [];
   public listOfData: any;
   public isLoading?: boolean;
+  listGuest: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -32,18 +33,6 @@ export class ImportBookingComponent implements OnInit {
 
   async ngOnInit() {
     this.myForm = this.fb.group({
-      importBookingData: this.fb.group({
-        // facilityId: [null, ValidatorExtension.required()],
-        // fileName: [null, ValidatorExtension.required()],
-        // name: [
-        //   null,
-        //   [
-        //     ValidatorExtension.required(),
-        //     ValidatorExtension.maxLength(250, 'Không được nhập quá 250 ký tự'),
-        //   ],
-        // ],
-      }),
-      importBookingStayData: this.fb.array([]),
     });
 
   }
@@ -52,31 +41,46 @@ export class ImportBookingComponent implements OnInit {
   }
 
   beforeUpload = (file: NzUploadFile): boolean => {
-
+    this.listGuest = [];
     this.uploading = true;
-    // this.importBookingService.upload({ file: file })
-    //   .firstValueFrom()
-    //   .then(rs => {
-    //     this.listOfData = rs;
-    //     this.mappingSexData(this.listOfData);
+    const reader: FileReader = new FileReader();
+    reader.readAsBinaryString(file as any);
 
-    //     // Lọc dữ liệu có status = 2
-    //     const status2Data = this.listOfData.filter((item: any) => item.status === 2);
+    reader.onload = (e: any) => {
+      const wb = read(e.target.result, { type: 'binary' });
+      const rows = utils.sheet_to_json<any[]>(wb.Sheets[wb.SheetNames[0]], {
+        header: 1,
+      });
 
-    //     // Đếm số lượng và thông báo
-    //     const countStatus2 = status2Data.length;
-    //     if(countStatus2 === 0){
-    //     }else{
-    //       this.messageService.alert(`Có ${countStatus2} dữ liệu lỗi`);
-    //     }
-    //     this.uploading = false;
+      let index = 0;
+      this.listGuest = rows
+        .slice(1)
+        .filter((row: any) => row.length > 1)
+        .map((row: any) => {
+          console.log('row', row);
+          index++;
+          return {
+            stt: index,
+            fullName: row[1],
+            birthDateText: row[2],
+            gender: row[3],
+            idNumber: row[4],
+            phoneNumber: row[5],
+            provinceCode: row[7],
+            districtCode: row[8],
+            wardCode: row[9],
+            addressDetail: row[6],
+            checkInText: row[13],
+            checkOutText: row[14],
+          };
+        });
+      console.log(this.listGuest);
 
-    //   }).catch(error => {
-    //     this.uploading = false;
-    //   });
-
+      this.uploading = false;
+    };
     return false;
   };
+
   mappingSexData(source: any[]) {
     source.getMapingCombobox(
       'provinceCode',
