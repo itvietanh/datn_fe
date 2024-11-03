@@ -20,7 +20,7 @@ import { StatisticalRoutes } from './statistical.routing';
     StatisticalDetailComponent
   ],
   exports: [
-    StatisticalComponent 
+    StatisticalComponent
   ]
 })
 export class StatisticalModule { }
