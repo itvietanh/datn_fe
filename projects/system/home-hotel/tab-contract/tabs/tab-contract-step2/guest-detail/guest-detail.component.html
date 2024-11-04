@@ -17,20 +17,20 @@
 
     <div class="col-md-4">
       <app-form-control label="Số điện thoại">
-        <input-text formControlName="phoneNumber" placeholder="Số điện thoại..."> </input-text>
+        <input-text formControlName="phone_number" placeholder="Số điện thoại..."> </input-text>
       </app-form-control>
     </div>
 
     <div class="col-md-4">
       <app-form-control label="Số CCCD">
-        <input-text formControlName="phoneNumber" placeholder="Số CCCD..."> </input-text>
+        <input-text formControlName="id_number" placeholder="Số CCCD..."> </input-text>
       </app-form-control>
     </div>
 
     <div class="col-md-12">
       <div class="col-md-12">
-        <input-diaban [apiService]="diaBanService" [city]="myForm.get('guests.provinceId')"
-          [district]="myForm.get('guests.districtId')" [village]="myForm.get('guests.wardId')"></input-diaban>
+        <input-diaban [apiService]="diaBanService" [city]="myForm.get('province_id')"
+          [district]="myForm.get('district_id')" [village]="myForm.get('ward_id')"></input-diaban>
       </div>
     </div>
   </div>

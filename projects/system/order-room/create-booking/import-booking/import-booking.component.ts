@@ -37,7 +37,7 @@ export class ImportBookingComponent implements OnInit {
 
   }
   async submit() {
-    this.onClose.emit(this.listOfData);
+    this.onClose.emit(this.listGuest);
   }
 
   beforeUpload = (file: NzUploadFile): boolean => {
@@ -74,8 +74,6 @@ export class ImportBookingComponent implements OnInit {
             checkOutText: row[14],
           };
         });
-      console.log(this.listGuest);
-
       this.uploading = false;
     };
     return false;

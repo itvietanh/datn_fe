@@ -32,7 +32,7 @@ export class TabContractComponent implements OnInit {
   }
 
   async intData(){
-    await this.shareData.getDataTab1(this.mode);
+    await this.shareData.getDataTab1();
     this.initForm = true;
   }
 

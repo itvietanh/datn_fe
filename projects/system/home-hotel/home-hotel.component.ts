@@ -179,16 +179,20 @@ export class HomeHotelComponent implements OnInit {
 
   }
 
-  handleFilter(values: any = null) {
-    if (values) {
-      switch (values) {
-        case 'available': this.formSearch.get('status')?.setValue(1); break;
-        case 'occupied': this.formSearch.get('status')?.setValue(2); break;
-        case 'overtime': this.formSearch.get('status')?.setValue(3); break;
-        case 'cleaning': this.formSearch.get('status')?.setValue(4); break;
-      }
+  // Khởi tạo giá trị trạng thái hiện tại
+  selectedStatus: number | null = null;
+
+  handleFilter(selectedValue: number | null) {
+    if (this.selectedStatus === selectedValue) {
+      this.selectedStatus = null;
+      this.formSearch.get('status')?.setValue(null);
+    } else {
+      this.selectedStatus = selectedValue;
+      this.formSearch.get('status')?.setValue(selectedValue);
     }
+
     this.getData(this.paging);
   }
+
 
 }

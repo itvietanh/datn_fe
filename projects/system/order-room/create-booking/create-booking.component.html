@@ -344,58 +344,53 @@
                 (successMulti)="scanMulti($event)"></app-customer-scanner-button> -->
             </div>
           </div>
-          <div class="customer-data">
-            <div class="customer-detail">
-              <!-- <app-customer-data [(form)]="resident" [data]="items"></app-customer-data> -->
-              <div class="row mt-2" formGroupName="guests">
-                <div class="col-md-4">
-                  <app-form-control label="Họ tên">
-                    <input-text formControlName="fullName" [toUper]="true"></input-text>
-                  </app-form-control>
-                </div>
-                <div class="col-md-4">
-                  <app-form-control label="Giới tính">
-                    <input-text formControlName="gender"></input-text>
-                  </app-form-control>
-                </div>
-                <div class="col-md-4">
-                  <app-form-control label="Ngày sinh">
-                    <input-date formControlName="dateOfBirth"></input-date>
-                  </app-form-control>
-                </div>
-                <div class="col-md-4">
-                  <app-form-control label="Số điện thoại">
-                    <input-text formControlName="phoneNumber"></input-text>
-                  </app-form-control>
-                </div>
-                <!-- <div class="col-md-4">
-                  <app-form-control label="Loại giấy tờ">
-                    <input-select formControlName="identityType"></input-select>
-                  </app-form-control>
-                </div> -->
-                <!-- <div *ngIf="form.get('identityType')?.value === 'GTK'" class="col-md-4">
-                  <app-form-control label="Tên giấy tờ">
-                    <input-text formControlName="identityName"></input-text>
-                  </app-form-control>
-                </div> -->
-                <div class="col-md-4">
-                  <app-form-control label="Số giấy tờ">
-                    <input-text formControlName="identityNo"></input-text>
-                  </app-form-control>
-                </div>
-                <ng-container>
-                  <div class="col-md-12">
-                    <input-diaban [city]="myForm.get('provinceId')" [district]="myForm.get('districtId')"
-                      [village]="myForm.get('wardId')" [address]="myForm.get('addressDetail')"></input-diaban>
-                  </div>
-                  <div class="col-md-12">
-                    <app-form-control label="Nơi làm việc">
-                      <input-textarea [maxlength]="225" formControlName="workplace"></input-textarea>
-                    </app-form-control>
-                  </div>
-                </ng-container>
-              </div>
+          <div class="row mt-2" formGroupName="guests">
+            <div class="col-md-4">
+              <app-form-control label="Họ tên">
+                <input-text formControlName="fullName" [toUper]="true"></input-text>
+              </app-form-control>
             </div>
+            <div class="col-md-4">
+              <app-form-control label="Giới tính">
+                <input-text formControlName="gender"></input-text>
+              </app-form-control>
+            </div>
+            <div class="col-md-4">
+              <app-form-control label="Ngày sinh">
+                <input-date formControlName="dateOfBirth"></input-date>
+              </app-form-control>
+            </div>
+            <div class="col-md-4">
+              <app-form-control label="Số điện thoại">
+                <input-text formControlName="phoneNumber"></input-text>
+              </app-form-control>
+            </div>
+            <!-- <div class="col-md-4">
+              <app-form-control label="Loại giấy tờ">
+                <input-select formControlName="identityType"></input-select>
+              </app-form-control>
+            </div> -->
+            <!-- <div *ngIf="form.get('identityType')?.value === 'GTK'" class="col-md-4">
+              <app-form-control label="Tên giấy tờ">
+                <input-text formControlName="identityName"></input-text>
+              </app-form-control>
+            </div> -->
+            <div class="col-md-4">
+              <app-form-control label="Số giấy tờ">
+                <input-text formControlName="identityNo"></input-text>
+              </app-form-control>
+            </div>
+            <ng-container>
+              <div class="col-md-12">
+                <input-diaban [city]="myForm.get('provinceId')" [district]="myForm.get('districtId')"
+                  [village]="myForm.get('wardId')" [address]="myForm.get('addressDetail')"></input-diaban>
+              </div>
+              <div class="col-md-12">
+                <app-form-control label="Nơi làm việc">
+                  <input-textarea [maxlength]="225" formControlName="workplace"></input-textarea>
+                </app-form-control>
+              </div>
+            </ng-container>
           </div>
           <!-- <app-customer-data [(form)]="resident" [data]="data"></app-customer-data> -->
         </div>
@@ -419,31 +414,20 @@
           </div>
 
           <div class="resident-list">
-            <div class="resident-item selected" *ngIf="residentIndex === -1">
+            <div class="resident-item selected" *ngFor="let item of listGuest">
               <div class="name">
-                <!-- <i class="mr-1" [ngClass]="{
-                    'isax-man1': resident.get('gender')?.value === 5,
-                    'isax-woman1': resident.get('gender')?.value === 6
+                <i class="mr-1" [ngClass]="{
+                    'isax-man1': item.gender === 'Nam',
+                    'isax-woman1': item.gender === 'Nữ'
                   }"></i>
-                {{
-                resident.get("fullName")?.value?.toUpperCase() ?? -->
-                "Đang nhập thông tin khách..."
-                <!-- }} -->
-                {{ resident.get("note")?.value ?? "" }}
+                {{item.fullName.toUpperCase() ?? "Đang nhập thông tin khách..."}}
+              </div>
+              <div class="title-label" *ngIf="item.representative">
+                Người đại diện
               </div>
               <div class="birth">
                 <i class="isax-cake1 mr-1"></i>
-                {{ resident.get("dateOfBirth")?.value | dateFormat }}
-              </div>
-            </div>
-            <div class="resident-item">
-              <div class="name">
-                <i class="mr-1" ></i>
-                pp
-              </div>
-              <div class="birth">
-                <i class="isax-cake1 mr-1"></i>
-                <!-- item.dateOfBirth | dateFormat -->
+                {{item.birthDateText}}
               </div>
             </div>
           </div>

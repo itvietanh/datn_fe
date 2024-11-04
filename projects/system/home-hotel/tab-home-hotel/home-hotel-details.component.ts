@@ -302,7 +302,6 @@ export class HomeHotelDetailsComponent implements OnInit {
         total_amount: this.remainingAmount ? this.remainingAmount : this.myForm.get('finalPrice')?.value
       },
       roomUsingGuest: {
-        uuid: this.ex.newGuid(),
         check_in: this.myForm.get('checkInTime')?.value,
         check_out: this.myForm.get('checkOutTime')?.value,
       }
