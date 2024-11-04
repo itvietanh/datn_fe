@@ -61,13 +61,12 @@
                 <div class="media-body">
                   <div class="media-title">
                     <a>
-                      <span class="font-weight-semibold">{{ item.title }}</span>
-                      <span class="text-muted float-right font-size-sm">{{
-                        item.createdAt | datetimeFormat
-                        }}</span>
+                      Phòng <span class="font-weight-semibold">{{ item.room_number }}</span> hết hạn
                     </a>
                   </div>
-                  <span class="text-muted">{{ item.content }}</span>
+                  <span class="text-muted float-right font-size-sm"><label for="">Check out lúc:</label> {{
+                    item.check_out}}</span>
+                  <span class="text-muted">ID: {{ item.id }}</span>
                 </div>
               </li>
             </ul>

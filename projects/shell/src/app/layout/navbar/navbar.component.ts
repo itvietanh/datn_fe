@@ -8,6 +8,7 @@ import { LocalStorageUtil } from 'common/base/utils';
 import { AutService } from 'common/share/src/service/application/auth/aut.service';
 import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
 import { Observable } from 'rxjs';
+import { RoomExpiredService } from 'common/share/src/service/application/hotel/room-expired.service';
 import {
   AccommodationFacilityService,
   DialogService,
@@ -37,9 +38,11 @@ export class NavbarComponent implements OnInit {
     public hotelService: HotelService,
     private local: LocationStrategy,
     public authService: AutService,
+    private roomExpiredService: RoomExpiredService, 
   ) { }
 
   async ngOnInit() {
+    this.getNotify();
   }
 
   resizeMenu() {
@@ -64,8 +67,18 @@ export class NavbarComponent implements OnInit {
     }, 1);
   }
 
-  async getNotify(paging: PagingModel = { page: 1, size: 20 }) {
-
+  async getNotify(paging: PagingModel = this.paging!) {
+    this.isLoading = true;
+    try {
+      const response = await this.roomExpiredService.getRoomExpiredList(paging).toPromise();
+      if (response && response.data) {
+        this.listNotification = response.data.items;  // Gán dữ liệu vào listNotification
+      }
+    } catch (error) {
+      console.error('Failed to load notifications:', error);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   loadMore = async () => {
