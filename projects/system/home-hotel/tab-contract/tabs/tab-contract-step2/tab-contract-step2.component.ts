@@ -64,6 +64,7 @@ export class TabContactStep2Component implements OnInit {
       check_in: this.shareData.item.checkIn,
       check_out: this.shareData.item.checkOut
     }
+
     const res = await this.orderRoomService.calculator(req).firstValueFrom();
     if (res.data) {
       this.roomAmount = Math.floor(res.data.final_price);
@@ -102,15 +103,15 @@ export class TabContactStep2Component implements OnInit {
         option.size = DialogSize.medium;
         option.component = GuestDetailComponent;
         option.inputs = {
-          uuid: this.shareData.item.roomUuid,
-          guest: this.shareData.listGuest,
+          uuid: item?.guestUuid,
+          item: this.shareData?.item
         };
       },
       (eventName, eventValue) => {
         if (eventName === 'onClose') {
           this.dialogService.closeDialogById(dialog.id);
           if (eventValue) {
-            this.shareData.closeDialog();
+            this.shareData.getDataTab1();
           }
         }
       }

@@ -83,7 +83,8 @@
         </ng-template>
         <ng-template [appCellTemplate]="'action'" let-item>
           <a>
-            <span nz-tooltip nzTooltipTitle="Cập nhật" class="isax-edit-21 text-primary"></span>
+            <span nz-tooltip nzTooltipTitle="Cập nhật" class="isax-edit-21 text-primary"
+              (click)="hanldeOpenDialog(item, 'edit')"></span>
           </a>
 
           <a class="p-2">

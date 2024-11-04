@@ -37,6 +37,7 @@ export class InputCheckBoxComponent implements OnInit, ControlValueAccessor, OnC
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    
   }
 
   writeValue(obj: any) {

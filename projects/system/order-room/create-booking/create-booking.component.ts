@@ -31,6 +31,7 @@ export class CreateBookingComponent implements OnInit {
   myForm!: FormGroup;
   loading = false;
   items: any[] = [];
+  listGuest: any[] = [];
   // types = CUSTOMER_TYPES;
   isCustomerGroup = false;
   columns: ColumnConfig[] = [
@@ -275,53 +276,21 @@ export class CreateBookingComponent implements OnInit {
       (eventName, eventValue) => {
         if (eventName === 'onClose') {
           this.dialogService.closeDialogById(dialog.id);
+          this.listGuest = eventValue;
           if (eventValue && Array.isArray(eventValue)) {
             // Lọc chỉ lấy các resident có status = 1
             const filteredResidents = eventValue.filter((resident) => resident.status === 1).map(x => {
-              let identityType = 'CCCD';
-              // switch (x.identityType) {
-              //   case 1:
-              //     identityType = IdentityType.CCCD;
-              //     break;
-              //   case 2:
-              //     identityType = IdentityType.CMND;
-              //     break;
-              //   case 3:
-              //     identityType = IdentityType.HC;
-              //     break;
-              //   case 4:
-              //     identityType = IdentityType.GTK;
-              //     break;
-              // }
-
-              // let addressType = 'Thường trú';
-              // switch (x.addressType) {
-              //   case 1:
-              //     addressType = AddressType.THUONGTRU;
-              //     break;
-              //   case 2:
-              //     addressType = AddressType.TAMTRU;
-              //     break;
-              //   case 3:
-              //     addressType = AddressType.KHAC;
-              //     break;
-              // }
 
               let b = {
-                identityType: identityType,
-                identityName: x.identityName,
-                identityNo: x.identityNo,
+                idNumber: x.idNumber,
                 fullName: x.fullName,
                 gender: x.sex,
                 phoneNumber: x.telephone,
-                dateOfBirth: x.birthday,
-                nationalityId: x.nationalityId,
-                countryId: x.nationalityId,
-                // addressType: addressType,
+                birthDateText: x.birthday,
                 addressDetail: x.addressDetail,
-                provinceId: x.provinceId,
-                districtId: x.districtId,
-                wardId: x.wardId,
+                provinceCode: x.provinceId,
+                districtCode: x.districtId,
+                wardCode: x.wardId,
                 note: x.note
               }
               return b;
