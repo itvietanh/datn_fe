@@ -242,20 +242,12 @@ export class MenuComponent implements OnInit {
         child: [
           {
             icon: 'isax-pen-tool-2-1',
-<<<<<<< HEAD
-            name: 'THỐNG KÊ GIAO DỊCH',
-            url: '/he-thong/thong-ke-giao-dich',
-=======
             name: 'Giao dịch',
             url: '/he-thong/thong-ke/giao-dich',
->>>>>>> bbe5af90c7e1bf4a6f7bfb5560de5f21322e9bfc
             isOpen: false,
             exact: false,
             level: 2,
             child: [],
-<<<<<<< HEAD
-          }
-=======
           },
           {
             icon: 'isax-pen-tool-2-1',
@@ -266,7 +258,6 @@ export class MenuComponent implements OnInit {
             level: 2,
             child: [],
           },
->>>>>>> bbe5af90c7e1bf4a6f7bfb5560de5f21322e9bfc
         ],
       },
 

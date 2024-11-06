@@ -20,11 +20,7 @@ import { ServiceRoutes } from './service.routing';
     ServiceDetailComponent
   ],
   exports: [
-<<<<<<< HEAD:projects/system/statistical/statistical.module.ts
-    StatisticalComponent
-=======
     ServiceComponent
->>>>>>> bbe5af90c7e1bf4a6f7bfb5560de5f21322e9bfc:projects/system/statistical/service/service.module.ts
   ]
 })
 export class ServiceModule { }
