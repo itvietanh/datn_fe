@@ -40,31 +40,11 @@ export class MenuComponent implements OnInit {
     },
     {
       key: 'code',
-      header: 'code',
+      header: 'Mã',
     },
     {
-      key:'url',
-      header:'description'
-    },
-    {
-      key:'url',
-      header:'icon'
-    },
-    {
-      key:'url',
-      header:'idx'
-    },
-    {
-      key:'url',
-      header:'is_show'
-    },
-    {
-      key:'url',
-      header:'parent_uid'
-    },
-    {
-      key:'url',
-      header:'hotel_id'
+      key:'api',
+      header:'Api'
     },
     {
       key: 'action',
