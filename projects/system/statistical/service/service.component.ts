@@ -1,182 +1,133 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { ColumnConfig } from 'common/base/models';
 import { MessageService } from 'common/base/service/message.service';
 import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
 import { ValidatorExtension } from 'common/validator-extension';
 import { DialogService, PagingModel, DialogMode, DialogSize } from 'share';
-import { FloorService } from 'common/share/src/service/application/hotel/floor.service';
-import { Service } from 'common/share/src/service/application/hotel/service.service';
-import { StatisticalService } from 'common/share/src/service/application/hotel/statistical.service';
-import { ServiceDetailComponent } from './service-detail/service-detail.component';
-
-interface DataPoint {
-  label: string; // Type for the label
-  y: number;     // Type for the y value
-}
+import { TransactionService } from 'common/share/src/service/application/hotel/transaction.service';
+import { FacilityDetailsComponent } from 'projects/system/facility/facility-detail/facility-details.component';
+import { ChartConfiguration } from 'chart.js';
 
 @Component({
   selector: 'app-service',
   templateUrl: './service.component.html',
   styleUrls: ['./service.component.scss']
 })
-export class ServiceComponent implements OnInit {
-  public formSearch: FormGroup;
-  public listOfData: any[] = [];
-  public isLoading?: boolean;
-  public paging: any;
-  items: any[] = [];
-  loading = false;
+export class ServiceComponent implements OnInit, OnChanges {
 
+  timeFilter: string = 'daily';
+  chartType: string = 'line';
+  loading: boolean = false;
+  error: string | null = null;
 
-  // Update the chartOptions type
-  chartOptions = {
-    animationEnabled: true,
-    title: {
-      text: "Thống Kê Dịch Vụ Khách Sạn"
+  // Data for the charts
+  dummyData: any = {
+    daily: {
+      labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      datasets: [
+        {
+          label: "Bookings",
+          data: [65, 59, 80, 81, 56, 55, 40],
+          borderColor: "rgb(75, 192, 192)",
+          backgroundColor: "rgba(75, 192, 192, 0.2)"
+        },
+        {
+          label: "Revenue",
+          data: [28, 48, 40, 19, 86, 27, 90],
+          borderColor: "rgb(53, 162, 235)",
+          backgroundColor: "rgba(53, 162, 235, 0.2)"
+        }
+      ]
     },
-    axisX: {
-      title: "Tên Dịch Vụ",
-      labelAngle: -45
+    weekly: {
+      labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+      datasets: [
+        {
+          label: "Bookings",
+          data: [300, 450, 320, 280],
+          borderColor: "rgb(75, 192, 192)",
+          backgroundColor: "rgba(75, 192, 192, 0.2)"
+        },
+        {
+          label: "Revenue",
+          data: [500, 650, 400, 580],
+          borderColor: "rgb(53, 162, 235)",
+          backgroundColor: "rgba(53, 162, 235, 0.2)"
+        }
+      ]
     },
-    axisY: {
-      title: "Số Lượng",
-      includeZero: true
-    },
-    axisY2: {
-      title: "Doanh Thu (VNĐ)",
-      includeZero: true
-    },
-    toolTip: {
-      shared: true
-    },
-    legend: {
-      cursor: "pointer",
-      itemclick: function (e: any) {
-        e.dataSeries.visible = typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible ? false : true;
-        e.chart.render();
-      }
-    },
-    data: [
-      {
-        type: "column",
-        name: "Số Lượng",
-        legendText: "Số Lượng",
-        showInLegend: true,
-        dataPoints: [] as DataPoint[] // Specify the type here
-      },
-      {
-        type: "column",
-        name: "Doanh Thu",
-        axisYType: "secondary",
-        legendText: "Doanh Thu (VNĐ)",
-        showInLegend: true,
-        dataPoints: [] as DataPoint[] // Specify the type here
-      }
-    ]
+    monthly: {
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+      datasets: [
+        {
+          label: "Bookings",
+          data: [1200, 1900, 1500, 1700, 2000, 1800],
+          borderColor: "rgb(75, 192, 192)",
+          backgroundColor: "rgba(75, 192, 192, 0.2)"
+        },
+        {
+          label: "Revenue",
+          data: [3000, 3500, 2800, 3200, 3800, 3400],
+          borderColor: "rgb(53, 162, 235)",
+          backgroundColor: "rgba(53, 162, 235, 0.2)"
+        }
+      ]
+    }
   };
 
-  constructor(
-    private fb: FormBuilder,
-    private dialogService: DialogService,
-    private messageService: MessageService,
-    public hotelService: HotelService,
-    private datePipe: DatePipe,
-    public floorService: FloorService,
-    public service: Service,
-    private statisticalService: StatisticalService
-  ) {
-    this.formSearch = this.fb.group({
-      service_name: [null],
-      service_price: [null]
-    });
-    this.formSearch.get('outEndDate')?.addValidators(
-      ValidatorExtension.gteDateValidator(
-        this.formSearch,
-        'signEndDate',
-        'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
-      )
-    );
-    this.formSearch.get('outEndDate')?.addValidators(
-      ValidatorExtension.gteDateValidator(
-        this.formSearch,
-        'outStartDate',
-        'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
-      )
-    );
-  }
-
-  ngOnInit() {
-    this.isLoading = true;
-    this.getData();
-    this.isLoading = false;
-  }
-
-  async getData(paging: PagingModel = { page: 1, size: 20 }) {
-    const params = {
-      ...paging,
-      ...this.formSearch.value
-    }
-    this.dialogService.openLoading();
-    const rs = await this.service.getPaging(params).firstValueFrom();
-    const dataRaw = rs.data!.items;
-    console.log("dataRaw:", dataRaw);
-
-    // Map data into dataPoints for chart
-    this.chartOptions.data[0].dataPoints = dataRaw.map(item => ({
-      label: item.service_name, // Tên dịch vụ
-      y: item.service_usage_count || 0     // Số lượng, sử dụng giá trị mặc định nếu không có
-    }));
-
-    this.chartOptions.data[1].dataPoints = dataRaw.map(item => ({
-      label: item.service_name,  // Tên dịch vụ
-      y: item.service_price || 0 // Giá dịch vụ, sử dụng giá trị mặc định nếu không có
-    }));
-
-    // Map additional data from StatisticalService
-    this.chartOptions.data[2].dataPoints = dataRaw.map(item => ({
-      label: item.service_name,  // Tên dịch vụ
-      y: item.statistical_value || 0 // Giá trị thống kê từ StatisticalService, sử dụng giá trị mặc định nếu không có
-    }));
-
-    this.items = rs.data!.items;
-    this.paging = rs.data?.meta;
-    this.dialogService.closeLoading();
-  }
-
-
-  async handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
-    const dialog = this.dialogService.openDialog(
-      async (option) => {
-        option.title = mode === 'view' ? 'Xem Chi Tiết Dịch Vụ' : 'Thêm Mới Dịch Vụ';
-        if (mode === 'edit') option.title = 'Cập Nhật Dịch Vụ';
-        option.size = DialogSize.xlarge;
-        option.component = ServiceDetailComponent; // open component
-        option.inputs = {
-          uuid: item?.uuid,
-          mode: mode,
-        };
+  options: ChartConfiguration['options'] = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top'
       },
-      (eventName, eventValue) => {
-        if (eventName === 'onClose') {
-          this.dialogService.closeDialogById(dialog.id);
-          if (eventValue) {
-            this.getData({ ...this.paging });
-          }
-        }
+      title: {
+        display: true,
+        text: 'Thống kê dịch  vụ'
       }
-    );
-  }
-
-  async handlerDelete(item: any) {
-    const confirm = await this.messageService.confirm('Bạn có muốn xóa dữ liệu này không?');
-    if (confirm) {
-      const rs = await this.hotelService.delete(item?.uuid).firstValueFrom();
-      if (rs.data) {
-        this.messageService.notiMessageSuccess('Xóa dữ liệu thành công');
-        return this.getData({ ...this.paging });
+    },
+    interaction: {
+      intersect: false,
+      mode: 'index'
+    },
+    scales: {
+      y: {
+        beginAtZero: true
       }
     }
+  };
+
+  constructor() { }
+
+  ngOnInit(): void {
+    this.refreshData();
+  }
+
+  async refreshData(): Promise<void> {
+    try {
+      this.loading = true;
+      this.error = null;
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (err) {
+      this.error = 'Failed to fetch data. Please try again.';
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['chartType']) {
+      this.renderChart(this.chartType);
+    }
+  }
+
+  getChartData() {
+    return this.dummyData[this.timeFilter];
+  }
+
+  renderChart(chartType: string) {
+    this.chartType = chartType;
   }
 }
