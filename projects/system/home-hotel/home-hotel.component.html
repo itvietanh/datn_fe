@@ -4,45 +4,58 @@
       <div class="d-flex">
         <div class="breadcrumb-title">Sơ đồ phòng</div>
       </div>
-      <div class="d-flex hd-room">
-        <div class="breadcrumb-title ">
-          <nz-segmented [nzOptions]="viewOptions" [ngModel]="[0]"
-            (nzValueChange)="onViewSelectedChange($event)"></nz-segmented>
+      <form [formGroup]="formSearch">
+        <div class="d-flex hd-room">
+          <div class="breadcrumb-title ">
+            <div class="chon-tang">
+              <input-select-api [apiService]="floorService" formControlName="floor_id"
+                [placeholder]="'Tầng...'"></input-select-api>
+            </div>
 
-          <div class="chon-tang">
-            <input-select-api [apiService]="floorService" placeholder="Tầng..."></input-select-api>
+            <ng-container>
+              <div class="mo-ta">
+                <div class="status">
+                  <input-check-box [(ngModel)]="selectedStatus" [ngModel]="selectedStatus === 1"
+                    (onChange)="handleFilter(1)">
+                    <span class="available">Phòng trống</span>
+                  </input-check-box>
+                </div>
+              </div>
+
+              <div class="mo-ta">
+                <div class="status">
+                  <input-check-box [(ngModel)]="selectedStatus" [ngModel]="selectedStatus === 2"
+                    (onChange)="handleFilter(2)">
+                    <span class="occupied">Đang ở</span>
+                  </input-check-box>
+                </div>
+              </div>
+
+              <div class="mo-ta">
+                <div class="status">
+                  <input-check-box [(ngModel)]="selectedStatus" [ngModel]="selectedStatus === 3"
+                    (onChange)="handleFilter(3)">
+                    <span class="overtime">Quá giờ</span>
+                  </input-check-box>
+                </div>
+              </div>
+
+              <div class="mo-ta">
+                <div class="phong-ban">
+                  <input-check-box [(ngModel)]="selectedStatus" [ngModel]="selectedStatus === 4"
+                    (onChange)="handleFilter(4)">
+                    <span class="cleaning">Cần dọn</span>
+                  </input-check-box>
+                </div>
+              </div>
+            </ng-container>
+
           </div>
-
-          <ng-container>
-            <div class="mo-ta">
-              <div class="status">
-                <input-check-box formControlName="status" (onChange)="handleFilter()">
-                  <span class="available">Phòng trống</span>
-                </input-check-box>
-              </div>
-            </div>
-
-            <div class="mo-ta">
-              <div class="status">
-                <input-check-box formControlName="status">
-                  <span class="occupied">Đang ở</span>
-                </input-check-box>
-              </div>
-            </div>
-
-            <div class="mo-ta">
-              <div class="phong-ban">
-                <input-check-box formControlName="status">
-                  <span class="cleaning">Cần dọn</span>
-                </input-check-box>
-              </div>
-            </div>
-          </ng-container>
+          <div class="breadcrumb">
+            <div class="list-control-main"></div>
+          </div>
         </div>
-        <div class="breadcrumb">
-          <div class="list-control-main"></div>
-        </div>
-      </div>
+      </form>
 
       <div class="d-flex align-items-center">
         <div class="breadcrumb">
@@ -86,7 +99,8 @@
             <div class="room-right text-center">
               <p class="mt-2" *ngIf="room.status === 1">{{room.status | labelValue: listRoomStatus}}</p>
 
-              <div class="d-flex justify-content-center align-items-center" *ngIf="room.status === 2 || room.status === 3">
+              <div class="d-flex justify-content-center align-items-center"
+                *ngIf="room.status === 2 || room.status === 3">
                 <ng-container *ngFor="let guest of room.room_using_guest">
                   <p class="mt-2 mb-0" style="font-weight: 700;" *ngIf="guest.representative">
                     {{ guest.name }}

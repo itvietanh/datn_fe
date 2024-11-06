@@ -5,6 +5,7 @@ import { DialogService, DialogSize } from "share";
 import { ColumnConfig } from "common/base/models";
 import { OrderRoomService } from "common/share/src/service/application/hotel/order-room.service";
 import { RoomChangeComponent } from "projects/system/home-hotel/room-change/room-change.component";
+import { GuestDetailComponent } from "./guest-detail/guest-detail.component";
 
 @Component({
   selector: 'app-tab-contract-step2',
@@ -63,6 +64,7 @@ export class TabContactStep2Component implements OnInit {
       check_in: this.shareData.item.checkIn,
       check_out: this.shareData.item.checkOut
     }
+
     const res = await this.orderRoomService.calculator(req).firstValueFrom();
     if (res.data) {
       this.roomAmount = Math.floor(res.data.final_price);
@@ -87,6 +89,29 @@ export class TabContactStep2Component implements OnInit {
           this.dialogService.closeDialogById(dialog.id);
           if (eventValue) {
             this.shareData.closeDialog();
+          }
+        }
+      }
+    );
+  }
+
+  hanldeOpenDialog(item: any = null, mode: any = 'add') {
+    const dialog = this.dialogService.openDialog(
+      async (option) => {
+        option.title = mode === 'view' ? 'Xem Chi Tiết Khách Hàng' : 'Thêm Mới Khách Hàng';
+        if (mode === 'edit') option.title = 'Cập Nhật Khách Hàng';
+        option.size = DialogSize.medium;
+        option.component = GuestDetailComponent;
+        option.inputs = {
+          uuid: item?.guestUuid,
+          item: this.shareData?.item
+        };
+      },
+      (eventName, eventValue) => {
+        if (eventName === 'onClose') {
+          this.dialogService.closeDialogById(dialog.id);
+          if (eventValue) {
+            this.shareData.getDataTab1();
           }
         }
       }

@@ -28,7 +28,7 @@
     </nz-tabset>
     <div class="lst-controls d-flex justify-content-between">
       <app-filter></app-filter>
-      <button *ngIf="selectedIndex === 0" type="button" class="loc-nang-cao btn btn-default ml-1">
+      <button *ngIf="0 === 0" type="button" class="loc-nang-cao btn btn-default ml-1">
         <span nz-icon nzType="filter" nzTheme="outline"></span> Lọc nâng cao
       </button>
     </div>
@@ -57,12 +57,12 @@
     </div> -->
 
     <div class="ux-pc">
-      <app-table [columns]="columns" [items]="items" [loading]="loading" [showIndex]="false" >
+      <app-table [columns]="columns" [items]="items" [loading]="loading" [showIndex]="false">
         <ng-template [appCellTemplate]="'contractType'" let-item>
           <!-- {{ contractTypesDict[item.contractType] }} -->gggg
         </ng-template>
         <ng-template [appCellTemplate]="'action'" let-item>
-          <div *ngIf="item.status === contractStatus.RESERVE" class="list-icons list-icons-extended text-center">
+          <div *ngIf="item.status === 1" class="list-icons list-icons-extended text-center">
             <a class="list-icons-item action-edit">
               <i nz-tooltip nzTooltipTitle="Nhận phòng" nz-icon nzType="login" nzTheme="outline"></i>
             </a>
@@ -122,11 +122,11 @@
             </li>
           </ul>
         </div>
-        <div class="list-icons list-icons-extended text-center round" *ngIf="item.status === contractStatus.RESERVE">
-          <a class="list-icons-item action-edit rounded-btn" >
+        <div class="list-icons list-icons-extended text-center round" *ngIf="item.status === 1">
+          <a class="list-icons-item action-edit rounded-btn">
             <i nz-tooltip nzTooltipTitle="Nhận phòng" nz-icon nzType="login" nzTheme="outline"></i>
           </a>
-          <a class="list-icons-item action-delete rounded-btn" >
+          <a class="list-icons-item action-delete rounded-btn">
             <span nz-tooltip nzTooltipTitle="Hủy đặt phòng" class="isax-trash1"></span>
           </a>
 

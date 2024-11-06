@@ -37,7 +37,6 @@ export class InputSelectApiComponent
   @Input() classControl: any = '';
   @Input() placeholder: any = '';
   @Input() apiService: any;
-  @Input() menuService: any;
   @Input() actionName: string | undefined;
   @Input() apiParams: any = {};
   @Input() disabled = false;

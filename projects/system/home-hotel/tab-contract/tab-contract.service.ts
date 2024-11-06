@@ -6,6 +6,7 @@ import { ExtentionService } from "common/base/service/extention.service";
 import { MessageService } from "common/base/service/message.service";
 import { ValidatorExtension } from "common/validator-extension";
 import { DialogMode, RegisGoverningBodyService, AccommodationFacilityService, AccommodationUserService, ShrContractService, DialogService } from "share";
+import { HomeHotelService } from 'common/share/src/service/application/hotel/home-hotel.service';
 
 @Injectable({
   providedIn: 'root',
@@ -30,9 +31,12 @@ export class TabContractService {
     private dialogService: DialogService,
     private messageService: MessageService,
     private datePipe: DatePipe,
+    private homeHotelService: HomeHotelService,
   ) {
     this.myForm = this.fb.group({
       /**Tab 1 */
+      roomNumber: [null],
+      typeName: [null],
       checkInTxt: [null],
       checkOutTxt: [null],
       name: [null],
@@ -52,19 +56,27 @@ export class TabContractService {
 
   }
 
-  async getDataTab1(mode: string) {
+  async getDataTab1() {
     this.dialogService.openLoading();
     this.myForm.disable();
     const item = this.item;
-    item.checkInTxt = this.datePipe.transform(item.checkIn, 'dd/MM/yyyy HH:MM');
-    item.checkOutTxt = this.datePipe.transform(item.checkOut, 'dd/MM/yyyy HH:MM');
-    this.myForm.patchValue(item);
-    item.room_using_guest.forEach((guest: any) => {
-      if (guest.representative) {
-        this.myForm.patchValue(guest);
+    const dataRuRes = await this.homeHotelService.findOne(item.roomUuid).firstValueFrom();
+    const data = dataRuRes.data;
+    data.checkInTxt = this.datePipe.transform(data.checkIn, 'dd/MM/yyyy HH:MM');
+    data.checkOutTxt = this.datePipe.transform(data.checkOut, 'dd/MM/yyyy HH:MM');
+    const dataRugRes = await this.homeHotelService.getPaging({ uuid: data.transUuid }).firstValueFrom();
+    const dataGuest = dataRugRes.data!.items;
+    dataGuest.forEach(item => {
+      if (item.birthDate) {
+        item.birthDate = this.datePipe.transform(item.birthDate, 'dd/MM/yyyy');
       }
     });
-    this.listGuest = this.item.room_using_guest;
+
+    // Thêm tổng khách đang ở vào list
+    data.totalGuests = dataGuest.length;
+    this.item = data;
+    this.listGuest = dataRugRes.data!.items;
+    this.myForm.patchValue(data);
     this.dialogService.closeLoading();
   }
 

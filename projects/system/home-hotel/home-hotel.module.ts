@@ -8,6 +8,7 @@ import { QrCodeDetailsComponent } from './tab-home-hotel/tab-qrcode/qrcode-detai
 import { NzSegmentedModule } from 'ng-zorro-antd/segmented';
 import { TabContractModule } from './tab-contract/tab-contract.module';
 import { RoomChangeComponent } from './room-change/room-change.component';
+import { GuestDetailComponent } from './tab-contract/tabs/tab-contract-step2/guest-detail/guest-detail.component';
 
 @NgModule({
   imports:
@@ -17,6 +18,6 @@ import { RoomChangeComponent } from './room-change/room-change.component';
       HomeHotelRoutes,
       TabContractModule
     ],
-  declarations: [HomeHotelComponent, HomeHotelDetailsComponent, QrCodeDetailsComponent, RoomChangeComponent],
+  declarations: [HomeHotelComponent, HomeHotelDetailsComponent, QrCodeDetailsComponent, RoomChangeComponent, GuestDetailComponent],
 })
 export class HomeHotelModule { }

@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { StatisticalComponent } from './statistical.component';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { FormModule } from 'common/base/module/form.module';
-import { StatisticalDetailComponent } from './statistical-detail/statistical-detail.component';
-import { StatisticalRoutes } from './statistical.routing';
+import { ServiceDetailComponent } from './service-detail/service-detail.component';
+import { ServiceComponent } from './service.component';
+import { ServiceRoutes } from './service.routing';
 
 @NgModule({
   imports: [
@@ -13,14 +13,14 @@ import { StatisticalRoutes } from './statistical.routing';
     FormModule,
     CanvasJSAngularChartsModule,
     RouterOutlet,
-    StatisticalRoutes
+    ServiceRoutes
   ],
   declarations: [
-    StatisticalComponent,
-    StatisticalDetailComponent
+    ServiceComponent,
+    ServiceDetailComponent
   ],
   exports: [
-    StatisticalComponent 
+    ServiceComponent
   ]
 })
-export class StatisticalModule { }
+export class ServiceModule { }

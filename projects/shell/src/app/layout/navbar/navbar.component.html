@@ -37,7 +37,8 @@
       <li class="nav-item accom-current">
         <i class="isax-building-31 nar-icon mr-2"></i>
         <div class="d-inline-block mr-2">
-          <input-select-api [apiService]="hotelService" [actionName]="'getCombobox'" [allowSearch]="false"></input-select-api>
+          <input-select-api [apiService]="hotelService" [actionName]="'getCombobox'"
+            [allowSearch]="false"></input-select-api>
         </div>
       </li>
 
@@ -60,13 +61,12 @@
                 <div class="media-body">
                   <div class="media-title">
                     <a>
-                      <span class="font-weight-semibold">{{ item.title }}</span>
-                      <span class="text-muted float-right font-size-sm">{{
-                        item.createdAt | datetimeFormat
-                        }}</span>
+                      Phòng <span class="font-weight-semibold">{{ item.room_number }}</span> hết hạn
                     </a>
                   </div>
-                  <span class="text-muted">{{ item.content }}</span>
+                  <span class="text-muted float-right font-size-sm"><label for="">Check out lúc:</label> {{
+                    item.check_out}}</span>
+                  <span class="text-muted">ID: {{ item.id }}</span>
                 </div>
               </li>
             </ul>

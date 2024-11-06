@@ -3,6 +3,33 @@
   <div class="row">
     <div class="col-8">
       <div class="row">
+        <div class="col-md-12">
+          <div class="group-header">
+            <div class="title-left">
+              <div class="title-group-table">Thông tin phòng ở</div>
+            </div>
+            <div class="control-right"></div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="false">Phòng</nz-form-label>
+            <nz-form-control>
+              <input-text formControlName="roomNumber"></input-text>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div class="col-md-6">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="false">Kiểu phòng</nz-form-label>
+            <nz-form-control>
+              <input-text formControlName="typeName"></input-text>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
         <div class="col-md-6">
           <nz-form-item>
             <nz-form-label [nzRequired]="false">Thời gian nhận phòng</nz-form-label>
@@ -80,15 +107,15 @@
         <div class="resident-list">
           <div class="resident-item selected" *ngFor="let item of shareData.listGuest">
             <div class="name">
-              <!-- <i class="mr-1" [ngClass]="{
+              <i class="mr-1" [ngClass]="{
                 'isax-man1': item.gender === 'Nam',
                 'isax-woman1': item.gender === 'Nữ'
-              }"></i> -->
+              }"></i>
               {{item.name.toUpperCase() ?? "Đang nhập thông tin khách..."}}
             </div>
             <div class="birth">
-              <!-- <i class="isax-cake1 mr-1"></i> -->
-              {{item.phoneNumber}}
+              <i class="isax-cake1 mr-1"></i>
+              {{item.birthDate}}
             </div>
           </div>
         </div>
