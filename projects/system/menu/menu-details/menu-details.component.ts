@@ -36,7 +36,7 @@ export class MenuDetailsComponent implements OnInit {
       code:[null,ValidatorExtension.required()],
       icon:[null,ValidatorExtension.required()],
       api:[null,ValidatorExtension.required()],
-      menu:[null,ValidatorExtension.required()],
+      hotel_id:[null,ValidatorExtension.required()],
       name:[null,ValidatorExtension.required()],
       id:[ex.newGuid()],
       idx:[null, ValidatorExtension.required()],
