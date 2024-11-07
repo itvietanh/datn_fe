@@ -38,7 +38,8 @@ export class MenuDetailsComponent implements OnInit {
       api:[null,ValidatorExtension.required()],
       hotel_id:[null,ValidatorExtension.required()],
       name:[null,ValidatorExtension.required()],
-      id:[ex.newGuid()],
+      // id:[null],
+      id: [ex.newGuid()],
       idx:[null, ValidatorExtension.required()],
       is_show:[null,ValidatorExtension.required()]
 
@@ -69,7 +70,7 @@ export class MenuDetailsComponent implements OnInit {
     const formData = this.myForm.getRawValue();
     this.dialogService.openLoading();
 
-    if (this.id) {
+    if (this.uuid) {
       //Update
       await this.menuService.edit(this.id, formData).firstValueFrom();
     } else {

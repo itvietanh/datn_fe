@@ -73,7 +73,7 @@ export class MenuComponent implements OnInit {
       api:[null,ValidatorExtension.required()],
       hotel_id:[null,ValidatorExtension.required()],
       name:[null,ValidatorExtension.required()],
-      id:[ex.newGuid()],
+      // id:[null],
       idx:[null, ValidatorExtension.required()],
       is_show:[null,ValidatorExtension.required()]
     });
