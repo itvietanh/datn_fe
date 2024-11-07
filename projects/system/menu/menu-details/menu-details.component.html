@@ -32,15 +32,15 @@
       </app-form-control>
     </div>
     <div class="col-md-6">
-      <app-form-control label="Menu cha">
-        <input-select-api [apiService]="hotelService" [actionName]="'getCombobox'"
-          formControlName="menu"></input-select-api>
+      <app-form-control label="Idx">
+        <input-text formControlName="idx"> </input-text>
       </app-form-control>
     </div>
+ 
 
     <div class="col-md-12">
       <app-form-control label="Xác nhận">
-        <input type="checkbox" formControlName="confirm_work_location" style="width: 20px; height: 20px; vertical-align: middle;">
+        <input type="checkbox" formControlName="is_show" style="width: 20px; height: 20px; vertical-align: middle;">
         <label for="confirm_work_location" style="font-size: 1.2em; margin-left: 5px;">Hiển thị </label>
       </app-form-control>
     </div>

@@ -38,7 +38,9 @@ export class MenuDetailsComponent implements OnInit {
       api:[null,ValidatorExtension.required()],
       menu:[null,ValidatorExtension.required()],
       name:[null,ValidatorExtension.required()],
-      confirm_work_location:[null,ValidatorExtension.required()]
+      id:[ex.newGuid()],
+      idx:[null, ValidatorExtension.required()],
+      is_show:[null,ValidatorExtension.required()]
 
     })
   }
