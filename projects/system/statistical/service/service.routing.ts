@@ -1,5 +1,5 @@
 import { Routes, RouterModule } from '@angular/router';
-import { ServiceComponent } from 'projects/system/service/service.component';
+import { ServiceComponent } from 'projects/system/statistical/service/service.component';
 
 const routes: Routes = [{ path: '', component: ServiceComponent }];
 
