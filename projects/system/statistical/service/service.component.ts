@@ -223,7 +223,7 @@ export class ServiceComponent implements OnInit, OnChanges {
       const labels: string[] = [];
   
       // Duyệt qua dữ liệu để trích xuất thông tin cần thiết
-      for (const item of dataRaw) {
+      for (const item of dataRaw  ) {
         if (item.created_at) {
           const date = this.datePipe.transform(item.created_at, 'dd-MM-yyyy');
           labels.push(date || '');
@@ -263,10 +263,6 @@ export class ServiceComponent implements OnInit, OnChanges {
       this.isLoading = false; 
     }
   }
-  
-  
-  
-  
 
   async handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
     const dialog = this.dialogService.openDialog(

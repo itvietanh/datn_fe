@@ -69,17 +69,15 @@ export class MenuDetailsComponent implements OnInit {
     if (this.myForm.invalid) return;
     const formData = this.myForm.getRawValue();
     this.dialogService.openLoading();
-
-    if (this.uuid) {
+    if (this.id) {
       //Update
       await this.menuService.edit(this.id, formData).firstValueFrom();
     } else {
       //Create
       await this.menuService.add(formData).firstValueFrom();
     }
-
     this.dialogService.closeLoading();
-    this.messageService.notiMessageSuccess("Thêm dữ liệu thành công!");
+    this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
     this.close(true);
   }
 

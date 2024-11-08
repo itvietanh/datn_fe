@@ -124,9 +124,10 @@ export class MenuComponent implements OnInit {
     this.dialogService.closeLoading();
   }
 
-  async handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
+  handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
+    // debugger;
     const dialog = this.dialogService.openDialog(
-      async (option) => {
+      (option) => {
         option.title =
           mode === 'view' ? 'Xem Chi Tiết Menu' : 'Thêm Mới Menu';
         if (mode === 'edit') option.title = 'Cập Nhật Menu';
