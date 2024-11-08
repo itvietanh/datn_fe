@@ -18,6 +18,7 @@ import { GuestService } from 'common/share/src/service/application/hotel/guest.s
 import { EmployeeService } from 'common/share/src/service/application/hotel/employee.service';
 import { MenuService } from "common/share/src/service/application/hotel/menu.service";
 import { MenuDetailsComponent } from './menu-details/menu-details.component';
+import { ExtentionService } from 'common/base/service/extention.service';
 
 
 @Component({
@@ -62,6 +63,7 @@ export class MenuComponent implements OnInit {
     private employeeService:EmployeeService,
     private menuService:MenuService,
     // private guestService : GuestService,
+    private ex: ExtentionService,
 
     private datePipe: DatePipe
   ) {
@@ -69,9 +71,11 @@ export class MenuComponent implements OnInit {
       code:[null,ValidatorExtension.required()],
       icon:[null,ValidatorExtension.required()],
       api:[null,ValidatorExtension.required()],
-      menu:[null,ValidatorExtension.required()],
+      hotel_id:[null,ValidatorExtension.required()],
       name:[null,ValidatorExtension.required()],
-      confirm_work_location:[null,ValidatorExtension.required()]
+      // id:[null],
+      idx:[null, ValidatorExtension.required()],
+      is_show:[null,ValidatorExtension.required()]
     });
     // this.formSearch
     //   .get('outEndDate')

@@ -38,7 +38,7 @@
     "inputmask": "5.0.6",
     "mustache": "^4.2.0",
     "ng-zorro-antd": "15.1.0",
-    "ng2-charts": "^3.0.0",
+    "ng2-charts": "^3.1.2",
     "ngx-mask": "^15.1.5",
     "ngx-socket-io": "^4.4.0",
     "rxjs": "7.8.0",

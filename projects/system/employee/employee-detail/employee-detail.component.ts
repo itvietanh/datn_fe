@@ -37,7 +37,8 @@ export class EmployeeDetailComponent implements OnInit {
       password: [null, ValidatorExtension.required()],
       phone: [null, ValidatorExtension.required()],
       address: [null, ValidatorExtension.required()],
-      hotel_id: [null, ValidatorExtension.required()]
+      hotel_id: [null, ValidatorExtension.required()],
+      id: [ex.newGuid()]
     })
   }
 
