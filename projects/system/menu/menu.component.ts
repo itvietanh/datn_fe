@@ -44,8 +44,8 @@ export class MenuComponent implements OnInit {
       header: 'Mã',
     },
     {
-      key:'api',
-      header:'Api'
+      key:'url',
+      header:'Url'
     },
     {
       key: 'action',
@@ -70,7 +70,7 @@ export class MenuComponent implements OnInit {
     this.formSearch = this.fb.group({
       code:[null,ValidatorExtension.required()],
       icon:[null,ValidatorExtension.required()],
-      api:[null,ValidatorExtension.required()],
+      url:[null,ValidatorExtension.required()],
       hotel_id:[null,ValidatorExtension.required()],
       name:[null,ValidatorExtension.required()],
       // id:[null],
