@@ -1,16 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuComponent } from './menu.component';
+import { MenuDataDialogComponent } from './menu-data-dialog/menu-data-dialog.component';
 import { MenuRoutes } from './menu.routing';
-import { MenuDetailsComponent } from './menu-details/menu-details.component';
 import { FormModule } from 'common/base/module/form.module';
+
 
 @NgModule({
   imports: [
     CommonModule,
-    MenuRoutes,
-    FormModule
+    FormModule,
+    MenuRoutes
   ],
-  declarations: [MenuComponent,MenuDetailsComponent]
+  declarations: [
+    MenuComponent,
+    MenuDataDialogComponent
+  ]
 })
 export class MenuModule { }

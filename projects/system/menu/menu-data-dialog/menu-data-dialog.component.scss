@@ -1,0 +1,13 @@
+@import "variables";
+form{
+  min-width: 800px;
+  min-height: 450px;
+  @include mobile{
+    min-width: 100%;
+  }
+}
+.group-header{
+  @include tablet-and-mobile{
+    flex-direction: column;
+  }
+}

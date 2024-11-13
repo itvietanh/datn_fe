@@ -3,20 +3,19 @@
     <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
       <div class="d-flex">
         <div class="breadcrumb-title">
-          <a class="isax-arrow-circle-left1 acction-back" [routerLink]="['..']"></a>
+          <a class="isax-arrow-circle-left1 acction-back"></a>
           Đặt phòng
         </div>
         <div class="breadcrumb">
           <div class="list-control-main">
             <div class="contract-time">
-              <nz-spin [nzSpinning]="loading">
+              <nz-spin [nzSpinning]="false">
                 <!-- <app-form-control>
                   <input-date-range-picker
                     [placeholder]="['Từ ngày', 'Tới ngày']"
                     formControlName="dateRange"
                     [disabledDate]="disabledDate"
                     [disabledTime]="disabledTime"
-                    (ngModelChange)="onDateRangeChange($event)"
                   ></input-date-range-picker>
                 </app-form-control> -->
 
@@ -110,6 +109,13 @@
         </div>
 
         <div class="col-md-2">
+          <app-form-control label="Số khách: ">
+            <nz-input-number formControlName="numOfResidents" (ngModelChange)="onQuantityChange()" [nzMin]="0">
+            </nz-input-number>
+          </app-form-control>
+        </div>
+
+        <div class="col-md-2">
           <app-form-control>
             <button type="button" class="btn btn-primary" style="top: 21px; width: 46%; font-weight: 700"
               (click)="onDateRangeChange()">
@@ -128,21 +134,20 @@
           </div>
           <div class="title-control">
             <span>Số lượng phòng: {{ numOfRooms }}</span>
-            <div class="count-member">
+            <!-- <div class="count-member">
               <span>Số khách: </span>
               <nz-input-number formControlName="numOfResidents" (ngModelChange)="onQuantityChange()" [nzMin]="0"
                 [nzStep]="1"></nz-input-number>
-            </div>
+            </div> -->
           </div>
         </div>
 
         <div class="ux-pc mt-1">
-          <app-table [showIndex]="false" [showPagination]="false" [columns]="columns" [items]="items"
-            [loading]="loading">
-            <ng-template [appCellTemplate]="'name'" let-item>
-              {{ item.name }}
+          <app-table [showIndex]="false" [showPagination]="false" [columns]="columns" [items]="items" [loading]="false">
+            <ng-template [appCellTemplate]="'roomTypeName'" let-item>
+              {{ item.roomTypeName }}
             </ng-template>
-            <ng-template [appCellTemplate]="'room'" let-item>
+            <ng-template [appCellTemplate]="'numberOfPeople'" let-item>
               <div class="row">
                 <div class="col-md-6">
                   <nz-input-number [ngModelOptions]="{ standalone: true }" [(ngModel)]="item.quantity"
@@ -150,7 +155,7 @@
                     [nzStep]="1"></nz-input-number>
                 </div>
                 <div class="col-md-6 m-auto" nz-tooltip nzTooltipTitle="Trống/Tổng">
-                  {{ item.available - item.quantity }}/{{ item.total }}
+                  0/{{ item.numberOfPeople }}
                 </div>
               </div>
             </ng-template>
@@ -168,16 +173,14 @@
                 </div>
               </div>
             </ng-template>
-            <ng-template [appCellTemplate]="'totalAmount'" let-item>
+            <ng-template [appCellTemplate]="'total_price'" let-item>
               <nz-spin [nzSpinning]="item.loading">
-                <input-number [(ngModel)]="item.totalAmount" [ngModelOptions]="{ standalone: true }" [min]="0"
+                <input-number [(ngModel)]="item.total_price" [ngModelOptions]="{ standalone: true }" [min]="0"
                   [integerLimit]="10"></input-number>
-                <!-- <input-number [(ngModel)]="item.totalAmount" [ngModelOptions]="{ standalone: true }"
-                  (ngModelChange)="updateInvoice()" [min]="0" [integerLimit]="10"></input-number> -->
               </nz-spin>
             </ng-template>
-            <ng-template [appCellTemplate]="'total'" let-item>
-              {{ item.totalAmount * item.quantity | moneyFormat }}
+            <ng-template [appCellTemplate]="'final_price'" let-item>
+              {{ item.final_price | moneyFormat }}
             </ng-template>
           </app-table>
         </div>
@@ -266,6 +269,15 @@
                   (ngModelChange)="updateInvoice()"></input-number> -->
               </app-form-control>
             </div>
+
+            <div class="col-md-7">Phụ trội</div>
+            <div class="col-md-5">
+              <app-form-control>
+                <input-number [min]="0" [integerLimit]="10" formControlName="prepayment"></input-number>
+                <!-- <input-number [min]="0" [integerLimit]="10" formControlName="prepayment"
+                  (ngModelChange)="updateInvoice()"></input-number> -->
+              </app-form-control>
+            </div>
           </div>
           <div class="return-money">
             <div class="name">Còn lại</div>
@@ -283,7 +295,7 @@
           </div>
         </div>
         <div class="row mt-2">
-          <div *ngIf="isCustomerGroup" class="col-md-3">
+          <div class="col-md-3">
             <app-form-control label="Tên đoàn">
               <input-text formControlName="groupName" [toUper]="true"></input-text>
             </app-form-control>
@@ -435,8 +447,7 @@
       </div>
     </div>
   </div>
-
-  <div class="list-control-footer">
+  <div class="list-control-footer text-center">
     <button [routerLink]="['..']" nz-button type="button" class="btn btn-default">
       <i nz-icon nzType="close" nzTheme="outline"></i>
       Đóng
