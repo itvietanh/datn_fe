@@ -8,51 +8,18 @@
         <div class="d-flex hd-room">
           <div class="breadcrumb-title ">
             <div class="chon-tang">
-              <input-select-api [apiService]="floorService" formControlName="floor_id"
+              <input-select-api [apiService]="floorService" formControlName="floor_id" (onChange)="handleFilter(null)"
                 [placeholder]="'Tầng...'"></input-select-api>
             </div>
 
             <ng-container>
               <div class="mo-ta">
-                <div class="status">
-                  <input-check-box [(ngModel)]="selectedStatus" [ngModel]="selectedStatus === 1"
-                    (onChange)="handleFilter(1)">
-                    <span class="available">Phòng trống</span>
-                  </input-check-box>
-                </div>
-              </div>
-
-              <div class="mo-ta">
-                <div class="status">
-                  <input-check-box [(ngModel)]="selectedStatus" [ngModel]="selectedStatus === 2"
-                    (onChange)="handleFilter(2)">
-                    <span class="occupied">Đang ở</span>
-                  </input-check-box>
-                </div>
-              </div>
-
-              <div class="mo-ta">
-                <div class="status">
-                  <input-check-box [(ngModel)]="selectedStatus" [ngModel]="selectedStatus === 3"
-                    (onChange)="handleFilter(3)">
-                    <span class="overtime">Quá giờ</span>
-                  </input-check-box>
-                </div>
-              </div>
-
-              <div class="mo-ta">
-                <div class="phong-ban">
-                  <input-check-box [(ngModel)]="selectedStatus" [ngModel]="selectedStatus === 4"
-                    (onChange)="handleFilter(4)">
-                    <span class="cleaning">Cần dọn</span>
-                  </input-check-box>
+                <div *ngFor="let item of statusOptions" (click)="handleFilter(item.value)" class="status"
+                  [attr.class]="item.class" [ngClass]="{ selected: item.value === selectedStatus }">
+                  {{ item.label }} {{ item.count ? '(' + item.count + ')' : '' }}
                 </div>
               </div>
             </ng-container>
-
-          </div>
-          <div class="breadcrumb">
-            <div class="list-control-main"></div>
           </div>
         </div>
       </form>
@@ -74,6 +41,7 @@
       <div *ngFor="let floor of listFloor" class="floor">
         <div class="title">
           <div class="name">
+            <i class="isax-house-21"></i>
             Tầng {{floor.floorNumber}}
           </div>
         </div>
@@ -119,7 +87,7 @@
                   <p class="m-0">{{room.checkOut | datetimeFormat : "HH:mm"}}</p>
                 </div>
               </div>
-              <button *ngIf="room.status === 1" class="book-room-btn">Nhận phòng</button>
+              <button *ngIf="room.status === 1" class="book-room-btn">Đặt phòng</button>
             </div>
           </div>
         </div>

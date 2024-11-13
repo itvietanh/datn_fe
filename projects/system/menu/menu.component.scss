@@ -1,0 +1,13 @@
+.isRoot {
+  >td {
+    background-color: #f4ba98;
+    color: #1a1818;
+  }
+
+  &:hover {
+    >td {
+      background-color: #ee9561;
+      color: #1a1818;
+    }
+  }
+}

@@ -45,6 +45,12 @@ export class OrderRoomService extends BaseService {
     });
   }
 
+  public hanldeSearchRooms<T = any>(data: any) {
+    return this.http.get<ResponseModel<T>>(`${this.baseUrl}/search-rooms`, {
+      params: this.stringifyParams(data),
+    });
+  }
+
   public handleRoomChange<T = any>(body: any) {
     return this.http.post<ResponseModel<T>>(`${this.baseUrl}/room-change-fee`, {
       ...body,
