@@ -6,6 +6,8 @@ import { FormModule } from 'common/base/module/form.module';
 import { ServiceDetailComponent } from './service-detail/service-detail.component';
 import { ServiceComponent } from './service.component';
 import { ServiceRoutes } from './service.routing';
+import { NgChartsModule } from 'ng2-charts';
+
 
 @NgModule({
   imports: [
@@ -13,6 +15,7 @@ import { ServiceRoutes } from './service.routing';
     FormModule,
     CanvasJSAngularChartsModule,
     RouterOutlet,
+    NgChartsModule,
     ServiceRoutes
   ],
   declarations: [
