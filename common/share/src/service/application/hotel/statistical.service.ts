@@ -10,7 +10,7 @@ export class StatisticalService extends BaseService {
   protected override prefix = 'statistic';
 
   /**Service */
-  public getAll<T = PagedListModel>(params: any = null) {
+  public getAll<T = any>(params: any = null) {
     return this.http.get<ResponseModel<T>>(`${this.baseUrl}/service/all`, {
       params: this.stringifyParams(params)
     });

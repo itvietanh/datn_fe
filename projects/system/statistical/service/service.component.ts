@@ -109,7 +109,7 @@ export class ServiceComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.getData();
     this.refreshData();
-  } 
+  }
 
   async refreshData(): Promise<void> {
     try {
@@ -208,59 +208,66 @@ export class ServiceComponent implements OnInit, OnChanges {
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
     const params = {
       ...paging,
-      ...this.formSearch.value 
+      ...this.formSearch.value
     };
-    this.isLoading = true; 
+    this.isLoading = true;
     this.dialogService.openLoading();
-  
+
     try {
       const rs = await this.service.getPaging(params).firstValueFrom();
-      const dataRaw = rs.data!.items;
-  
+      const rss = await this.statistical.getAll(params).firstValueFrom();
+
+      const dataRaw = rss.data!.monthly_revenue;
       // Tạo các mảng lưu dữ liệu cho biểu đồ
       const bookingData: number[] = [];
       const revenueData: number[] = [];
       const labels: string[] = [];
-  
+
       // Duyệt qua dữ liệu để trích xuất thông tin cần thiết
-      for (const item of dataRaw  ) {
+      for (const item of rs.data!.items) {
         if (item.created_at) {
           const date = this.datePipe.transform(item.created_at, 'dd-MM-yyyy');
           labels.push(date || '');
-  
-          // Giả sử `service_price` đại diện cho doanh thu của dịch vụ
-          bookingData.push(item.bookingCount || 0); // số lượt đặt (giả định)
-          revenueData.push(item.service_price || 0); // doanh thu (giả định)
+          bookingData.push(item.bookingCount);
         }
       }
-  
+
+      for (const item of dataRaw) {
+        if (item) {
+          labels.push(item.month || '');
+
+          // Giả sử `service_price` đại diện cho doanh thu của dịch vụ
+          revenueData.push(item.total_revenue);
+        }
+      }
+
       // Chèn dữ liệu vào cấu trúc biểu đồ
       this.dummyData.daily = {
         labels: labels,
         datasets: [
           {
-            label: "Bookings",
+            label: labels[0],
             data: bookingData,
             borderColor: "rgb(75, 192, 192)",
             backgroundColor: "rgba(75, 192, 192, 0.2)"
           },
           {
-            label: "Revenue",
+            label: labels[1],
             data: revenueData,
             borderColor: "rgb(53, 162, 235)",
             backgroundColor: "rgba(53, 162, 235, 0.2)"
           }
         ]
       };
-  
+
       // Cập nhật `items` và `paging`
       this.items = dataRaw;
-      this.paging = rs.data?.meta;
+      // this.paging = rs.data?.meta;
     } catch (error) {
       console.error('Error fetching data', error);
     } finally {
       this.dialogService.closeLoading();
-      this.isLoading = false; 
+      this.isLoading = false;
     }
   }
 
