@@ -18,6 +18,7 @@ import {
 } from 'share';
 import { ImportBookingComponent } from './import-booking/import-booking.component';
 import { ExtentionService } from 'common/base/service/extention.service';
+import { OrderRoomService } from 'common/share/src/service/application/hotel/order-room.service';
 
 @Component({
   selector: 'app-create-booking',
@@ -32,32 +33,31 @@ export class CreateBookingComponent implements OnInit {
   loading = false;
   items: any[] = [];
   listGuest: any[] = [];
-  // types = CUSTOMER_TYPES;
   isCustomerGroup = false;
   columns: ColumnConfig[] = [
     {
-      key: 'name',
+      key: 'roomTypeName',
       header: 'Loại phòng',
-      pipe: 'template',
+      // pipe: 'template',
       tdClass: 'text-center',
     },
     {
       key: 'priceId',
       header: 'Loại giá',
-      pipe: 'template',
+      // pipe: 'template',
     },
     {
-      key: 'totalAmount',
+      key: 'total_price',
       header: 'Giá phòng dự kiến',
       pipe: 'template',
     },
     {
-      key: 'room',
+      key: 'numberOfPeople',
       header: 'Số lượng phòng',
-      pipe: 'template',
+      // pipe: 'template',
     },
     {
-      key: 'total',
+      key: 'final_price',
       header: 'Tổng tiền',
       pipe: 'template',
     },
@@ -106,7 +106,8 @@ export class CreateBookingComponent implements OnInit {
     private messageService: MessageService,
     private contractService: ContractService,
     private dialogService: DialogService,
-    private ex: ExtentionService
+    private ex: ExtentionService,
+    private orderRoomService: OrderRoomService
 
   ) {
     this.myForm = this.fb.group({
@@ -409,8 +410,8 @@ export class CreateBookingComponent implements OnInit {
     //   });
   }
 
-  // onTypeChange(type: CustomerType) {
-  //   this.isCustomerGroup = type === CustomerType.Group;
+  // onTypeChange(type: any) {
+  //   this.isCustomerGroup = ;
   //   this.myForm
   //     .get('groupName')
   //     ?.setValidators(
@@ -418,54 +419,38 @@ export class CreateBookingComponent implements OnInit {
   //     );
   // }
 
-  onDateRangeChange() {
+  async onDateRangeChange() {
     this.myForm.get('checkInTime')?.markAsDirty();
     this.myForm.get('checkOutTime')?.markAsDirty();
+    this.myForm.get('numOfResidents')?.markAsDirty();
 
     if (
       this.myForm.get('checkInTime')?.invalid ||
-      this.myForm.get('checkOutTime')?.invalid
+      this.myForm.get('checkOutTime')?.invalid ||
+      this.myForm.get('numOfResidents')?.invalid
     ) {
       return;
     }
-
-    localStorage.setItem(
-      'checkInhourDefault',
-      this.myForm.get('checkInTimeHour')?.value
-    );
-    localStorage.setItem(
-      'checkOuthourDefault',
-      this.myForm.get('checkOutTimeHour')?.value
-    );
 
     this.loading = true;
 
     let checkInTime = this.myForm.get('checkInTime')?.value;
     let checkInTimeHour = this.myForm.get('checkInTimeHour')?.value;
+    let numOfResidents = this.myForm.get('numOfResidents')?.value;
 
     let checkOutTime = this.myForm.get('checkOutTime')?.value;
     let checkOutTimeHour = this.myForm.get('checkOutTimeHour')?.value;
 
-    let dateRange = {
-      checkInTime: `${checkInTime}${checkInTimeHour}00`,
-      checkOutTime: `${checkOutTime}${checkOutTimeHour}00`,
+    let data = {
+      checkIn: `${checkInTime}${checkInTimeHour}00`,
+      checkOut: `${checkOutTime}${checkOutTimeHour}00`,
+      totalGuest: numOfResidents
     };
-    // this.serviceService
-    //   .getAvailable(dateRange)
-    //   .pipe(finalize(() => (this.loading = false)))
-    //   .subscribe((res) => {
-    //     this.items = res.data!.items;
-    //     this.items.forEach((item) => {
-    //       item.priceId = this.pricesDict[item.id]?.find(
-    //         (p: any) => p.isDefault
-    //       )?.value;
-    //       item.description = this.pricesDict[item.id]?.find(
-    //         (p: any) => p.value === item.priceId
-    //       )?.description;
-    //       item.quantity = 0;
-    //       this.calculate(item);
-    //     });
-    //   });
+
+    console.log(data);
+
+    const res = await this.orderRoomService.hanldeSearchRooms(data).firstValueFrom();
+    this.items = res.data.items;
   }
 
 

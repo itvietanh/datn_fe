@@ -68,7 +68,7 @@ export class GuestDetailComponent implements OnInit {
       //Update
       await this.guestService.edit(this.uuid, formData).firstValueFrom();
     } else {
-      const checkIn = this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:MM:SS');
+      const checkIn = this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');
       const roomUsingGuest = {
         uuid: this.ex.newGuid(),
         ruUuid: this.item.ruUuid,

@@ -16,19 +16,6 @@ import { HomeHotelDetailsComponent } from './tab-home-hotel/home-hotel-details.c
 import { FloorService } from 'common/share/src/service/application/hotel/floor.service';
 import { TabContractComponent } from './tab-contract/tab-contract.component';
 
-interface Room {
-  number: string;
-  type: string;
-  maxGuests: number;
-  status: 'available' | 'occupied' | 'cleaning';
-  amenities: string[];
-}
-
-interface Floor {
-  number: number;
-  rooms: Room[];
-}
-
 @Component({
   selector: 'app-home-hotel',
   templateUrl: './home-hotel.component.html',
@@ -43,6 +30,8 @@ export class HomeHotelComponent implements OnInit {
   items: any[] = [];
   loading = false;
   public listFloor: any;
+  // Khởi tạo giá trị trạng thái hiện tại
+  selectedStatus: number | null = null;
   public listRoomStatus: any[] = [
     {
       value: 1,
@@ -62,7 +51,38 @@ export class HomeHotelComponent implements OnInit {
     }
   ];
 
-  filterRoomStatus: any;
+  statusOptions = [
+    {
+      class: '',
+      value: null,
+      label: 'Tất cả',
+      count: null,
+    },
+    {
+      class: 'available ml-3',
+      value: 1,
+      label: 'P. trống',
+      count: 0,
+    },
+    {
+      class: 'occupied ml-3',
+      value: 2,
+      label: 'Đang ở',
+      count: 0,
+    },
+    {
+      class: 'overtime ml-3',
+      value: 3,
+      label: 'Quá giờ',
+      count: 0,
+    },
+    {
+      class: 'cleaning ml-3',
+      value: 4,
+      label: 'Đang dọn',
+      count: 0,
+    }
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -74,7 +94,7 @@ export class HomeHotelComponent implements OnInit {
   ) {
     this.formSearch = this.fb.group({
       floor_id: [null],
-      status: [null]
+      // status: [null]
     });
     this.formSearch
       .get('outEndDate')
@@ -104,6 +124,9 @@ export class HomeHotelComponent implements OnInit {
 
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
     const params = this.formSearch.getRawValue();
+    if (this.selectedStatus) {
+      params.status = this.selectedStatus
+    }
     const searchParams = {
       ...paging,
       ...params
@@ -175,24 +198,13 @@ export class HomeHotelComponent implements OnInit {
     );
   }
 
-  onViewSelectedChange(index: number) {
-
-  }
-
-  // Khởi tạo giá trị trạng thái hiện tại
-  selectedStatus: number | null = null;
-
   handleFilter(selectedValue: number | null) {
     if (this.selectedStatus === selectedValue) {
       this.selectedStatus = null;
-      this.formSearch.get('status')?.setValue(null);
     } else {
       this.selectedStatus = selectedValue;
-      this.formSearch.get('status')?.setValue(selectedValue);
     }
 
     this.getData(this.paging);
   }
-
-
 }
