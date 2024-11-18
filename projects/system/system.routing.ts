@@ -84,6 +84,20 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'thong-ke/khach-hang',
+        loadChildren: () =>
+          import('./statistical/guest/guest-statistial.module').then(
+            (x) => x.GuestStatisticalModule
+          ),
+      },
+      {
+        path: 'thong-ke/nhan-vien',
+        loadChildren: () =>
+          import('./statistical/employee/employee.module').then(
+            (x) => x.EmployeeModule
+          ),
+      },
+      {
         path: 'dat-phong',
         loadChildren: () =>
           import('./order-room/order-room.module').then(
