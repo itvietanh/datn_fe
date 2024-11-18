@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="col-md-4">
+    <ul nz-menu nzMode="inline">
+      <nz-skeleton [nzLoading]="loading" [nzActive]="true" [nzParagraph]="{ rows: 3 }">
+      </nz-skeleton>
+      <li nz-menu-item *ngFor="let category of categories; let isFirst = first" class="category-list"
+        [nzSelected]="isFirst" (click)="getServices(category.id)">
+        {{ category.service_name }}
+      </li>
+    </ul>
+  </div>
+  <div class="col-md-8 list-service">
+    <nz-list [nzLoading]="loadingService">
+      <nz-list-item *ngFor="let item of items" (click)="selectedServiceChange.emit(item)" class="list-item">
+        <div class="d-flex justify-content-sm-between w-100">
+          <div class="name">{{ item.name }}</div>
+          <div class="amout">
+            {{ item.price | moneyFormat }}
+          </div>
+        </div>
+      </nz-list-item>
+    </nz-list>
+  </div>
+</div>

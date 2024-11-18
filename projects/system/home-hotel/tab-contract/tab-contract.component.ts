@@ -12,16 +12,16 @@ import { DialogMode, AccommodationFacilityService, DialogService } from 'share';
 export class TabContractComponent implements OnInit {
   @Input() uuid: any;
   @Input() mode: string = DialogMode.add;
-  @Input() item:any;
+  @Input() item: any;
   @Output() onClose = new EventEmitter<any | null>();
-
+  
   public initForm = false;
   constructor(
     public accommodationFacilityService: AccommodationFacilityService,
     public shareData: TabContractService,
     private dialogService: DialogService,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.shareData.uuid = this.uuid;
@@ -31,12 +31,12 @@ export class TabContractComponent implements OnInit {
     this.intData();
   }
 
-  async intData(){
+  async intData() {
     await this.shareData.getDataTab1();
     this.initForm = true;
   }
 
   changeFacility(event: any) {
-    this.uuid =  event.uuid;
+    this.uuid = event.uuid;
   }
 }

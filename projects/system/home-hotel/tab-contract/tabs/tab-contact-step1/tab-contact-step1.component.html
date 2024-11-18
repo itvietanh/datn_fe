@@ -1,7 +1,10 @@
 <form [formGroup]="myForm">
 
   <div class="row">
-    <div class="col-8">
+    <div [ngClass]="{
+      'col-md-8': shareData.step === 0,
+      'col-md-4' : shareData.step === 2
+    }">
       <div class="row">
         <div class="col-md-12">
           <div class="group-header">
@@ -93,10 +96,36 @@
           </nz-form-item>
         </div>
 
+        <div class="col-md-12" *ngIf="shareData.step === 2">
+          <div class="customer-list">
+            <div class="title-group">
+              <div class="title-label">
+                <i class="isax-house-21"></i> Danh sách khách
+              </div>
+            </div>
+
+            <div class="resident-list">
+              <div class="resident-item selected" *ngFor="let item of shareData.listGuest">
+                <div class="name">
+                  <i class="mr-1" [ngClass]="{
+                      'isax-man1': item.gender === 'Nam',
+                      'isax-woman1': item.gender === 'Nữ'
+                    }"></i>
+                  {{item.name.toUpperCase() ?? "Đang nhập thông tin khách..."}}
+                </div>
+                <div class="birth">
+                  <i class="isax-cake1 mr-1"></i>
+                  {{item.birthDate}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <div class="col-4">
+    <div class="col-4" *ngIf="shareData.step === 1">
       <div class="customer-list">
         <div class="title-group">
           <div class="title-label">
@@ -118,6 +147,64 @@
               {{item.birthDate}}
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4" *ngIf="shareData.step === 2">
+      <div class="customer-list">
+        <div class="title-group">
+          <div class="title-label">
+            <i class="isax-house-21"></i> Phương thức thanh toán
+          </div>
+        </div>
+
+        <div class="resident-list">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="false">Phương thức thanh toán</nz-form-label>
+            <nz-form-control>
+              <input-select [items]="shareData.paymentMethod" formControlName="paymentMethod"
+                (onChange)="hanldeChangeMethod()"></input-select>
+            </nz-form-control>
+          </nz-form-item>
+
+          <div class="qr-code" *ngIf="qrCode">
+            <img src="data:image/png;base64,{{qrCode}}" style="width: 220px; height: 220px;" alt="qrCode">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class=" col-md-4" *ngIf="shareData.step === 2">
+      <div class="card my-2">
+        <h1>Tóm tắt hoá đơn</h1>
+        <div class="pay-data">
+          <div class="pay-item">
+            <div class="name">Tổng tiền phòng</div>
+            <div class="value">
+              {{ this.myForm.get("totalPrice")?.value | moneyFormat }}
+            </div>
+          </div>
+          <div class="pay-item">
+            <div class="name">Thuế</div>
+            <div class="value">{{ this.myForm.get("vat")?.value | moneyFormat }}</div>
+          </div>
+          <div class="pay-item">
+            <div class="name">Cần thanh toán</div>
+            <div class="value">{{ this.myForm.get("finalPrice")?.value | moneyFormat }}</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-7">Trả trước</div>
+          <div class="col-md-5">
+            <app-form-control>
+              <input-number formControlName="prepayment"></input-number>
+            </app-form-control>
+          </div>
+        </div>
+        <div class="return-money">
+          <div class="name">Còn lại</div>
+          <div class="value">remainingAmount | moneyFormat</div>
         </div>
       </div>
     </div>

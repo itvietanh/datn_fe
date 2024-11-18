@@ -15,6 +15,12 @@ export class Service extends BaseService {
     });
   }
 
+  public getListService<T = PagedListModel>(params: any = null) {
+    return this.http.get<ResponseModel<T>>(`${this.baseUrl}/get-list-service`, {
+      params: this.stringifyParams(params)
+    });
+  }
+
   public override findOne<T = any>(uuid: any) {
     return this.http.get<ResponseModel<T>>(`${this.baseUrl}`, {
       params: this.stringifyParams({ uuid: uuid }),

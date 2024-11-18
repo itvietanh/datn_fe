@@ -24,7 +24,7 @@ export class TabContractService {
   stepMax = 0;
 
   listGuest: any[] = [];
-
+  paymentMethod: any;
 
   constructor(
     private fb: FormBuilder,
@@ -43,7 +43,8 @@ export class TabContractService {
       name: [null],
       phoneNumber: [null],
       idNumber: [null],
-      address: [null]
+      address: [null],
+      paymentMethod: [null]
     });
   }
 
