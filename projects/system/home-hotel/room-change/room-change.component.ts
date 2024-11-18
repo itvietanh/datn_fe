@@ -109,11 +109,12 @@ export class RoomChangeComponent implements OnInit {
   }
 
   async saveData() {
+    debugger;
     const formData = this.myForm.getRawValue();
     formData.guest = formData.guest || [];
     for (const item of this.guest) {
       formData.guest.push({
-        guestUuid: item.uuid,
+        guestUuid: item.guestUuid,
         representative: item.representative,
       });
     }

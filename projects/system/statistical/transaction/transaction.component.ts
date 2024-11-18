@@ -8,7 +8,10 @@ import { ValidatorExtension } from 'common/validator-extension';
 import { DialogService, PagingModel, DialogMode, DialogSize } from 'share';
 import { TransactionService } from 'common/share/src/service/application/hotel/transaction.service';
 import { FacilityDetailsComponent } from 'projects/system/facility/facility-detail/facility-details.component';
+import { TransitionStatistics } from 'common/share/src/service/application/hotel/transitionstatistics';
 import { ChartConfiguration } from 'chart.js';
+
+
 
 @Component({
   selector: 'app-transaction',
@@ -99,7 +102,14 @@ export class TransactionComponent implements OnInit, OnChanges {
     }
   };
 
-  constructor() { }
+  constructor( 
+    private fb: FormBuilder,
+    private dialogService: DialogService,
+    private messageService: MessageService,
+    public hotelService: HotelService,
+    private datePipe: DatePipe,
+    public transitionstatistics: TransitionStatistics,
+  ) { }
 
   ngOnInit(): void {
     this.refreshData();
@@ -130,4 +140,5 @@ export class TransactionComponent implements OnInit, OnChanges {
   renderChart(chartType: string) {
     this.chartType = chartType;
   }
+
 }

@@ -1,0 +1,183 @@
+<button
+  *ngIf="!isLoading"
+  aria-label="Close"
+  class="ant-modal-close ng-star-inserted"
+  (click)="closeDialog()"
+>
+  <span class="ant-modal-close-x">
+    <i
+      nz-icon
+      nzType="close"
+      nzTheme="outline"
+      class="anticon ant-modal-close-icon anticon-close"
+    ></i>
+  </span>
+</button>
+
+<form [formGroup]="myForm">
+  <ng-template #controlErrorTpl let-control>
+    <app-render-errors [control]="control"></app-render-errors>
+  </ng-template>
+  <div class="row">
+    <div class="col-md-6">
+      <nz-form-item>
+        <nz-form-label [nzRequired]="false">Mã</nz-form-label>
+        <nz-form-control [nzErrorTip]="controlErrorTpl">
+          <input-text placeholder="" formControlName="code"></input-text>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div class="col-md-6">
+      <nz-form-item>
+        <nz-form-label [nzRequired]="false">Tên</nz-form-label>
+        <nz-form-control [nzErrorTip]="controlErrorTpl">
+          <input-text formControlName="name"></input-text>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div class="col-md-6">
+      <nz-form-item>
+        <nz-form-label [nzRequired]="false">Icon</nz-form-label>
+        <nz-form-control [nzErrorTip]="controlErrorTpl">
+          <input-text placeholder="" formControlName="icon"> </input-text>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div class="col-md-6">
+      <nz-form-item>
+        <nz-form-label [nzRequired]="false">Url</nz-form-label>
+        <nz-form-control [nzErrorTip]="controlErrorTpl">
+          <input-text placeholder="" formControlName="url"> </input-text>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div class="col-md-6">
+      <nz-form-item>
+        <nz-form-label [nzRequired]="false">Menu Cha</nz-form-label>
+        <nz-form-control [nzErrorTip]="controlErrorTpl">
+          <input-select
+            [items]="listMenu"
+            placeholder="Chọn menu cha"
+            formControlName="parentUid"
+          >
+          </input-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div class="col-md-3">
+      <nz-form-item>
+        <nz-form-label [nzRequired]="false"></nz-form-label>
+        <nz-form-control [nzErrorTip]="controlErrorTpl">
+          <input-check-box formControlName="isShow"> Hiển thị </input-check-box>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div class="col-md-3">
+      <nz-form-item>
+        <nz-form-label [nzRequired]="false">Sắp xếp</nz-form-label>
+        <nz-form-control [nzErrorTip]="controlErrorTpl">
+          <input-text formControlName="index"></input-text>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="group-header">
+        <div class="title-left">
+          <div class="title-group-table">Danh sách thao tác</div>
+        </div>
+        <div class="control-right">
+          <button nz-button type="button" (click)="selectPrivilegeData()">
+            <i class="icon-plus-circle2 mr-2"></i>Chọn thao tác
+          </button>
+        </div>
+      </div>
+      <nz-table
+        [nzData]="isLoading ? [{}] : listAction"
+        [nzBordered]="true"
+        [nzFrontPagination]="false"
+        nzSize="small"
+      >
+        <thead>
+          <tr>
+            <th nzWidth="45px">STT</th>
+            <th nzWidth="260px">Mã</th>
+            <th nzWidth="260px">Tên</th>
+            <th nzWidth="180px">Api</th>
+            <th nzWidth="60px" nzRight>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let item of listAction; let i = index">
+            <tr
+              [ngClass]="{
+                'item-add': item.thaoTac === 1,
+                'item-edit': item.thaoTac === 2,
+                'item-deleted': item.thaoTac === 3
+              }"
+            >
+              <td>{{ i + 1 }}</td>
+              <td>
+                {{ item.code }}
+              </td>
+              <td>
+                {{ item.name }}
+              </td>
+              <td></td>
+              <td nzRight>
+                <div class="list-icons list-icons-extended text-center">
+                  <a
+                    class="list-icons-item action-delete"
+                    (click)="deletePrivilegeData(item)"
+                  >
+                    <span nz-tooltip nzTooltipTitle="Xóa">
+                      <i class="isax-trash1"></i>
+                    </span>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+
+  <div class="list-control-search">
+    <button
+      nz-button
+      type="button"
+      class="btn btn-default"
+      (click)="closeDialog()"
+    >
+      <i nz-icon nzType="close" nzTheme="outline"></i>Hủy
+    </button>
+    <button
+      nz-button
+      type="button"
+      class="btn"
+      (click)="saveData(1)"
+      [ngClass]="{
+        'btn-primary': mode === 'edit',
+        'btn-default': mode === 'add'
+      }"
+      *ngIf="mode !== 'view'"
+    >
+      <i class="icon-plus-circle2 mr-2"></i>Lưu và đóng
+    </button>
+    <button
+      nz-button
+      type="button"
+      class="btn btn-primary"
+      *ngIf="mode === 'add'"
+      (click)="saveData(2)"
+    >
+      <i class="icon-plus-circle2 mr-2"></i>Lưu và thêm mới
+    </button>
+  </div>
+</form>

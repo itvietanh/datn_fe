@@ -1,0 +1,26 @@
+<form [formGroup]="myForm" (ngSubmit)="submit()">
+  <div class="d-flex">
+    <div class="row">
+      <div class="col-md-6">
+        <app-form-control label="Nội dung">
+          <input-text formControlName="note"></input-text>
+        </app-form-control>
+      </div>
+      <div class="col-md-6">
+        <app-form-control label="Số tiền">
+          <input-number [min]="0" formControlName="totalAmount"></input-number>
+        </app-form-control>
+      </div>
+    </div>
+    <div class="ml-2">
+      <button nz-button type="submit" class="btn btn-primary">
+        <ng-container *ngIf="nzModalData?.active !== 'EDIT'; else elseTemplate">
+          <i class="icon-plus-circle2 mr-2"></i> Thêm
+        </ng-container>
+        <ng-template #elseTemplate>
+          <i class="isax-edit-21 mr-2"></i> Lưu
+        </ng-template>
+      </button>
+    </div>
+  </div>
+</form>

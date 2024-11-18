@@ -1,13 +1,16 @@
 <div class="page-header page-header-light">
   <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
     <div class="d-flex">
-      <div class="breadcrumb-title">
-        Quản lý Menu
-      </div>
+      <div class="breadcrumb-title">Danh sách menu</div>
       <div class="breadcrumb">
         <div class="list-control-main">
-          <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
-            <i class="isax-add-circle1 mr-2"></i>Thêm danh mục Menu
+          <button
+            nz-button
+            type="button"
+            class="btn btn-primary"
+            (click)="addDataDialog()"
+          >
+            <i class="isax-add-circle1 mr-2"></i>Thêm menu
           </button>
         </div>
       </div>
@@ -19,56 +22,148 @@
   <div class="header-elements-inline">
     <div class="navbar-expand-md w-100">
       <div class="padding-left-15 text-right d-md-none w-100 row">
-        <button class="navbar-toggler" data-target="#search-list" data-toggle="collapse" type="button">
+        <button
+          class="navbar-toggler"
+          data-target="#search-list"
+          data-toggle="collapse"
+          type="button"
+        >
           <i nz-icon nzType="menu" nzTheme="outline"></i>
         </button>
-      </div>
-      <!-- search -->
-      <div class="navbar-collapse collapse" id="search-list" *ngIf="!isLoading">
-        <form *ngIf="formSearch" [formGroup]="formSearch" class="w-100" (ngSubmit)="getData()">
-          <ng-template #controlErrorTpl let-control>
-            <app-render-errors [control]="control"></app-render-errors>
-          </ng-template>
-          <div class="text-center mt-3">
-            <!-- <button nz-button type="submit" class="btn btn-primary ml-2">
-              <span nz-icon nzType="search" nzTheme="outline"></span>Tìm kiếm
-            </button> -->
-          </div>
-        </form>
       </div>
     </div>
   </div>
 
-  <div class="hearder-table mt-1">
+  <!-- <div class="hearder-table mt-m-25">
     <nz-tabset>
-      <nz-tab nzTitle="Danh sách Menu">
+      <nz-tab nzTitle="Kết quả tìm kiếm">
         <ng-template [ngTemplateOutlet]="tab1"></ng-template>
       </nz-tab>
     </nz-tabset>
     <div class="lst-controls">
-      <div class="breadcrumb">
-        <div class="list-control-main">
-        </div>
-      </div>
+      <button nz-button type="button" class="btn btn-default btn-view">
+        <i class="isax-eye1 mr-2"></i>Import
+      </button>
+      <button nz-button type="button" class="btn btn-default btn-edit">
+        <i class="isax-edit1 mr-2"></i>Kết xuất
+      </button>
     </div>
-  </div>
+  </div> -->
 
-  <ng-template #tab1>
-    <app-table [columns]="columns" [items]="items" [loading]="loading">
-      <ng-template [appCellTemplate]="'action'" let-item>
-        <div class="list-icons list-icons-extended text-center">
-          <a class="list-icons-item action-view" (click)="handlerOpenDialog('view', item)">
-            <span nz-tooltip nzTooltipTitle="Xem thông tin menu" class="isax-eye1"></span>
-          </a>
-          <a class="list-icons-item action-delete" (click)="handlerDelete(item)">
-            <span nz-tooltip nzTooltipTitle="Xóa menu" class="isax-trash1"></span>
-          </a>
-          <a class="list-icons-item action-edit" (click)="handlerOpenDialog('edit', item)">
-            <span nz-tooltip nzTooltipTitle="Sửa thông tin menu" class="isax-edit-21"></span>
-          </a>
-        </div>
-      </ng-template>
-    </app-table>
-    <app-paging [data]="paging" [changeListPage]="0" (onChange)="getData($event)"></app-paging>
-  </ng-template>
+  <!-- <ng-template #tab1> -->
+  <nz-table
+    [nzData]="listOfData"
+    [nzBordered]="true"
+    [nzFrontPagination]="false"
+    nzSize="small"
+    [nzScroll]="{ x: 'scroll', y: 'calc(100vh - 100px)' }"
+  >
+    <thead>
+      <tr>
+        <th class="text-center" nzWidth="50px">STT</th>
+        <th class="text-center" nzWidth="100px">Mã</th>
+        <th class="text-center" nzWidth="350px" nzLeft>Tên menu</th>
+        <th class="text-center" nzWidth="160px">Url</th>
+        <th class="text-center" nzWidth="160px">Ngày tạo</th>
+        <th class="text-center" nzWidth="170px" nzRight>Trạng thái</th>
+        <th class="text-center" nzWidth="110px" nzRight>Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let data of listOfData; let i = index">
+        <ng-container
+          *ngFor="
+            let item of tableTreeConfig.mapOfExpandedData[
+              data[tableTreeConfig.keyId]
+            ];
+            let j = index
+          "
+        >
+          <tr
+            *ngIf="(item.parent && item.parent.expand) || !item.parent"
+            [ngClass]="{
+              isRoot: !item.parent
+            }"
+          >
+            <td class="text-center">{{ item.index }}</td>
+            <td class="text-center">
+              {{ item.code }}
+            </td>
+            <td
+              class="text-left"
+              [ngStyle]="{
+                'padding-left':
+                  5 + item.level! * 20 + (item.hasChild ? 0 : 5) + 'px'
+              }"
+              [nzShowExpand]="item.children.length > 0"
+              [(nzExpand)]="item.expand"
+              (nzExpandChange)="
+                getChid(
+                  tableTreeConfig.mapOfExpandedData[
+                    data[tableTreeConfig.keyId]
+                  ],
+                  item,
+                  $event
+                )
+              "
+              nzLeft
+            >
+              <i [class]="item.icon"></i>
+              {{ item.name }}
+            </td>
+            <td class="text-left">{{ item.url }}</td>
+            <td>{{ item.createdAt | datetimeFormat }}</td>
+            <td
+              class="text-center"
+              [ngClass]="{
+                status0: item.isShow === true,
+                status1: item.isShow === false
+              }"
+              nzRight
+            >
+              {{ item.isShow ? "Hiển thị" : "Ẩn" }}
+            </td>
+            <td class="text-center" nzRight>
+              <div class="list-icons list-icons-extended text-center">
+                <a
+                  class="list-icons-item action-add"
+                  (click)="addDataDialog(item)"
+                >
+                  <span
+                    nz-tooltip
+                    nzTooltipTitle="Thêm menu con"
+                    class="isax-add1"
+                  ></span>
+                </a>
+                <a
+                  class="list-icons-item action-edit"
+                  (click)="updateDataDialog(item)"
+                >
+                  <span
+                    nz-tooltip
+                    nzTooltipTitle="Cập nhật thông tin"
+                    class="isax-edit-21"
+                  ></span>
+                </a>
+                <a
+                  class="list-icons-item action-delete"
+                  (click)="deleteData(item)"
+                >
+                  <span nz-tooltip nzTooltipTitle="Xóa">
+                    <i class="isax-trash1"></i>
+                  </span>
+                </a>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </ng-container>
+    </tbody>
+  </nz-table>
+  <div class="table-not-loading text-center" *ngIf="isLoading === null">
+    <a class="data-link" (click)="getData()">
+      Chọn điều kiện tìm kiếm để lấy dữ liệu
+    </a>
+  </div>
+  <!-- </ng-template> -->
 </div>
