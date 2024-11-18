@@ -8,6 +8,9 @@ import { FormModule } from "common/base/module/form.module";
 import { TabContractComponent } from "./tab-contract.component";
 import { TabContactStep1Component } from "./tabs/tab-contact-step1/tab-contact-step1.component";
 import { TabContactStep2Component } from "./tabs/tab-contract-step2/tab-contract-step2.component";
+import { ReactiveFormsModule } from "@angular/forms";
+import { TabContactStep3Component } from "./tabs/tab-contract-step3/tab-contract-step3.component";
+import { GuestDetailComponent } from "./tabs/tab-contract-step3/guest-detail/guest-detail.component";
 
 @NgModule({
   imports: [
@@ -15,7 +18,8 @@ import { TabContactStep2Component } from "./tabs/tab-contract-step2/tab-contract
     FormModule,
     NzTabsModule,
     NzUploadModule,
-    NzToolTipModule
+    NzToolTipModule,
+    // ReactiveFormsModule
   ],
   exports: [TabContractComponent],
   declarations: [
@@ -23,6 +27,8 @@ import { TabContactStep2Component } from "./tabs/tab-contract-step2/tab-contract
     //Sign
     TabContactStep1Component,
     TabContactStep2Component,
+    TabContactStep3Component,
+    GuestDetailComponent
   ],
 })
 export class TabContractModule {}

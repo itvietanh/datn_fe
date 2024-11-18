@@ -27,13 +27,13 @@
             <span nz-tooltip nzTooltipTitle="Hủy phòng" class="isax-trash1"></span>
           </a>
         </div> -->
-        <button type="button" class="btn btn-primary" (click)="onChangeRoom()">
+        <!-- <button type="button" class="btn btn-primary" (click)="onChangeRoom()">
           <span nz-icon nzType="sync" nzTheme="outline" class="mr-2"></span>Đổi phòng
         </button>
 
         <button type="button" class="btn btn-primary ml-2">
           <span nz-icon nzType="logout" nzTheme="outline" class="mr-2"></span>Trả phòng
-        </button>
+        </button> -->
       </div>
     </div>
     <div class="check-in-out my-2">
@@ -70,10 +70,10 @@
         Có {{shareData.item.totalGuests}}/{{shareData.item.numberOfPeople}} Khách trong phòng
       </span>
 
-      <button type="button" class="btn btn-default add-resident float-right"
+      <!-- <button type="button" class="btn btn-default add-resident float-right"
         *ngIf="shareData.item.totalGuests < shareData.item.numberOfPeople" (click)="hanldeOpenDialog()">
         <i class="isax-add-circle1 mr-2"></i>Thêm khách
-      </button>
+      </button> -->
     </div>
 
     <div class="ux-pc">
@@ -93,79 +93,12 @@
         </ng-template>
       </app-table>
     </div>
-
-    <!-- <div class="ux-mobile card-container">
-      <div class="custom-card" *ngFor="let item of shareData.listGuest" style="overflow: unset">
-        <div class="card-body">
-          <ul>
-            <li><strong>Khách:</strong> {{item.name}}</li>
-            <li><strong>Số giấy tờ (CCCD):</strong> {{item.idNumber}}</li>
-            <li><strong>Số điện thoại:</strong> {{item.phoneNumber}}</li>
-          </ul>
-        </div>
-
-        <div class="list-icons list-icons-extended text-center round">
-          <a class="list-icons-item action-edit rounded-btn">
-            <i nz-tooltip nzTooltipTitle="Cập nhật" nz-icon nzType="edit" nzTheme="outline"></i>
-          </a>
-
-          <a class="list-icons-item action-delete rounded-btn p-2">
-            <i nz-tooltip nzTooltipTitle="Check-out" nz-icon nzType="logout" nzTheme="outline"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <div *ngIf="false" class="resident-list">
-      <div class="resident-item" *ngFor="let resident of []">
-        <div class="item-name">
-          <i class="mr-1" [ngClass]="{ 'isax-man1': true, 'isax-woman1': false }"></i>
-          {{ resident?.fullName?.toUpperCase() }}
-        </div>
-        <div class="item-data">
-          <div class="name">
-            <i class="isax-card-tick-1 mr-1"></i>
-            {{ resident.identityNo }}
-          </div>
-        </div>
-        <div class="item-data">
-          <div class="name">
-            <i class="isax-call-calling mr-1"></i>
-            {{ resident.phoneNumber }}
-          </div>
-          <div class="birth">
-            <i class="isax-cake1 mr-1"></i>
-            {{ resident.dateOfBirth | dateFormat }}
-          </div>
-        </div>
-        <div class="check-in-out">
-          <div class="check-in">
-            <div class="day">
-              {{ resident?.checkInTime | dateFormat }}
-            </div>
-            <div class="hour">
-              {{ resident?.checkInTime | datetimeFormat : "HH:mm" }}
-            </div>
-          </div>
-          <div class="check-space">-</div>
-          <div class="check-out">
-            <div class="day">
-              {{ resident?.checkOutTime | dateFormat }}
-            </div>
-            <div class="hour">
-              {{ resident?.checkOutTime | datetimeFormat : "HH:mm" }}
-            </div>
-          </div>
-        </div>
-        <div class="item-action">
-          <button class="btn btn-success" nz-tooltip nzTooltipTitle="Chỉnh sửa">
-            <i class="isax-edit1"></i>
-          </button>
-        </div>
-      </div>
-    </div> -->
   </div>
-
+  <div class="QR">
+    <h3>Mã QR của khách sạn</h3>
+    <img src="" alt="Mã QR khách sạn">
+    <!-- <img src="{{ shareData.hotelQRCodeUrl }}" alt="Mã QR của khách sạn" style="width: 150px; height: 150px; margin-top: 10px;"> -->
+  </div>
   <div class="room-money">
     <div class="title-group2 mt-2">
       <div class="title-label2"><i class="isax-card-slash1"></i> Dịch vụ</div>
@@ -174,14 +107,6 @@
         <span class="mt-1 float-right cursor-pointer color-primary" nz-icon nzType="plus-circle" nzTheme="fill"></span>
       </div>
     </div>
-
-    <!-- <nz-collapse>
-      <nz-collapse-panel class="has-icon my-2" [ngClass]="" [nzHeader]="'Dịch vụ'">
-        <i class="isax-card-slash1"></i>
-        <div class="point-target" id="panel1"></div>
-      </nz-collapse-panel>
-    </nz-collapse> -->
-
     <div class="d-flex justify-content-between w-100">
       <div class="name-service-container">
       </div>

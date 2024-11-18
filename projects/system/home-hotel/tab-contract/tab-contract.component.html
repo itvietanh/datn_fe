@@ -46,15 +46,18 @@
       <app-tab-contract-step2></app-tab-contract-step2>
     </ng-template>
   </nz-tab>
-
-  <nz-tab [nzTitle]="titleTab4">
-    <ng-template #titleTab4>
-      <i class="isax-note-text1 mr-2"></i>
+  <nz-tab [nzTitle]="titleTab3">
+    <ng-template #titleTab3>
+      <i class="isax-slider-horizontal-11 mr-2"></i>
       Thanh toán
+      <i class="isax-danger" *ngIf="false"></i>
     </ng-template>
+
     <ng-template nz-tab>
+      <app-tab-contract-step3></app-tab-contract-step3>
     </ng-template>
   </nz-tab>
+
 </nz-tabset>
 
 <nz-skeleton class="form-loading" [nzParagraph]="{ rows: 14 }" [nzActive]="true" *ngIf="!initForm"></nz-skeleton>
