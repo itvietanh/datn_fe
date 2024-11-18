@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { FormModule } from 'common/base/module/form.module';
+import { NgChartsModule } from 'ng2-charts';
 import { ServiceDetailComponent } from './service-detail/service-detail.component';
 import { ServiceComponent } from './service.component';
 import { ServiceRoutes } from './service.routing';
-import { NgChartsModule } from 'ng2-charts';
 
 
 @NgModule({

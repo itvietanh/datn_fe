@@ -1,0 +1,50 @@
+<div class="content">
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-6">
+    <div class="max-w-7xl mx-auto bg-white rounded-xl shadow-lg p-6">
+      <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <h1 class="text-2xl font-bold text-gray-800">Thống kê khách hàng cái đầu buồi</h1>
+        <div class="row my-2 p-2">
+          <div class="col-md-4 my-2">
+            <select class="form-control" [(ngModel)]="timeFilter" (change)="refreshData()"
+              aria-label="Select time filter">
+              <option value="daily">Ngày</option>
+              <option value="weekly">Tuần</option>
+              <option value="monthly">Tháng</option>
+            </select>
+          </div>
+          <div class="col-md-4 my-2">
+            <select class="form-control" [(ngModel)]="chartType" (change)="renderChart(chartType)"
+              aria-label="Select chart type">
+              <option value="line">Line Chart</option>
+              <option value="bar">Bar Chart</option>
+              <option value="pie">Pie Chart</option>
+            </select>
+          </div>
+          <div class="col-md-4 my-2">
+            <button (click)="refreshData()" [disabled]="loading" class="btn btn-primary" aria-label="Refresh data">
+              <i class="icon-refresh"></i> Làm mới
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="error" class="mb-6 p-4 bg-red-100 text-red-700 rounded-lg" role="alert">
+        {{ error }}
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow-inner">
+        <div *ngIf="loading" class="flex justify-center items-center h-[400px]">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        </div>
+        <div *ngIf="!loading">
+          <canvas *ngIf="chartType === 'line'" baseChart [data]="getChartData()" [options]="options"
+            chartType="line"></canvas>
+          <canvas *ngIf="chartType === 'bar'" baseChart [data]="getChartData()" [options]="options"
+            chartType="bar"></canvas>
+          <canvas *ngIf="chartType === 'pie'" baseChart [data]="getChartData()" [options]="options"
+            chartType="pie"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

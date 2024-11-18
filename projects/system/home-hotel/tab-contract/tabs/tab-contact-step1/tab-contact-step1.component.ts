@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { FormBuilder, FormGroup } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 import { NZ_MODAL_DATA } from "ng-zorro-antd/modal";
 import { TabContractService } from "../../tab-contract.service";
@@ -20,14 +20,27 @@ export class TabContactStep1Component implements OnInit {
 
   listGuest: any[] = [];
 
+  qrCode: any;
+
   constructor(
     public shareData: TabContractService,
+    private fb: FormBuilder,
+
   ) {
     this.myForm = shareData.myForm;
   }
 
   ngOnInit() {
+    this.myForm.get('paymentMethod')?.enable();
+  }
 
+  hanldeChangeMethod() {
+    const method = this.myForm.get('paymentMethod')?.value;
+    if (method === 2) {
+      this.qrCode = this.shareData.paymentMethod[1].qrCode;
+    } else if (method === 1) {
+      this.qrCode = null;
+    }
   }
 
 }

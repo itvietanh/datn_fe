@@ -1,0 +1,23 @@
+.list-item {
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  &:hover {
+    background-color: #e6f7ff;
+    color: #1890ff;
+  }
+
+  .name {
+    width: calc(100% - 120px);
+  }
+}
+
+.list-service {
+  max-height: 290px;
+  overflow: auto;
+}
+
+.category-list{
+  font-weight: 700;
+}
+

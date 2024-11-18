@@ -35,3 +35,49 @@
         }
     }
 }
+
+.card {
+    border-color: #e8e8e8;
+    // background-color: #ffe1ca;
+    padding: 10px 10px;
+    min-height: 215px;
+    margin-bottom: 0;
+
+    h1 {
+        // border-bottom: solid 1px #ccc;
+    }
+
+    .pay-data {
+        background-color: #e8e8e8;
+        margin: -10px -10px 10px -10px;
+        padding: 5px 10px 10px 10px;
+
+        .pay-item {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+
+            .name {}
+
+            .value {
+                color: #db3e3e;
+            }
+        }
+    }
+
+    .return-money {
+        display: flex;
+        justify-content: space-between;
+        border-top: solid 1px #e8e8e8;
+        margin: 0 -10px -10px -10px;
+        padding: 10px;
+
+        .name {
+            font-weight: 500px;
+        }
+
+        .value {
+            color: #db3e3e;
+        }
+    }
+}
