@@ -86,7 +86,7 @@ const routes: Routes = [
       {
         path: 'thong-ke/khach-hang',
         loadChildren: () =>
-          import('./statistical/guest/guest-statistial.module').then(
+          import('./statistical/guest/guest-statistical.module').then(
             (x) => x.GuestStatisticalModule
           ),
       },
