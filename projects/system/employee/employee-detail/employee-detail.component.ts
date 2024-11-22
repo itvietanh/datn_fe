@@ -33,8 +33,7 @@ export class EmployeeDetailComponent implements OnInit {
       uuid: [ex.newGuid()],
       name: [null, ValidatorExtension.required()],
       email: [null, ValidatorExtension.required()],
-      account: [null, ValidatorExtension.required()],
-      password: [null, ValidatorExtension.required()],
+      password: ['', ValidatorExtension.required()],
       phone: [null, ValidatorExtension.required()],
       address: [null, ValidatorExtension.required()],
       hotel_id: [null, ValidatorExtension.required()],
@@ -66,9 +65,9 @@ export class EmployeeDetailComponent implements OnInit {
     const formData = this.myForm.getRawValue();
     this.dialogService.openLoading();
 
-    if (this.uuid) {
+    if (this.id) {
       //Update
-      await this.employeeService.edit(this.uuid, formData).firstValueFrom();
+      await this.employeeService.edit(this.id, formData).firstValueFrom();
     } else {
       //Create
       await this.employeeService.add(formData).firstValueFrom();

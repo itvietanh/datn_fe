@@ -91,7 +91,6 @@
             </nz-form-control>
           </nz-form-item>
         </div>
-
         <div class="col-md-6">
           <nz-form-item>
             <nz-form-label [nzRequired]="false">Địa chỉ</nz-form-label>
@@ -137,7 +136,7 @@
       </div>
     </div>
 
-    <div class="col-4" *ngIf="shareData.step === 0">
+    <div class="col-4" *ngIf="shareData.step === 1">
       <div class="customer-list">
         <div class="title-group">
           <div class="title-label">
@@ -183,11 +182,10 @@
               >Phương thức thanh toán</nz-form-label
             >
             <nz-form-control>
-              <input-select
-                [items]="shareData.paymentMethod"
-                formControlName="paymentMethod"
-                (onChange)="handleChangeMethod()"
-              ></input-select>
+              <input-select  [items]="shareData.paymentMethod" formControlName="paymentMethod"
+              (onChange)="handleChangeMethod()">
+
+              </input-select>
             </nz-form-control>
           </nz-form-item>
 
@@ -220,9 +218,7 @@
           <div class="pay-item">
             <p>
               Thuế (10%) :
-              <strong>
-                {{ vatAmount | moneyFormat }} </strong
-              >đ
+              <strong> {{ vatAmount | moneyFormat }} </strong>đ
             </p>
           </div>
 
@@ -237,15 +233,13 @@
                 placeholder="Nhập số tiền"
               />
             </div>
-
-          </div> <div class="pay-item">
-              <p>
-                Cần thanh toán :
-                <strong>
-                  {{ remainingAmount | moneyFormat }} </strong
-                >đ
-              </p>
-            </div>
+          </div>
+          <div class="pay-item">
+            <p>
+              Cần thanh toán :
+              <strong> {{ remainingAmount | moneyFormat }} </strong>đ
+            </p>
+          </div>
         </div>
         <div class="return-money">
           <div class="name">Còn lại</div>
@@ -255,7 +249,16 @@
             <!-- Hiển thị số tiền còn lại -->
           </div>
         </div>
+        <div></div>
       </div>
+      <button nz-button type="button" class="btn btn-primary">
+        <i nz-icon nzType="save" nzTheme="outline"></i>
+        Thanh toán thành công
+      </button>
+      <button nz-button type="button" class="btn btn-warning ml-2">
+        <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i>
+        Xuất hóa đơn
+      </button>
     </div>
   </div>
 
