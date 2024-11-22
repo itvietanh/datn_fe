@@ -33,5 +33,15 @@ export class StatisticalService extends BaseService {
       params: this.stringifyParams(params)
     });
   }
+  public getDailyRevenue<T = PagedListModel>(params: any = null) {
+    return this.http.get<ResponseModel<T>>(`${this.baseUrl}/service/daily-revenue`, {
+      params: this.stringifyParams(params)
+    });
+  }
+  public getWeeklyRevenue<T = PagedListModel>(params: any = null) {
+    return this.http.get<ResponseModel<T>>(`${this.baseUrl}/service/weekly-revenue`, {
+      params: this.stringifyParams(params)
+    });
+  }
 
 }

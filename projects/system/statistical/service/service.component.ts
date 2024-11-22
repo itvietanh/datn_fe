@@ -214,117 +214,120 @@ export class ServiceComponent implements OnInit, OnChanges {
     this.dialogService.openLoading();
   
     try {
-      const rs = await this.service.getPaging(params).firstValueFrom();
       const rss = await this.statistical.getAll(params).firstValueFrom();
   
       const dataRawMonth = rss.data!.monthly_revenue;
       const dataRawWeek = rss.data!.weekly_revenue;
-      const dataRawDay = rs.data!.items;
+      const dataRawDay = rss.data!.daily_revenue;
   
-      // Mảng lưu dữ liệu cho biểu đồ
-      const bookingDataDay: number[] = [];
-      const revenueDataDay: number[] = [];
-      const labelsDay: string[] = [];
+      // Kiểm tra và xử lý dữ liệu cho biểu đồ
+      if (Array.isArray(dataRawDay)) {
+        const bookingDataDay: number[] = [];
+        const revenueDataDay: number[] = [];
+        const labelsDay: string[] = [];
   
-      const bookingDataWeek: number[] = [];
-      const revenueDataWeek: number[] = [];
-      const labelsWeek: string[] = [];
-  
-      const bookingDataMonth: number[] = [];
-      const revenueDataMonth: number[] = [];
-      const labelsMonth: string[] = [];
-  
-      // Xử lý dữ liệu theo Ngày
-      for (const item of dataRawDay) {
-        if (item.created_at) {
-          const date = this.datePipe.transform(item.created_at, 'dd-MM-yyyy');
-          if (date) {
-            labelsDay.push(date);  // Thêm ngày vào mảng labelsDay
-            bookingDataDay.push(item.service_usage_count || 0);
-            revenueDataDay.push(item.total_revenue || 0);
+        for (const item of dataRawDay) {
+          if (item.created_at) {
+            const date = this.datePipe.transform(item.created_at, 'dd-MM-yyyy');
+            if (date) {
+              labelsDay.push(date);
+              bookingDataDay.push(item.service_usage_count || 0);
+              revenueDataDay.push(item.total_revenue || 0);
+            }
           }
         }
+  
+        // Cập nhật dữ liệu cho biểu đồ Ngày
+        this.dummyData.daily = {
+          labels: labelsDay,
+          datasets: [
+            {
+              label: 'Bookings (Daily)',
+              data: bookingDataDay,
+              borderColor: 'rgb(75, 192, 192)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)'
+            },
+            {
+              label: 'Revenue (Daily)',
+              data: revenueDataDay,
+              borderColor: 'rgb(53, 162, 235)',
+              backgroundColor: 'rgba(53, 162, 235, 0.2)'
+            }
+          ]
+        };
+      } else {
+        console.error('dataRawDay is not an array:', dataRawDay);
       }
   
-      // Xử lý dữ liệu theo Tuần
-      for (const item of dataRawWeek || []) {
-        if (item && item.total_revenue !== undefined) {
-          labelsWeek.push(`Week ${item.week_number}`);
-          bookingDataWeek.push(item.service_usage_count || 0);
-          revenueDataWeek.push(item.total_revenue);
+      // Xử lý dữ liệu cho tuần
+      if (Array.isArray(dataRawWeek)) {
+        const bookingDataWeek: number[] = [];
+        const revenueDataWeek: number[] = [];
+        const labelsWeek: string[] = [];
+  
+        for (const item of dataRawWeek) {
+          if (item && item.total_revenue !== undefined) {
+            labelsWeek.push(`Week ${item.week_number}`);
+            bookingDataWeek.push(item.service_usage_count || 0);
+            revenueDataWeek.push(item.total_revenue);
+          }
         }
-      }
-  
-      // Xử lý dữ liệu theo Tháng
-      for (const item of dataRawMonth || []) {
-        if (item && item.total_revenue !== undefined) {
-          const month = this.datePipe.transform(item.month, 'MM-yyyy');
-          labelsMonth.push(month || '');
-          bookingDataMonth.push(item.service_usage_count || 0);
-          revenueDataMonth.push(item.total_revenue);
-        }
-      }
-  
-   
-  
-      // Cập nhật dữ liệu cho biểu đồ Ngày
-     // Cập nhật dữ liệu cho biểu đồ Ngày
-this.dummyData.daily = {
-  labels: labelsDay,  // Mảng nhãn (Ngày)
-  datasets: [
-    {
-      label: 'Bookings (Daily)',
-      data: bookingDataDay,  // Dữ liệu đặt chỗ theo ngày
-      borderColor: 'rgb(75, 192, 192)',  // Màu sắc đường viền
-      backgroundColor: 'rgba(75, 192, 192, 0.2)'  // Màu nền
-    },
-    {
-      label: 'Revenue (Daily)',
-      data: revenueDataDay,  // Dữ liệu doanh thu theo ngày
-      borderColor: 'rgb(53, 162, 235)',  // Màu sắc đường viền
-      backgroundColor: 'rgba(53, 162, 235, 0.2)'  // Màu nền
-    }
-  ]
-};
 
   
-      // Cập nhật dữ liệu cho biểu đồ Tuần
-      this.dummyData.weekly = {
-        labels: labelsWeek,
-        datasets: [
-          {
-            label: 'Bookings (Weekly)',
-            data: bookingDataWeek,
-            borderColor: 'rgb(255, 159, 64)',
-            backgroundColor: 'rgba(255, 159, 64, 0.2)'
-          },
-          {
-            label: 'Revenue (Weekly)',
-            data: revenueDataWeek,
-            borderColor: 'rgb(153, 102, 255)',
-            backgroundColor: 'rgba(153, 102, 255, 0.2)'
-          }
-        ]
-      };
+        // Cập nhật dữ liệu cho biểu đồ Tuần
+        this.dummyData.weekly = {
+          labels: labelsWeek,
+          datasets: [
+            {
+              label: 'Bookings (Weekly)',
+              data: bookingDataWeek,
+              borderColor: 'rgb(255, 159, 64)',
+              backgroundColor: 'rgba(255, 159, 64, 0.2)'
+            },
+            {
+              label: 'Revenue (Weekly)',
+              data: revenueDataWeek,
+              borderColor: 'rgb(153, 102, 255)',
+              backgroundColor: 'rgba(153, 102, 255, 0.2)'
+            }
+          ]
+        };
+      }
   
-      // Cập nhật dữ liệu cho biểu đồ Tháng
-      this.dummyData.monthly = {
-        labels: labelsMonth,
-        datasets: [
-          {
-            label: 'Bookings (Monthly)',
-            data: bookingDataMonth,
-            borderColor: 'rgb(54, 162, 235)',
-            backgroundColor: 'rgba(54, 162, 235, 0.2)'
-          },
-          {
-            label: 'Revenue (Monthly)',
-            data: revenueDataMonth,
-            borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: 'rgba(255, 99, 132, 0.2)'
+      // Xử lý dữ liệu cho tháng
+      if (Array.isArray(dataRawMonth)) {
+        const bookingDataMonth: number[] = [];
+        const revenueDataMonth: number[] = [];
+        const labelsMonth: string[] = [];
+  
+        for (const item of dataRawMonth) {
+          if (item && item.total_revenue !== undefined) {
+            const month = this.datePipe.transform(item.month, 'MM-yyyy');
+            labelsMonth.push(month || '');
+            bookingDataMonth.push(item.service_usage_count || 0);
+            revenueDataMonth.push(item.total_revenue);
           }
-        ]
-      };
+        }
+  
+        // Cập nhật dữ liệu cho biểu đồ Tháng
+        this.dummyData.monthly = {
+          labels: labelsMonth,
+          datasets: [
+            {
+              label: 'Bookings (Monthly)',
+              data: bookingDataMonth,
+              borderColor: 'rgb(54, 162, 235)',
+              backgroundColor: 'rgba(54, 162, 235, 0.2)'
+            },
+            {
+              label: 'Revenue (Monthly)',
+              data: revenueDataMonth,
+              borderColor: 'rgb(255, 99, 132)',
+              backgroundColor: 'rgba(255, 99, 132, 0.2)'
+            }
+          ]
+        };
+      }
   
       // Gọi renderChart() để cập nhật biểu đồ
       this.renderChart(this.chartType);
@@ -335,7 +338,7 @@ this.dummyData.daily = {
       this.dialogService.closeLoading();
       this.isLoading = false;
     }
-  }
+  } 
   
 
   async handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
