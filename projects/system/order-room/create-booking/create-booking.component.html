@@ -161,8 +161,8 @@
             </ng-template>
             <ng-template [appCellTemplate]="'priceId'" let-item>
               <div class="price-type">
-                <input-select [allowClear]="false" [items]="pricesDict[item.id]" [(ngModel)]="item.priceId"
-                  (onChange)="onInputSelectChange(item)" [ngModelOptions]="{ standalone: true }"></input-select>
+                <input-select [allowClear]="false" [items]="pricesDict"
+                  (onChange)="onInputSelectChange(item)"></input-select>
                 <div class="price-type-info" nz-tooltip [nzTooltipTitle]="priceDetail">
                   <ng-template #priceDetail>
                     <div style="white-space: pre-line">
@@ -212,8 +212,8 @@
 
               <div class="price-type mb-2">
                 <strong>Loại giá:</strong>
-                <input-select [allowClear]="false" [items]="pricesDict[item.id]" [(ngModel)]="item.priceId"
-                  (onChange)="onInputSelectChange(item)" [ngModelOptions]="{ standalone: true }"></input-select>
+                <input-select [allowClear]="false" [items]="pricesDict"
+                  (onChange)="onInputSelectChange(item)"></input-select>
                 <div class="price-type-info" nz-tooltip [nzTooltipTitle]="priceDetail">
                   <ng-template #priceDetail>
                     <div style="white-space: pre-line">
