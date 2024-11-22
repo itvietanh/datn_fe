@@ -19,7 +19,10 @@ export class TabContactStep1Component implements OnInit {
   readonly nzModalData: any = inject(NZ_MODAL_DATA);
 
   listGuest: any[] = [];
-
+  totalAmountSum = 0;
+  totalAmount = 0;
+  taxAmount = 0;
+  remainingAmount = 0
   qrCode: any;
 
   constructor(
@@ -32,6 +35,7 @@ export class TabContactStep1Component implements OnInit {
 
   ngOnInit() {
     this.myForm.get('paymentMethod')?.enable();
+    
   }
 
   hanldeChangeMethod() {

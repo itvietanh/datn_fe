@@ -181,30 +181,31 @@
         <div class="pay-data">
           <div class="pay-item">
             <div class="name">Tổng tiền phòng</div>
-            <div class="value">
-              {{ this.myForm.get("totalPrice")?.value | moneyFormat }}
+            <div class="value">  {{ this.totalAmountSum | moneyFormat }}
             </div>
           </div>
           <div class="pay-item">
             <div class="name">Thuế</div>
-            <div class="value">{{ this.myForm.get("vat")?.value | moneyFormat }}</div>
+            <div class="value">{{ taxAmount | moneyFormat }}</div>
           </div>
           <div class="pay-item">
             <div class="name">Cần thanh toán</div>
-            <div class="value">{{ this.myForm.get("finalPrice")?.value | moneyFormat }}</div>
+            <div class="value">{{ totalAmount | moneyFormat }}</div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-7">Trả trước</div>
           <div class="col-md-5">
             <app-form-control>
-              <input-number formControlName="prepayment"></input-number>
+              <input-number [min]="0" [integerLimit]="10" formControlName="prepayment"></input-number>
+              <!-- <input-number [min]="0" [integerLimit]="10" formControlName="prepayment"
+                (ngModelChange)="updateInvoice()"></input-number> -->
             </app-form-control>
           </div>
         </div>
         <div class="return-money">
           <div class="name">Còn lại</div>
-          <div class="value">remainingAmount | moneyFormat</div>
+          <div class="value">{{remainingAmount | moneyFormat}}</div>
         </div>
       </div>
     </div>
