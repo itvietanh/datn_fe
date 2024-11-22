@@ -122,7 +122,7 @@ export class TabContactStep2Component implements OnInit {
   hanldeOpenTabService(item: any = null, mode: any = 'cong-them') {
     const dialog = this.dialogService.openDialog(
       async (option) => {
-        option.title = mode === 'view' ? 'Xem Chi Tiết Dịch Vụ' : 'Thêm Mới Dịch Vụ';
+        option.title = mode === 'view' ? 'Xem Chi Tiết Dịch Vụ' : 'Thêm Dịch Vụ';
         if (mode === 'edit') option.title = 'Cập Nhật Dịch Vụ';
         option.size = DialogSize.large;
         option.component = ServiceDetailComponent;

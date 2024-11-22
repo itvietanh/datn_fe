@@ -1,16 +1,9 @@
-import { DatePipe } from '@angular/common';
-import { HomeHotelService } from '../../../../../../../common/share/src/service/application/hotel/home-hotel.service';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { ExtentionService } from 'common/base/service/extention.service';
-import { MessageService } from 'common/base/service/message.service';
-import { GuestService } from 'common/share/src/service/application/hotel/guest.service';
-import { DialogMode, DialogService } from 'common/share/src/service/base/dialog.service';
-import { ValidatorExtension } from 'common/validator-extension';
 import { ContractServiceService, DiaBanService } from 'share';
 import { NzModalRef, NZ_MODAL_DATA } from 'ng-zorro-antd/modal';
 import { forkJoin, finalize } from 'rxjs';
 import { TabContractService } from '../../../tab-contract.service';
+import { sumBy } from 'lodash-es';
 
 @Component({
   selector: 'app-service-detail',
@@ -56,27 +49,33 @@ export class ServiceDetailComponent implements OnInit {
   }
 
   updateTotal() {
-    // this.total = sumBy(this.services, (s: any) => s.totalAmount * s.quantity);
+    this.total = sumBy(this.services, (s: any) => s.price * s.quantity);
   }
 
   addContractServices() {
     this.loading = true;
-    forkJoin(
-      this.services.map((s) =>
-        this.contractServiceService.add({
-          contractId: this.nzModalData.contractId,
-          contractResidenceId: this.nzModalData.contractResidenceId,
-          quantity: s.quantity,
-          serviceId: s.id,
-          note: s.note,
-          totalAmount: s.totalAmount,
-          serviceCategoryCode: this.nzModalData.serviceCategoryCode,
-        })
-      )
-    )
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe(() => {
-        this.#modal.destroy(true);
-      });
+    const data = this.services;
+    debugger;
+    // forkJoin(
+    //   this.services.map((s) =>
+    //     this.contractServiceService.add({
+    //       contractId: this.nzModalData.contractId,
+    //       contractResidenceId: this.nzModalData.contractResidenceId,
+    //       quantity: s.quantity,
+    //       serviceId: s.id,
+    //       note: s.note,
+    //       totalAmount: s.totalAmount,
+    //       serviceCategoryCode: this.nzModalData.serviceCategoryCode,
+    //     })
+    //   )
+    // )
+    //   .pipe(finalize(() => (this.loading = false)))
+    //   .subscribe(() => {
+    //     this.#modal.destroy(true);
+    //   });
+  }
+
+  close() {
+    this.onClose.emit();
   }
 }

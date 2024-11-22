@@ -31,7 +31,7 @@ export class AddContractServiceForm1Component implements OnInit {
   constructor(
     private fb: FormBuilder,
     private contractServiceService: ContractServiceService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (this.nzModalData?.active === 'EDIT') {
@@ -39,7 +39,7 @@ export class AddContractServiceForm1Component implements OnInit {
         ...this.nzModalData?.objectEdit,
         active: this.nzModalData?.active,
       };
-      this.price = this.objectEdit?.totalAmount / this.objectEdit?.quantity;
+      this.price = this.objectEdit?.price / this.objectEdit?.quantity;
 
       this.myForm = this.fb.group({
         quantity: [this.objectEdit?.quantity, ValidatorExtension.required()],
@@ -49,14 +49,14 @@ export class AddContractServiceForm1Component implements OnInit {
 
   changeQuantity(event: any) {
     if (event <= 0) {
-      this.objectEdit.totalAmount = 0;
+      this.objectEdit.price = 0;
       this.objectEdit.totalAmountAfterVat = 0;
     } else {
-      this.objectEdit.totalAmount = this.price * event;
+      this.objectEdit.price = this.price * event;
 
       this.objectEdit.totalAmountAfterVat =
-        this.objectEdit.totalAmount +
-        (this.objectEdit.totalAmount * this.objectEdit.vat) / 100;
+        this.objectEdit.price +
+        (this.objectEdit.price * this.objectEdit.vat) / 100;
     }
   }
 
@@ -80,7 +80,7 @@ export class AddContractServiceForm1Component implements OnInit {
             this.#modal.destroy(true);
           })
         )
-        .subscribe(() => {});
+        .subscribe(() => { });
     }
   }
 }
