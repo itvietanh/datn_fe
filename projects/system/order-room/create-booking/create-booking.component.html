@@ -166,7 +166,9 @@
                 <div class="price-type-info" nz-tooltip [nzTooltipTitle]="priceDetail">
                   <ng-template #priceDetail>
                     <div style="white-space: pre-line">
-                      {{ item.description }}
+                      <p>{{ item.pricePerHour }}</p>
+                      <p>{{ item.pricerPerDay }}</p>
+                      <p>{{ item.priceOverTime }}</p>
                     </div>
                   </ng-template>
                   <span nz-icon nzType="info-circle" nzTheme="outline"></span>

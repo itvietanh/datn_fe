@@ -73,8 +73,8 @@ export class TabContactStep1Component implements OnInit {
           mode === 'view'
             ? 'Xem Chi Tiết Khách Hàng'
             : mode === 'edit'
-            ? 'Cập Nhật Khách Hàng'
-            : 'Thêm Mới Khách Hàng';
+              ? 'Cập Nhật Khách Hàng'
+              : 'Thêm Mới Khách Hàng';
         option.size = DialogSize.medium;
         option.component = GuestDetailComponent;
         option.inputs = {
@@ -100,23 +100,23 @@ export class TabContactStep1Component implements OnInit {
     const totalPayable = this.totalAmount + this.vatAmount; // Tính tổng tiền cần thanh toán (bao gồm thuế)
     this.remainingAmount = Math.max(0, totalPayable - inputValue); // Số tiền còn lại
   }
-////
-onPrepaymentInput(event: Event): void {
-  const input = (event.target as HTMLInputElement).value;
+  ////
+  onPrepaymentInput(event: Event): void {
+    const input = (event.target as HTMLInputElement).value;
 
-  // Loại bỏ dấu chấm và chuyển về số thực
-  const numericValue = parseInt(input.replace(/\./g, ''), 10) || 0;
-  this.prepayment = numericValue;
+    // Loại bỏ dấu chấm và chuyển về số thực
+    const numericValue = parseInt(input.replace(/\./g, ''), 10) || 0;
+    this.prepayment = numericValue;
 
-  // Định dạng lại số với dấu chấm
-  this.formattedPrepayment = this.formatNumber(numericValue);
+    // Định dạng lại số với dấu chấm
+    this.formattedPrepayment = this.formatNumber(numericValue);
 
-  // Tính số tiền còn lại
-  this.remainingAmount = Math.max(0, this.totalAmount - numericValue);
-}
-private formatNumber(value: number): string {
-  return value.toLocaleString('vi-VN');
-}
+    // Tính số tiền còn lại
+    this.remainingAmount = Math.max(0, this.totalAmount - numericValue);
+  }
+  private formatNumber(value: number): string {
+    return value.toLocaleString('vi-VN');
+  }
 
   calculateRemainingAmount(): void {
     const vat = 0.1; // Thuế 10%

@@ -44,7 +44,7 @@ export class CreateBookingComponent implements OnInit {
     {
       key: 'priceId',
       header: 'Loại giá',
-      // pipe: 'template',
+      pipe: 'template',
     },
     {
       key: 'total_price',
@@ -54,7 +54,7 @@ export class CreateBookingComponent implements OnInit {
     {
       key: 'numberOfPeople',
       header: 'Số lượng phòng',
-      // pipe: 'template',
+      pipe: 'template',
     },
     {
       key: 'final_price',
@@ -63,7 +63,12 @@ export class CreateBookingComponent implements OnInit {
     },
   ];
   numOfRooms = 0;
-  pricesDict: any = [];
+  pricesDict: any = [
+    {
+      'value': 1,
+      'label': `Mặc định`
+    }
+  ];
   // dateRange = { checkInTime: 0, checkOutTime: 0 };
   cache: { [key: string]: any } = {};
   totalAmountSum = 0;
@@ -448,8 +453,6 @@ export class CreateBookingComponent implements OnInit {
       totalGuest: numOfResidents
     };
 
-    console.log(data);
-
     this.dialogService.openLoading();
     const res = await this.orderRoomService.hanldeSearchRooms(data).firstValueFrom();
     this.dialogService.closeLoading();
@@ -458,38 +461,18 @@ export class CreateBookingComponent implements OnInit {
       this.items.forEach(item => {
         if (item.pricePerHour || item.pricerPerDay || item.priceOverTime) {
           if (item.pricePerHour) {
-            // item.pricePerHour = `Giá theo giờ: ${item.pricePerHour}/giờ`;
-            this.pricesDict.push(
-              {
-                'description': `Giá theo giờ: ${item.pricePerHour}/giờ`,
-                'value': item.pricePerHour
-              }
-            );
+            item.pricePerHour = `Giá theo giờ: ${item.pricePerHour}/giờ`;
           }
 
           if (item.pricerPerDay) {
-            // item.pricerPerDay = `Giá theo ngày: ${item.pricerPerDay}/ngày`;
-            this.pricesDict.push(
-              {
-                'description': `Giá theo ngày: ${item.pricerPerDay}/ngày`,
-                'value': item.pricerPerDay
-              }
-            );
+            item.pricerPerDay = `Giá theo ngày: ${item.pricerPerDay}/ngày`;
           }
 
           if (item.priceOverTime) {
-            // item.priceOverTime = `Giá quá giờ: ${item.priceOverTime}/giờ`;
-            this.pricesDict.push(
-              {
-                'description': `Giá quá giờ: ${item.priceOverTime}/giờ`,
-                'value': item.priceOverTime
-              }
-            );
+            item.priceOverTime = `Giá quá giờ: ${item.priceOverTime}/giờ`;
           }
         }
       });
-      const d = this.pricesDict;
-      debugger;
     } else {
       this.messageService.notiMessageWarning('Không đủ phòng với số lượng khách yêu cầu!');
       if (this.items) {

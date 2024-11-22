@@ -49,7 +49,7 @@ export class TabContactStep2Component implements OnInit {
     public shareData: TabContractService,
     private orderRoomService: OrderRoomService,
     private dialogService: DialogService
-
+    
   ) {
     this.myForm = shareData.myForm;
   }
@@ -71,6 +71,11 @@ export class TabContactStep2Component implements OnInit {
       this.roomAmount = Math.floor(res.data.final_price);
     }
 
+    this.dialogService.closeLoading();
+  }
+
+  async getListService() {
+    this.dialogService.openLoading();
     this.dialogService.closeLoading();
   }
 
