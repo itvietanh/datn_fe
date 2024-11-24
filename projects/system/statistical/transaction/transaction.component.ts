@@ -1,13 +1,10 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { ColumnConfig } from 'common/base/models';
 import { MessageService } from 'common/base/service/message.service';
 import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
 import { ValidatorExtension } from 'common/validator-extension';
-import { DialogService, PagingModel, DialogMode, DialogSize } from 'share';
-import { TransactionService } from 'common/share/src/service/application/hotel/transaction.service';
-import { FacilityDetailsComponent } from 'projects/system/facility/facility-detail/facility-details.component';
+import { DialogService } from 'share';
 import { TransitionStatistics } from 'common/share/src/service/application/hotel/transitionstatistics';
 import { ChartConfiguration } from 'chart.js';
 
@@ -19,65 +16,27 @@ import { ChartConfiguration } from 'chart.js';
   styleUrls: ['./transaction.component.scss']
 })
 export class TransactionComponent implements OnInit, OnChanges {
-
+  public formSearch!: FormGroup;
   timeFilter: string = 'daily';
-  chartType: string = 'line';
+  chartType: string = 'bar';
   loading: boolean = false;
   error: string | null = null;
 
-  // Data for the charts
-  dummyData: any = {
-    daily: {
-      labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      datasets: [
-        {
-          label: "Bookings",
-          data: [65, 59, 80, 81, 56, 55, 40],
-          borderColor: "rgb(75, 192, 192)",
-          backgroundColor: "rgba(75, 192, 192, 0.2)"
-        },
-        {
-          label: "Revenue",
-          data: [28, 48, 40, 19, 86, 27, 90],
-          borderColor: "rgb(53, 162, 235)",
-          backgroundColor: "rgba(53, 162, 235, 0.2)"
-        }
-      ]
+
+  listChartType: any[] = [
+    {
+      value: 'bar',
+      label: 'Biều đồ cột'
     },
-    weekly: {
-      labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
-      datasets: [
-        {
-          label: "Bookings",
-          data: [300, 450, 320, 280],
-          borderColor: "rgb(75, 192, 192)",
-          backgroundColor: "rgba(75, 192, 192, 0.2)"
-        },
-        {
-          label: "Revenue",
-          data: [500, 650, 400, 580],
-          borderColor: "rgb(53, 162, 235)",
-          backgroundColor: "rgba(53, 162, 235, 0.2)"
-        }
-      ]
-    },
-    monthly: {
-      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-      datasets: [
-        {
-          label: "Bookings",
-          data: [1200, 1900, 1500, 1700, 2000, 1800],
-          borderColor: "rgb(75, 192, 192)",
-          backgroundColor: "rgba(75, 192, 192, 0.2)"
-        },
-        {
-          label: "Revenue",
-          data: [3000, 3500, 2800, 3200, 3800, 3400],
-          borderColor: "rgb(53, 162, 235)",
-          backgroundColor: "rgba(53, 162, 235, 0.2)"
-        }
-      ]
+    {
+      value: 'line',
+      label: 'Biều đồ đường kẻ'
     }
+  ];
+
+  chartData: any = {
+    labels: [],
+    datasets: []
   };
 
   options: ChartConfiguration['options'] = {
@@ -88,7 +47,7 @@ export class TransactionComponent implements OnInit, OnChanges {
       },
       title: {
         display: true,
-        text: 'Thống kê giao dịch'
+        text: 'Thống kê giao dịch',
       }
     },
     interaction: {
@@ -97,33 +56,88 @@ export class TransactionComponent implements OnInit, OnChanges {
     },
     scales: {
       y: {
-        beginAtZero: true
+        beginAtZero: true,
+        ticks: {
+          callback: function (value) {
+            return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }); // Định dạng tiền tệ
+          }
+        }
       }
     }
   };
 
-  constructor( 
+  constructor(
     private fb: FormBuilder,
     private dialogService: DialogService,
     private messageService: MessageService,
     public hotelService: HotelService,
     private datePipe: DatePipe,
     public transitionstatistics: TransitionStatistics,
-  ) { }
+  ) {
+    this.formSearch = this.fb.group({
+      dateFrom: [null, ValidatorExtension.required()],
+      dateTo: [null, ValidatorExtension.required()],
+      chartType: [null]
+    });
+    this.formSearch
+      .get('dateTo')
+      ?.addValidators(
+        ValidatorExtension.gteDateValidator(
+          this.formSearch,
+          'dateFrom',
+          'Ngày kết thúc không được nhỏ hơn ngày bắt đầu'
+        )
+      );
+    this.formSearch
+      .get('dateTo')
+      ?.addValidators(
+        ValidatorExtension.gteDateValidator(
+          this.formSearch,
+          'dateTo',
+          'Ngày kết thúc không được nhỏ hơn ngày bắt đầu'
+        )
+      );
+  }
 
   ngOnInit(): void {
     this.refreshData();
   }
 
+  async getData() {
+    this.formSearch.markAllAsTouched();
+    if (this.formSearch.invalid) return;
+    this.dialogService.openLoading();
+    const params = this.formSearch.getRawValue();
+    const res = await this.transitionstatistics.getDataStatisticalTrans(params).firstValueFrom();
+    const dataStatistical = res.data.statistical;
+
+    this.chartData = {
+      labels: dataStatistical.map((item: any) => item.transitionDate),
+      datasets: [
+        {
+          label: "Doanh thu",
+          data: dataStatistical.map((item: any) => item.totalAmount),
+          borderColor: "rgb(75, 192, 192)",
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          fill: true
+        }
+      ]
+    };
+
+    this.dialogService.closeLoading();
+  }
+
   async refreshData(): Promise<void> {
     try {
       this.loading = true;
+      this.dialogService.openLoading();
       this.error = null;
       await new Promise(resolve => setTimeout(resolve, 1000));
     } catch (err) {
       this.error = 'Failed to fetch data. Please try again.';
     } finally {
       this.loading = false;
+      this.dialogService.closeLoading();
     }
   }
 
@@ -133,12 +147,56 @@ export class TransactionComponent implements OnInit, OnChanges {
     }
   }
 
-  getChartData() {
-    return this.dummyData[this.timeFilter];
-  }
-
-  renderChart(chartType: string) {
+  renderChart(chartType: string = "") {
+    this.dialogService.openLoading();
     this.chartType = chartType;
+    this.dialogService.closeLoading();
   }
 
+  handlerSearchDate() {
+    const dateFrom = this.formSearch.get('dateFrom')?.value;
+    const dateTo = this.formSearch.get('dateTo')?.value;
+
+    if (dateTo < dateFrom) {
+      this.formSearch
+        .get('dateTo')
+        ?.setValidators(
+          ValidatorExtension.gteDateValidator(
+            this.formSearch,
+            'dateFrom',
+            'Ngày kết thúc không được nhỏ hơn ngày bắt đầu'
+          )
+        );
+      this.formSearch
+        .get('dateTo')?.updateValueAndValidity();
+    } else {
+      this.formSearch
+        .get('dateTo')?.setErrors(null);
+    }
+  }
+
+  async handleExportExcel() {
+    this.getData();
+    this.dialogService.openLoading();
+    const params = this.formSearch.getRawValue();
+
+    try {
+      const res: any = await this.transitionstatistics.exportExcelTrans(params).firstValueFrom();
+
+      const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'thong-ke-giao-dich.xlsx';
+      a.click();
+
+      this.messageService.notiMessageSuccess('Kết xuất dữ liệu thành công');
+    } catch (error) {
+      console.error(error);
+      this.messageService.notiMessageError('Kết xuất dữ liệu thất bại');
+    } finally {
+      this.dialogService.closeLoading();
+    }
+  }
 }

@@ -8,11 +8,11 @@ html {
 }
 
 a:active {
-  color: #2d78d7;
+  color: #1A5B92;
 }
 
 a:hover {
-  color: #2d78d7;
+  color: #1A5B92;
 }
 
 /* scroll bar */
@@ -191,7 +191,7 @@ nz-input-group {
       padding-top: 10px;
 
       span {
-        color: #2d78d7;
+        color: #1A5B92;
       }
     }
   }
@@ -279,28 +279,28 @@ nz-input-group {
 
 .ant-input-affix-wrapper:focus,
 .ant-input-affix-wrapper-focused {
-  border-color: #2d78d7 !important;
+  border-color: #1A5B92 !important;
   box-shadow: 0 0 0 2px rgb(199 105 50 / 20%);
 }
 
 .ant-tabs-tab {
   &:hover {
-    color: #2d78d7;
+    color: #1A5B92;
   }
 
   &.ant-tabs-tab-active {
     .ant-tabs-tab-btn {
-      color: #2d78d7;
+      color: #1A5B92;
     }
   }
 }
 
 .ant-tabs-ink-bar {
-  background: #2d78d7;
+  background: #1A5B92;
 }
 
 html {
-  --antd-wave-shadow-color: #2d78d7;
+  --antd-wave-shadow-color: #1A5B92;
 }
 
 .navbar-light {
@@ -336,7 +336,7 @@ body {
   }
 
   .sidebar-light {
-    background-color: #2d78d7;
+    background-color: #1A5B92;
     position: fixed;
     width: 279px; //+1 pixel border
     height: 100%;
@@ -386,7 +386,7 @@ body {
     }
 
     .sidebar-light {
-      background-color: #2d78d7;
+      background-color: #1A5B92;
       position: fixed;
       // height: calc(100% + 300px);
       height: 100%;
@@ -404,8 +404,8 @@ body {
   height: 32px;
 
   .btn-primary {
-    background-color: #2d78d7;
-    border-color: #2d78d7;
+    background-color: #1A5B92;
+    border-color: #1A5B92;
     font-size: 13px;
     line-height: 17px;
     font-weight: 600;
@@ -476,7 +476,7 @@ body {
 .ant-collapse>.ant-collapse-item>.ant-collapse-header {
   border-radius: 4px;
   background-color: rgb(50 123 199 / 10%);
-  color: #2d78d7;
+  color: #1A5B92;
   font-weight: 600;
   font-size: 14px;
 }
@@ -502,7 +502,7 @@ table tbody>tr>td {
   margin-bottom: 10px;
   font-weight: 600;
   font-size: 14px;
-  color: #2d78d7;
+  color: #1A5B92;
   border: none;
   background-color: white;
   height: 30px;
@@ -516,7 +516,7 @@ table tbody>tr>td {
   margin: 0px 1px;
   border-radius: 4px;
   background-color: rgb(50 123 199 / 10%);
-  color: #2d78d7;
+  color: #1A5B92;
   font-weight: 600;
   font-size: 14px;
   height: 40px;
@@ -546,7 +546,7 @@ table tbody>tr>td {
 .button-sync {
   width: 20px;
   height: 20px;
-  background-color: #2d78d7;
+  background-color: #1A5B92;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -567,7 +567,7 @@ table tbody>tr>td {
           top: 5px;
           left: 10px;
           font-size: 18px;
-          color: #2d78d7;
+          color: #1A5B92;
         }
 
         >.point-target {
@@ -622,7 +622,7 @@ nz-spin {
 
   .i-mess {
     padding: 5px 10px;
-    background-color: #2d78d7;
+    background-color: #1A5B92;
     color: #ffffff;
     position: absolute;
     top: -13px;
@@ -659,27 +659,27 @@ nz-spin {
 }
 
 .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
-  border-color: #2d78d7;
+  border-color: #1A5B92;
   box-shadow: 0 0 0 2px rgb(199 105 50 / 20%);
 }
 
 .ant-checkbox-checked .ant-checkbox-inner {
-  background-color: #2d78d7;
-  border-color: #2d78d7 !important;
+  background-color: #1A5B92;
+  border-color: #1A5B92 !important;
 }
 
 .ant-checkbox-checked::after {
-  border: 1px solid #2d78d7 !important;
+  border: 1px solid #1A5B92 !important;
 }
 
 .ant-checkbox-wrapper:hover .ant-checkbox-inner,
 .ant-checkbox:hover .ant-checkbox-inner,
 .ant-checkbox-input:focus+.ant-checkbox-inner {
-  border-color: #2d78d7;
+  border-color: #1A5B92;
 }
 
 .ant-checkbox-indeterminate .ant-checkbox-inner::after {
-  background-color: #2d78d7;
+  background-color: #1A5B92;
 }
 
 .ant-notification-notice {
@@ -851,7 +851,7 @@ body {
   .control-right {
     button {
       font-size: 14px;
-      color: #2d78d7;
+      color: #1A5B92;
       border: none;
       background: none;
       font-weight: 600px;
@@ -870,7 +870,7 @@ body {
   z-index: 999;
 
   button {
-    color: #2d78d7;
+    color: #1A5B92;
     background: none;
     border: none;
     padding: 0px 10px;
@@ -887,7 +887,7 @@ body {
 }
 
 .text-primary {
-  color: #2d78d7 !important;
+  color: #1A5B92 !important;
 
   &:hover {
     color: #d6570e !important;
@@ -896,7 +896,7 @@ body {
 
 td {
   .td-his-edit {
-    color: #2d78d7 !important;
+    color: #1A5B92 !important;
 
     .hist-content {
       display: none;
@@ -1071,7 +1071,7 @@ td {
     i {
       font-size: 24px;
       line-height: 48px;
-      color: #2d78d7;
+      color: #1A5B92;
     }
   }
 
@@ -1127,7 +1127,7 @@ td {
   }
 
   .nav-tabs-bottom .nav-link.active:before {
-    background-color: #2d78d7;
+    background-color: #1A5B92;
   }
 
   .ant-collapse-content>.ant-collapse-content-box {
@@ -1176,7 +1176,7 @@ td {
     i {
       font-size: 24px;
       line-height: 48px;
-      color: #2d78d7;
+      color: #1A5B92;
     }
   }
 
@@ -1210,7 +1210,7 @@ td {
   }
 
   .nav-tabs-bottom .nav-link.active:before {
-    background-color: #2d78d7;
+    background-color: #1A5B92;
   }
 
   .ant-collapse-content>.ant-collapse-content-box {
@@ -1327,7 +1327,7 @@ nz-result {
   display: flex;
   border-radius: 4px;
   background-color: rgb(50 123 199 / 10%);
-  color: #2d78d7;
+  color: #1A5B92;
   font-weight: 600;
   font-size: 14px;
   align-items: center;
