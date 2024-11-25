@@ -85,7 +85,7 @@ app-menu {
     .nav-item-header {
       display: none;
       @include mobile {
-        background-color: #2d78d7;
+        background-color: #1A5B92;
       }
     }
 
@@ -97,7 +97,7 @@ app-menu {
       @include mobile {
         top: 65px !important;
         padding-top: 10px;
-        background-color: #2d78d7;
+        background-color: #1A5B92;
       }
     }
   }

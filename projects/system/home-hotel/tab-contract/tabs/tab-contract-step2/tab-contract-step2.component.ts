@@ -49,7 +49,7 @@ export class TabContactStep2Component implements OnInit {
     public shareData: TabContractService,
     private orderRoomService: OrderRoomService,
     private dialogService: DialogService
-
+    
   ) {
     this.myForm = shareData.myForm;
   }
@@ -71,6 +71,11 @@ export class TabContactStep2Component implements OnInit {
       this.roomAmount = Math.floor(res.data.final_price);
     }
 
+    this.dialogService.closeLoading();
+  }
+
+  async getListService() {
+    this.dialogService.openLoading();
     this.dialogService.closeLoading();
   }
 
@@ -122,7 +127,7 @@ export class TabContactStep2Component implements OnInit {
   hanldeOpenTabService(item: any = null, mode: any = 'cong-them') {
     const dialog = this.dialogService.openDialog(
       async (option) => {
-        option.title = mode === 'view' ? 'Xem Chi Tiết Dịch Vụ' : 'Thêm Mới Dịch Vụ';
+        option.title = mode === 'view' ? 'Xem Chi Tiết Dịch Vụ' : 'Thêm Dịch Vụ';
         if (mode === 'edit') option.title = 'Cập Nhật Dịch Vụ';
         option.size = DialogSize.large;
         option.component = ServiceDetailComponent;

@@ -35,10 +35,6 @@ export class EmployeeComponent implements OnInit {
       header: 'Tên nhân viên',
     },
     {
-      key: 'account',
-      header: 'Tên tài khoản',
-    },
-    {
       key: 'created_at',
       header: 'Ngày tạo',
     },
@@ -49,10 +45,6 @@ export class EmployeeComponent implements OnInit {
     {
       key:"email",
       header:"Email",
-    },
-    {
-      key:"password",
-      header:"Mật khẩu",
     },
     {
       key: 'action',
@@ -75,8 +67,7 @@ export class EmployeeComponent implements OnInit {
     this.formSearch = this.fb.group({
       name:[null, ValidatorExtension.required()],
       email: [null, ValidatorExtension.required()],
-      account:[null,ValidatorExtension.required()],
-      password:[null,ValidatorExtension.required()],
+      password:['',ValidatorExtension.required()],
       phone:[null,ValidatorExtension.required()],
       address:[null,ValidatorExtension.required()],
       hotel_id:[null,ValidatorExtension.required()]

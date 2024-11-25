@@ -91,7 +91,6 @@
             </nz-form-control>
           </nz-form-item>
         </div>
-
         <div class="col-md-6">
           <nz-form-item>
             <nz-form-label [nzRequired]="false">Địa chỉ</nz-form-label>
@@ -183,11 +182,10 @@
               >Phương thức thanh toán</nz-form-label
             >
             <nz-form-control>
-              <input-select
-                [items]="shareData.paymentMethod"
-                formControlName="paymentMethod"
-                (onChange)="handleChangeMethod()"
-              ></input-select>
+              <input-select  [items]="shareData.paymentMethod" formControlName="paymentMethod"
+              (onChange)="handleChangeMethod()">
+
+              </input-select>
             </nz-form-control>
           </nz-form-item>
 
@@ -255,11 +253,18 @@
         </div>
         <div></div>
       </div>
+<<<<<<< HEAD
       <button nz-button type="button" class="btn btn-primary" (click)="handlePaymentSuccess()">
         <i nz-icon nzType="save" nzTheme="outline"></i>
         Thanh toán thành công
       </button>
 
+=======
+      <button nz-button type="button" class="btn btn-primary">
+        <i nz-icon nzType="save" nzTheme="outline"></i>
+        Thanh toán thành công
+      </button>
+>>>>>>> 4df30b6c7bf86732c42d0c6548ffa105cf8da146
       <button nz-button type="button" class="btn btn-warning ml-2">
         <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i>
         Xuất hóa đơn
