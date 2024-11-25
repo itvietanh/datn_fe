@@ -65,9 +65,9 @@ export class EmployeeDetailComponent implements OnInit {
     const formData = this.myForm.getRawValue();
     this.dialogService.openLoading();
 
-    if (this.id) {
+    if (this.uuid) {
       //Update
-      await this.employeeService.edit(this.id, formData).firstValueFrom();
+      await this.employeeService.edit(this.uuid, formData).firstValueFrom();
     } else {
       //Create
       await this.employeeService.add(formData).firstValueFrom();
