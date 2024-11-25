@@ -204,6 +204,8 @@
 
     <div class="col-md-4" *ngIf="shareData.step === 2">
       x
+
+
       <div class="card my-2">
         <h1>Tóm tắt hoá đơn</h1>
         <div class="pay-data">
@@ -220,9 +222,7 @@
           <div class="pay-item">
             <p>
               Thuế (10%) :
-              <strong>
-                {{ vatAmount | moneyFormat }} </strong
-              >đ
+              <strong> {{ vatAmount | moneyFormat }} </strong>đ
             </p>
           </div>
 
@@ -237,15 +237,13 @@
                 placeholder="Nhập số tiền"
               />
             </div>
-
-          </div> <div class="pay-item">
-              <p>
-                Cần thanh toán :
-                <strong>
-                  {{ remainingAmount | moneyFormat }} </strong
-                >đ
-              </p>
-            </div>
+          </div>
+          <div class="pay-item">
+            <p>
+              Cần thanh toán :
+              <strong> {{ remainingAmount | moneyFormat }} </strong>đ
+            </p>
+          </div>
         </div>
         <div class="return-money">
           <div class="name">Còn lại</div>
@@ -255,7 +253,17 @@
             <!-- Hiển thị số tiền còn lại -->
           </div>
         </div>
+        <div></div>
       </div>
+      <button nz-button type="button" class="btn btn-primary" (click)="handlePaymentSuccess()">
+        <i nz-icon nzType="save" nzTheme="outline"></i>
+        Thanh toán thành công
+      </button>
+
+      <button nz-button type="button" class="btn btn-warning ml-2">
+        <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i>
+        Xuất hóa đơn
+      </button>
     </div>
   </div>
 
