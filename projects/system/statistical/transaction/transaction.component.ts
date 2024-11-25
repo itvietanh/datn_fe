@@ -108,7 +108,7 @@ export class TransactionComponent implements OnInit, OnChanges {
     if (this.formSearch.invalid) return;
     this.dialogService.openLoading();
     const params = this.formSearch.getRawValue();
-    const res = await this.transitionstatistics.getDataStatisticalTrans(params).firstValueFrom();
+    const res = await this.transitionstatistics.getTransactionsByDate(params).firstValueFrom();
     const dataStatistical = res.data.statistical;
 
     this.chartData = {
@@ -199,4 +199,31 @@ export class TransactionComponent implements OnInit, OnChanges {
       this.dialogService.closeLoading();
     }
   }
+  public getTransactionStatisticsByDate() {
+    this.dialogService.openLoading();
+    const params = this.formSearch.getRawValue();
+
+    this.transitionstatistics.getTransactionsByDate(params).subscribe(
+      (response) => {
+        this.chartData = {
+          labels: response.data.map((item: any) => item.date),
+          datasets: [
+            {
+              label: "Tổng tiền",
+              data: response.data.map((item: any) => item.total_amount),
+              borderColor: "rgb(75, 192, 192)",
+              backgroundColor: "rgba(75, 192, 192, 0.2)",
+              fill: true
+            }
+          ]
+        };
+        this.dialogService.closeLoading();
+      },
+      (error) => {
+        this.error = 'Lỗi khi lấy dữ liệu thống kê giao dịch.';
+        this.dialogService.closeLoading();
+      }
+    );
+  }
+
 }

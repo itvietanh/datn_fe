@@ -21,6 +21,11 @@ export class TransitionStatistics extends BaseService {
       responseType: 'blob'
     });
   }
+  public getTransactionsByDate(params: any = null) {
+    return this.http.get<ResponseModel<any>>(`${this.baseUrl}/by-date`, {
+      params: this.stringifyParams(params)
+    });
+  }
 
 
   // public getAll<T = PagedListModel>(params: any = null) {
