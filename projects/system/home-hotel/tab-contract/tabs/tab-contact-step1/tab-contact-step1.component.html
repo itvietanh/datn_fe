@@ -202,6 +202,8 @@
 
     <div class="col-md-4" *ngIf="shareData.step === 2">
       x
+
+
       <div class="card my-2">
         <h1>Tóm tắt hoá đơn</h1>
         <div class="pay-data">
@@ -251,10 +253,11 @@
         </div>
         <div></div>
       </div>
-      <button nz-button type="button" class="btn btn-primary">
+      <button nz-button type="button" class="btn btn-primary" (click)="handlePaymentSuccess()">
         <i nz-icon nzType="save" nzTheme="outline"></i>
         Thanh toán thành công
       </button>
+
       <button nz-button type="button" class="btn btn-warning ml-2">
         <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i>
         Xuất hóa đơn

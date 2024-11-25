@@ -2,16 +2,15 @@ import { Injectable } from '@angular/core';
 import { BaseService } from '../../base/base.service';
 import { PagedListModel, ResponseModel } from 'share';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RoomService extends BaseService {
   protected override prefix = 'room';
 
   public override getPaging<T = PagedListModel>(params: any = null) {
     return this.http.get<ResponseModel<T>>(`${this.baseUrl}/get-list`, {
-      params: this.stringifyParams(params)
+      params: this.stringifyParams(params),
     });
   }
 
@@ -33,5 +32,10 @@ export class RoomService extends BaseService {
       params: this.stringifyParams({ uuid: uuid }),
     });
   }
+  public updateRoomStatus<T = any>(uuid: string) {
+    return this.http.put<ResponseModel<T>>(`${this.baseUrl}/${uuid}`, { status: 1 });
+  }
+
+
 
 }

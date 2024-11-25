@@ -1,3 +1,4 @@
+import { RoomService } from 'common/share/src/service/application/hotel/room.service';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NZ_MODAL_DATA } from 'ng-zorro-antd/modal';
@@ -28,7 +29,8 @@ export class TabContactStep1Component implements OnInit {
     public shareData: TabContractService,
     private dialogService: DialogService,
     private fb: FormBuilder,
-    private orderRoomService: OrderRoomService
+    private orderRoomService: OrderRoomService ,
+    private roomService : RoomService
   ) {
     this.myForm = shareData.myForm;
   }
@@ -163,4 +165,23 @@ export class TabContactStep1Component implements OnInit {
       this.dialogService.closeLoading();
     }
   }
+  async handlePaymentSuccess(): Promise<void> {
+    if (!this.shareData.item?.roomUuid) {
+      console.error('Room UUID is missing');
+      return; // Nếu không có roomUuid thì dừng
+    }
+
+    this.dialogService.openLoading();
+    try {
+      // Gọi API để cập nhật trạng thái phòng
+      const res = await this.roomService.updateRoomStatus(this.shareData.item.roomUuid).toPromise();
+      console.log('Room status updated:', res);
+    } catch (error) {
+      // console.error('Error updating room status:', error);
+    } finally {
+      this.dialogService.closeLoading();
+    }
+  }
+
+
 }
