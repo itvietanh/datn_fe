@@ -23,64 +23,28 @@ import { FloorService } from 'common/share/src/service/application/hotel/floor.s
 })
 export class ServiceComponent implements OnInit, OnChanges {
 
+  public formSearch!: FormGroup;
   timeFilter: string = 'daily';
-  chartType: string = 'line';
+  chartType: string = 'bar';
   loading: boolean = false;
   error: string | null = null;
 
+
   // Data for the charts
-  dummyData: any = {
-    daily: {
-      labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      datasets: [
-        {
-          label: "Bookings",
-          data: [65, 59, 80, 81, 56, 55, 40],
-          borderColor: "rgb(75, 192, 192)",
-          backgroundColor: "rgba(75, 192, 192, 0.2)"
-        },
-        {
-          label: "Revenue",
-          data: [28, 48, 40, 19, 86, 27, 90],
-          borderColor: "rgb(53, 162, 235)",
-          backgroundColor: "rgba(53, 162, 235, 0.2)"
-        }
-      ]
+  listChartType: any[] = [
+    {
+      value: 'bar',
+      label: 'Biều đồ cột'
     },
-    weekly: {
-      labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
-      datasets: [
-        {
-          label: "Bookings",
-          data: [300, 450, 320, 280],
-          borderColor: "rgb(75, 192, 192)",
-          backgroundColor: "rgba(75, 192, 192, 0.2)"
-        },
-        {
-          label: "Revenue",
-          data: [500, 650, 400, 580],
-          borderColor: "rgb(53, 162, 235)",
-          backgroundColor: "rgba(53, 162, 235, 0.2)"
-        }
-      ]
-    },
-    monthly: {
-      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-      datasets: [
-        {
-          label: "Bookings",
-          data: [1200, 1900, 1500, 1700, 2000, 1800],
-          borderColor: "rgb(75, 192, 192)",
-          backgroundColor: "rgba(75, 192, 192, 0.2)"
-        },
-        {
-          label: "Revenue",
-          data: [3000, 3500, 2800, 3200, 3800, 3400],
-          borderColor: "rgb(53, 162, 235)",
-          backgroundColor: "rgba(53, 162, 235, 0.2)"
-        }
-      ]
+    {
+      value: 'line',
+      label: 'Biều đồ đường kẻ'
     }
+  ];
+
+  chartData: any = {
+    labels: [],
+    datasets: []
   };
 
   options: ChartConfiguration['options'] = {
@@ -91,7 +55,7 @@ export class ServiceComponent implements OnInit, OnChanges {
       },
       title: {
         display: true,
-        text: 'Thống kê dịch  vụ'
+        text: 'Thống kê dich vụ',
       }
     },
     interaction: {
@@ -100,26 +64,88 @@ export class ServiceComponent implements OnInit, OnChanges {
     },
     scales: {
       y: {
-        beginAtZero: true
+        beginAtZero: true,
+        ticks: {
+          callback: function (value) {
+            return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }); // Định dạng tiền tệ
+          }
+        }
       }
     }
   };
 
+  constructor(
+    private fb: FormBuilder,
+    private dialogService: DialogService,
+    private messageService: MessageService,
+    public hotelService: HotelService,
+    private datePipe: DatePipe,
+    public StatisticalService: StatisticalService,
+  ) {
+    this.formSearch = this.fb.group({
+      dateFrom: [null, ValidatorExtension.required()],
+      dateTo: [null, ValidatorExtension.required()],
+      chartType: [null]
+    });
+    this.formSearch
+      .get('dateTo')
+      ?.addValidators(
+        ValidatorExtension.gteDateValidator(
+          this.formSearch,
+          'dateFrom',
+          'Ngày kết thúc không được nhỏ hơn ngày bắt đầu'
+        )
+      );
+    this.formSearch
+      .get('dateTo')
+      ?.addValidators(
+        ValidatorExtension.gteDateValidator(
+          this.formSearch,
+          'dateTo',
+          'Ngày kết thúc không được nhỏ hơn ngày bắt đầu'
+        )
+      );
+  }
 
   ngOnInit(): void {
-    this.getData();
     this.refreshData();
+  }
+
+  async getData() {
+    this.formSearch.markAllAsTouched();
+    if (this.formSearch.invalid) return;
+    this.dialogService.openLoading();
+    const params = this.formSearch.getRawValue();
+    const res = await this.StatisticalService.getAll(params).firstValueFrom();
+    const dataStatistical = res.data?.statistical;
+
+    this.chartData = {
+      labels: dataStatistical.map((item: any) => item.transitionDate),
+      datasets: [
+        {
+          label: "Doanh thu",
+          data: dataStatistical.map((item: any) => item.total_revenue),
+          borderColor: "rgb(75, 192, 192)",
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          fill: true
+        }
+      ]
+    };
+
+    this.dialogService.closeLoading();
   }
 
   async refreshData(): Promise<void> {
     try {
       this.loading = true;
+      this.dialogService.openLoading();
       this.error = null;
       await new Promise(resolve => setTimeout(resolve, 1000));
     } catch (err) {
       this.error = 'Failed to fetch data. Please try again.';
     } finally {
       this.loading = false;
+      this.dialogService.closeLoading();
     }
   }
 
@@ -129,250 +155,83 @@ export class ServiceComponent implements OnInit, OnChanges {
     }
   }
 
-  getChartData() {
-    return this.dummyData[this.timeFilter];
-  }
-
-  renderChart(chartType: string) {
-    this.chartType = chartType;
-  }
-
-  ////////////////////////////////////////////////////////////////
-  public formSearch: FormGroup;
-  public listOfData: any[] = [];
-  public isLoading?: boolean;
-  public paging: any;
-  items: any[] = [];
-
-  columns: ColumnConfig[] = [
-    {
-      key: 'hotel_name',
-      header: 'Tên khách sạn',
-    },
-    {
-      key: 'service_name',
-      header: 'Tên dịch vụ',
-    },
-    {
-      key: 'service_price',
-      header: 'Giá dịch vụ',
-    },
-    {
-      key: 'created_at',
-      header: 'Ngày tạo',
-    },
-    {
-      key: 'action',
-      header: 'Thao tác',
-      tdClass: 'text-center',
-      pipe: 'template',
-    },
-  ];
-
-  constructor(
-    private fb: FormBuilder,
-    private dialogService: DialogService,
-    private messageService: MessageService,
-    public hotelService: HotelService,
-    private datePipe: DatePipe,
-    public floorService: FloorService,
-    public service: Service,
-    public statistical: StatisticalService,
-  ) {
-    this.formSearch = this.fb.group({
-      hotel_id: [null],
-      service_name: [null],
-      service_price: [null]
-    });
-    this.formSearch
-      .get('outEndDate')
-      ?.addValidators(
-        ValidatorExtension.gteDateValidator(
-          this.formSearch,
-          'signEndDate',
-          'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
-        )
-      );
-    this.formSearch
-      .get('outEndDate')
-      ?.addValidators(
-        ValidatorExtension.gteDateValidator(
-          this.formSearch,
-          'outStartDate',
-          'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
-        )
-      );
-  }
-
-
-  async getData(paging: PagingModel = { page: 1, size: 20 }) {
-    const params = {
-      ...paging,
-      ...this.formSearch.value
-    };
-    this.isLoading = true;
+  renderChart(chartType: string = "") {
     this.dialogService.openLoading();
-  
-    try {
-      const rss = await this.statistical.getAll(params).firstValueFrom();
-  
-      const dataRawMonth = rss.data!.monthly_revenue;
-      const dataRawWeek = rss.data!.weekly_revenue;
-      const dataRawDay = rss.data!.daily_revenue;
-  
-      // Kiểm tra và xử lý dữ liệu cho biểu đồ
-      if (Array.isArray(dataRawDay)) {
-        const bookingDataDay: number[] = [];
-        const revenueDataDay: number[] = [];
-        const labelsDay: string[] = [];
-  
-        for (const item of dataRawDay) {
-          if (item.created_at) {
-            const date = this.datePipe.transform(item.created_at, 'dd-MM-yyyy');
-            if (date) {
-              labelsDay.push(date);
-              bookingDataDay.push(item.service_usage_count || 0);
-              revenueDataDay.push(item.total_revenue || 0);
-            }
-          }
-        }
-  
-        // Cập nhật dữ liệu cho biểu đồ Ngày
-        this.dummyData.daily = {
-          labels: labelsDay,
-          datasets: [
-            {
-              label: 'Bookings (Daily)',
-              data: bookingDataDay,
-              borderColor: 'rgb(75, 192, 192)',
-              backgroundColor: 'rgba(75, 192, 192, 0.2)'
-            },
-            {
-              label: 'Revenue (Daily)',
-              data: revenueDataDay,
-              borderColor: 'rgb(53, 162, 235)',
-              backgroundColor: 'rgba(53, 162, 235, 0.2)'
-            }
-          ]
-        };
-      } else {
-        console.error('dataRawDay is not an array:', dataRawDay);
-      }
-  
-      // Xử lý dữ liệu cho tuần
-      if (Array.isArray(dataRawWeek)) {
-        const bookingDataWeek: number[] = [];
-        const revenueDataWeek: number[] = [];
-        const labelsWeek: string[] = [];
-  
-        for (const item of dataRawWeek) {
-          if (item && item.total_revenue !== undefined) {
-            labelsWeek.push(`Week ${item.week_number}`);
-            bookingDataWeek.push(item.service_usage_count || 0);
-            revenueDataWeek.push(item.total_revenue);
-          }
-        }
+    this.chartType = chartType;
+    this.dialogService.closeLoading();
+  }
 
-  
-        // Cập nhật dữ liệu cho biểu đồ Tuần
-        this.dummyData.weekly = {
-          labels: labelsWeek,
-          datasets: [
-            {
-              label: 'Bookings (Weekly)',
-              data: bookingDataWeek,
-              borderColor: 'rgb(255, 159, 64)',
-              backgroundColor: 'rgba(255, 159, 64, 0.2)'
-            },
-            {
-              label: 'Revenue (Weekly)',
-              data: revenueDataWeek,
-              borderColor: 'rgb(153, 102, 255)',
-              backgroundColor: 'rgba(153, 102, 255, 0.2)'
-            }
-          ]
-        };
-      }
-  
-      // Xử lý dữ liệu cho tháng
-      if (Array.isArray(dataRawMonth)) {
-        const bookingDataMonth: number[] = [];
-        const revenueDataMonth: number[] = [];
-        const labelsMonth: string[] = [];
-  
-        for (const item of dataRawMonth) {
-          if (item && item.total_revenue !== undefined) {
-            const month = this.datePipe.transform(item.month, 'MM-yyyy');
-            labelsMonth.push(month || '');
-            bookingDataMonth.push(item.service_usage_count || 0);
-            revenueDataMonth.push(item.total_revenue);
-          }
-        }
-  
-        // Cập nhật dữ liệu cho biểu đồ Tháng
-        this.dummyData.monthly = {
-          labels: labelsMonth,
-          datasets: [
-            {
-              label: 'Bookings (Monthly)',
-              data: bookingDataMonth,
-              borderColor: 'rgb(54, 162, 235)',
-              backgroundColor: 'rgba(54, 162, 235, 0.2)'
-            },
-            {
-              label: 'Revenue (Monthly)',
-              data: revenueDataMonth,
-              borderColor: 'rgb(255, 99, 132)',
-              backgroundColor: 'rgba(255, 99, 132, 0.2)'
-            }
-          ]
-        };
-      }
-  
-      // Gọi renderChart() để cập nhật biểu đồ
-      this.renderChart(this.chartType);
-  
+  handlerSearchDate() {
+    const dateFrom = this.formSearch.get('dateFrom')?.value;
+    const dateTo = this.formSearch.get('dateTo')?.value;
+
+    if (dateTo < dateFrom) {
+      this.formSearch
+        .get('dateTo')
+        ?.setValidators(
+          ValidatorExtension.gteDateValidator(
+            this.formSearch,
+            'dateFrom',
+            'Ngày kết thúc không được nhỏ hơn ngày bắt đầu'
+          )
+        );
+      this.formSearch
+        .get('dateTo')?.updateValueAndValidity();
+    } else {
+      this.formSearch
+        .get('dateTo')?.setErrors(null);
+    }
+  }
+
+  async handleExportExcel() {
+    this.getData();
+    this.dialogService.openLoading();
+    const params = this.formSearch.getRawValue();
+
+    try {
+      const res: any = await this.StatisticalService.getAll(params).firstValueFrom();
+
+      const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'thong-ke-dich-vu.xlsx';
+      a.click();
+
+      this.messageService.notiMessageSuccess('Kết xuất dữ liệu thành công');
     } catch (error) {
-      console.error('Error fetching data', error);
+      console.error(error);
+      this.messageService.notiMessageError('Kết xuất dữ liệu thất bại');
     } finally {
       this.dialogService.closeLoading();
-      this.isLoading = false;
     }
-  } 
-  
+  }
+  public getTransactionStatisticsByDate() {
+    this.dialogService.openLoading();
+    const params = this.formSearch.getRawValue();
 
-  async handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
-    const dialog = this.dialogService.openDialog(
-      async (option) => {
-        option.title = mode === 'view' ? 'Xem Chi Tiết Dịch Vụ' : 'Thêm Mới Dịch Vụ';
-        if (mode === 'edit') option.title = 'Cập Nhật Dịch Vụ';
-        option.size = DialogSize.xlarge;
-        option.component = ServiceDetailComponent;// open component; (mở component)
-        option.inputs = {
-          uuid: item?.uuid,
-          item: item,
-          mode: mode,
+    this.StatisticalService.getAll(params).subscribe(
+      (response) => {
+        this.chartData = {
+          labels: response.data.map((item: any) => item.date),
+          datasets: [
+            {
+              label: "Tổng tiền",
+              data: response.data.map((item: any) => item.total_amount),
+              borderColor: "rgb(75, 192, 192)",
+              backgroundColor: "rgba(75, 192, 192, 0.2)",
+              fill: true
+            }
+          ]
         };
+        this.dialogService.closeLoading();
       },
-      (eventName, eventValue) => {
-        if (eventName === 'onClose') {
-          this.dialogService.closeDialogById(dialog.id);
-          if (eventValue) {
-            this.getData({ ...this.paging });
-          }
-        }
+      (error) => {
+        this.error = 'Lỗi khi lấy dữ liệu thống kê giao dịch.';
+        this.dialogService.closeLoading();
       }
     );
   }
 
-  async handlerDelete(item: any) {
-    const confirm = await this.messageService.confirm('Bạn có muốn xóa dữ liệu này không?');
-    if (confirm) {
-      const rs = await this.service.delete(item?.uuid).firstValueFrom();
-      if (rs.data) {
-        this.messageService.notiMessageSuccess('Xóa dữ liệu thành công');
-        return this.getData({ ...this.paging });
-      }
-    }
-  }
 }
