@@ -17,6 +17,7 @@ export class TabContactStep2Component implements OnInit {
 
   public myForm: FormGroup;
   roomAmount: any;
+  listService: any[] = [];
 
   columns: ColumnConfig[] = [
     {
@@ -49,13 +50,14 @@ export class TabContactStep2Component implements OnInit {
     public shareData: TabContractService,
     private orderRoomService: OrderRoomService,
     private dialogService: DialogService
-    
+
   ) {
     this.myForm = shareData.myForm;
   }
 
   ngOnInit() {
     this.onDate();
+    this.getListService();
   }
 
   async onDate() {
@@ -76,6 +78,13 @@ export class TabContactStep2Component implements OnInit {
 
   async getListService() {
     this.dialogService.openLoading();
+    const res = await this.orderRoomService.getListService({ ruUuid: this.shareData.item.ruUuid }).firstValueFrom();
+    const data = res.data?.items;
+    if (data) {
+      data.forEach(item => {
+        this.listService.push(item);
+      });
+    }
     this.dialogService.closeLoading();
   }
 

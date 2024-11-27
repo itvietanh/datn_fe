@@ -12,7 +12,7 @@
     <div>
       <div *ngFor="let service of services" class="d-flex justify-content-between mt-1">
         <div class="name-service-container">
-          {{ service.note ?? service.name }} <span>({{ service.price | moneyFormat }} VNĐ)</span>
+          {{ service.note ?? service.service_name }} <span>({{ service.price | moneyFormat }} VNĐ)</span>
         </div>
         <div *ngIf="service.note" class="amount-container">
 

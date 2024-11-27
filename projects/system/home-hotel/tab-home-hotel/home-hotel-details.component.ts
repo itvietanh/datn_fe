@@ -86,7 +86,7 @@ export class HomeHotelDetailsComponent implements OnInit {
   ) {
     this.myForm = this.fb.group({
       checkInTime: [{ value: this.now.toNumberYYYYMMDDHHmmss(), disabled: true }, ValidatorExtension.required()],
-      checkOutTime: [null, ValidatorExtension.required()],
+      checkOutTime: [null],
       groupName: [null],
       note: [null],
       numOfResidents: [0],
@@ -271,6 +271,10 @@ export class HomeHotelDetailsComponent implements OnInit {
     this.myForm.markAllAsDirty();
     if (this.myForm.invalid) return;
     this.dialogService.openLoading();
+
+    if (!this.listGuest.length) {
+      this.handleAddGuest();
+    }
 
     const guests = this.listGuest.map(x => ({
       uuid: this.ex.newGuid(),
