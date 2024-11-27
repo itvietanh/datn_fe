@@ -98,6 +98,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'thong-ke/loai-phong',
+        loadChildren: () =>
+          import('./statistical/roomtype/roomtype.module').then(
+            (x) => x.RoomTypeModule
+          ),
+      },
+      {
         path: 'dat-phong',
         loadChildren: () =>
           import('./order-room/order-room.module').then(
