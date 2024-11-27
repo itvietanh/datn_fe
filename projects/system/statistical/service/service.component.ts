@@ -120,7 +120,7 @@ export class ServiceComponent implements OnInit, OnChanges {
     const dataStatistical = res.data?.statistical;
 
     this.chartData = {
-      labels: dataStatistical.map((item: any) => item.transitionDate),
+      labels: dataStatistical.map((item: any) => item.total_revenue),
       datasets: [
         {
           label: "Doanh thu",
@@ -187,51 +187,76 @@ export class ServiceComponent implements OnInit, OnChanges {
     this.getData();
     this.dialogService.openLoading();
     const params = this.formSearch.getRawValue();
-
+  
     try {
       const res: any = await this.StatisticalService.getAll(params).firstValueFrom();
-
-      const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'thong-ke-dich-vu.xlsx';
-      a.click();
-
-      this.messageService.notiMessageSuccess('Kết xuất dữ liệu thành công');
+  
+      if (res) {
+        const blob = new Blob([res], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+  
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "thong-ke-dich-vu.xlsx";
+        a.click();
+  
+        this.messageService.notiMessageSuccess("Kết xuất dữ liệu thành công");
+      } else {
+        throw new Error("Dữ liệu không hợp lệ để xuất Excel.");
+      }
     } catch (error) {
       console.error(error);
-      this.messageService.notiMessageError('Kết xuất dữ liệu thất bại');
+      this.messageService.notiMessageError("Kết xuất dữ liệu thất bại");
     } finally {
       this.dialogService.closeLoading();
     }
   }
+  
   public getTransactionStatisticsByDate() {
     this.dialogService.openLoading();
     const params = this.formSearch.getRawValue();
-
+  
     this.StatisticalService.getAll(params).subscribe(
       (response) => {
-        this.chartData = {
-          labels: response.data.map((item: any) => item.date),
-          datasets: [
-            {
-              label: "Tổng tiền",
-              data: response.data.map((item: any) => item.total_amount),
-              borderColor: "rgb(75, 192, 192)",
-              backgroundColor: "rgba(75, 192, 192, 0.2)",
-              fill: true
-            }
-          ]
-        };
+        // Kiểm tra nếu response.data là một object
+        if (response && response.data && typeof response.data === "object") {
+          const data = response.data;
+  
+          // Trích xuất thông tin theo các thuộc tính từ API
+          this.chartData = {
+            labels: ["Tổng doanh thu", "Số lần sử dụng dịch vụ"], // Hoặc tùy chỉnh label khác
+            datasets: [
+              {
+                label: "Thống kê dịch vụ",
+                data: [
+                  parseFloat(data.total_revenue) || 0,
+                  parseInt(data.service_usage_count) || 0,
+                ],
+                borderColor: "rgb(75, 192, 192)",
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill: true,
+              },
+            ],
+          };
+        } else {
+          this.chartData = {
+            labels: [],
+            datasets: [],
+          };
+          this.error = "Dữ liệu trả về không hợp lệ.";
+          console.error("Invalid data format:", response.data);
+        }
         this.dialogService.closeLoading();
       },
       (error) => {
-        this.error = 'Lỗi khi lấy dữ liệu thống kê giao dịch.';
+        this.error = "Lỗi khi lấy dữ liệu thống kê giao dịch.";
+        console.error(error);
         this.dialogService.closeLoading();
       }
     );
   }
-
+  
+  
 }

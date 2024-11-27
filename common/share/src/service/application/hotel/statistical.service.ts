@@ -22,7 +22,7 @@ export class StatisticalService extends BaseService {
     });
   }
 
-  public getUsageCount<T = PagedListModel>(params: any = null) {
+  public getUsageCount<T = any>(params: any = null) {
     return this.http.get<ResponseModel<T>>(`${this.baseUrl}/service/service-usage-count`, {
       params: this.stringifyParams(params)
     });
