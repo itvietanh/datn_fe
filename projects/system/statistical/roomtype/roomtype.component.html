@@ -1,0 +1,113 @@
+<div class="page-header page-header-light">
+  <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
+    <div class="d-flex">
+      <div class="breadcrumb-title">THỐNG KÊ LOẠI PHÒNG</div>
+      <div class="breadcrumb">
+        <div class="list-control-main"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="header-elements-inline">
+    <div class="navbar-expand-md w-100">
+      <div class="padding-left-15 text-right d-md-none w-100 row">
+        <button class="navbar-toggler" data-target="#search-list" data-toggle="collapse" type="button">
+          <i nz-icon nzType="menu" nzTheme="outline"></i>
+        </button>
+      </div>
+      <!-- search -->
+      <div class="navbar-collapse collapse" id="search-list">
+        <form [formGroup]="formSearch" class="w-100" (ngSubmit)="getData()">
+          <ng-template #controlErrorTpl let-control>
+            <app-render-errors [control]="control"></app-render-errors>
+          </ng-template>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="group-header">
+                <div class="title-left">
+                  <div class="title-group-table">Thống kê khoảng thời gian</div>
+                </div>
+                <div class="control-right"></div>
+              </div>
+              <nz-form-item>
+                <nz-form-label>Từ ngày</nz-form-label>
+                <nz-form-control [nzErrorTip]="controlErrorTpl">
+                  <input-date formControlName="dateFrom" (onChange)="handlerSearchDate()">
+                  </input-date>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div class="col-md-4">
+              <div class="group-header">
+                <div class="title-left">
+                  <div class="title-group-table"></div>
+                </div>
+                <div class="control-right"></div>
+              </div>
+              <nz-form-item>
+                <nz-form-label>Đến ngày</nz-form-label>
+                <nz-form-control [nzErrorTip]="controlErrorTpl">
+                  <input-date formControlName="dateTo" (onChange)="handlerSearchDate()">
+                  </input-date>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div class="col-md-4">
+              <div class="group-header">
+                <div class="title-left">
+                  <div class="title-group-table"></div>
+                </div>
+                <div class="control-right"></div>
+              </div>
+              <nz-form-item>
+                <nz-form-label>Loại biểu đồ</nz-form-label>
+                <nz-form-control [nzErrorTip]="controlErrorTpl">
+                  <input-select [items]="listChartType" formControlName="chartType" [(ngModel)]="chartType"
+                    (onChange)="renderChart(chartType)"></input-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+
+          <div class="text-center my-3">
+            <button nz-button type="button" class="btn btn-primary ml-2" (click)="refreshData()">
+              <span nz-icon nzType="undo" nzTheme="outline"></span>Làm mới
+            </button>
+
+            <button nz-button type="submit" (click)="getTransactionStatisticsByDate()" class="btn btn-primary ml-2">
+              <span nz-icon nzType="search" nzTheme="outline"></span>Tìm kiếm
+            </button>
+            <!-- <button >Tìm kiếm</button> -->
+
+            <button nz-button type="button" class="btn btn-success ml-2" (click)="handleExportExcel()">
+              <span nz-icon nzType="file-excel" nzTheme="outline"></span>Kết
+              xuất
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-6">
+    <div class="max-w-7xl mx-auto bg-white rounded-xl shadow-lg p-6">
+      <div *ngIf="error" class="mb-6 p-4 bg-red-100 text-red-700 rounded-lg" role="alert">
+        {{ error }}
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow-inner">
+        <div *ngIf="loading" class="flex justify-center items-center h-[400px]">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        </div>
+        <div *ngIf="!loading">
+          <canvas *ngIf="chartType === 'bar'" baseChart [data]="chartData" [options]="options" [type]="'bar'">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
