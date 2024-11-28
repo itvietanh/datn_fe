@@ -171,16 +171,19 @@
       <div class="title-label2"><i class="isax-card-slash1"></i> Dịch vụ</div>
       <div class="title-control2">
         <span class="mr-2"></span>
-        <span class="mt-1 float-right cursor-pointer color-primary" nz-icon nzType="plus-circle" nzTheme="fill" (click)="hanldeOpenTabService()"></span>
+        <span class="mt-1 float-right cursor-pointer color-primary" nz-icon nzType="plus-circle" nzTheme="fill"
+          (click)="hanldeOpenTabService()"></span>
       </div>
     </div>
 
-    <!-- <nz-collapse>
+    <nz-collapse>
       <nz-collapse-panel class="has-icon my-2" [ngClass]="" [nzHeader]="'Dịch vụ'">
         <i class="isax-card-slash1"></i>
-        <div class="point-target" id="panel1"></div>
+        <div *ngFor="let item of listService">
+          <p>{{item.catName}}: {{item.serviceName}}       - {{item.price | moneyFormat}} VNĐ</p>
+        </div>
       </nz-collapse-panel>
-    </nz-collapse> -->
+    </nz-collapse>
 
     <div class="d-flex justify-content-between w-100">
       <div class="name-service-container">
