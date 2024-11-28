@@ -8,10 +8,12 @@ import { ChartConfiguration } from 'chart.js';
 import { EmployeeStatistics } from 'common/share/src/service/application/hotel/employeestatistics';
 import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
 
+
+
 @Component({
   selector: 'app-employee',
   templateUrl: './employee.component.html',
-  styleUrls: ['./employee.component.scss'],
+  styleUrls: ['./employee.component.scss']
 })
 export class EmployeeComponent implements OnInit, OnChanges {
   public formSearch!: FormGroup;
@@ -23,33 +25,33 @@ export class EmployeeComponent implements OnInit, OnChanges {
   listChartType: any[] = [
     {
       value: 'bar',
-      label: 'Biểu đồ cột',
+      label: 'Biểu đồ cột'
     },
     {
       value: 'line',
-      label: 'Biểu đồ đường kẻ',
-    },
+      label: 'Biểu đồ đường kẻ'
+    }
   ];
 
   chartData: any = {
     labels: [],
-    datasets: [],
+    datasets: []
   };
 
   options: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        position: 'top'
       },
       title: {
         display: true,
         text: 'Thống kê nhân viên',
-      },
+      }
     },
     interaction: {
       intersect: false,
-      mode: 'index',
+      mode: 'index'
     },
     scales: {
       y: {
@@ -60,10 +62,10 @@ export class EmployeeComponent implements OnInit, OnChanges {
           stepSize: 10,
           callback: function (value) {
             return value.toLocaleString('vi-VN', { maximumFractionDigits: 0 });
-          },
-        },
-      },
-    },
+          }
+        }
+      }
+    }
   };
 
   constructor(
@@ -72,12 +74,12 @@ export class EmployeeComponent implements OnInit, OnChanges {
     private messageService: MessageService,
     public hotelService: HotelService,
     private datePipe: DatePipe,
-    public employeeStatistics: EmployeeStatistics
+    public employeeStatistics: EmployeeStatistics,
   ) {
     this.formSearch = this.fb.group({
       dateFrom: [null, ValidatorExtension.required()],
       dateTo: [null, ValidatorExtension.required()],
-      chartType: [null],
+      chartType: [null]
     });
     this.formSearch
       .get('dateTo')
@@ -93,51 +95,29 @@ export class EmployeeComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.refreshData();
   }
-  // Lấy danh sách khách sạn
-  async fetchHotels(): Promise<void> {
-    try {
-      const res = await this.hotelService.getHotelList().firstValueFrom();
-      res.data.map((hotel: any) => ({
-        value: hotel.id,
-        label: hotel.name,
-      }));
-    } catch (err) {
-      console.error(err);
-      this.messageService.notiMessageError('Không thể tải danh sách khách sạn');
-    }
-  }
+// Lấy danh sách khách sạn
+
   async getData() {
     this.formSearch.markAllAsTouched();
     if (this.formSearch.invalid) return;
-
     this.dialogService.openLoading();
-    const params = this.formSearch.getRawValue(); // Lấy giá trị từ form
-    try {
-      const res = await this.employeeStatistics
-        .getEmployeeStatistics(params)
-        .firstValueFrom();
-      const dataStatistical = res.data.statistical;
+    const params = this.formSearch.getRawValue();
+    const res = await this.employeeStatistics.getEmployeesByDate(params).firstValueFrom();
+    const dataStatistical = res.data.statistical;
+    this.chartData = {
+      labels: dataStatistical.map((item: any) => item.statisticDate),
+      datasets: [
+        {
+          label: "Số lượng nhân viên",
+          data: dataStatistical.map((item: any) => item.totalEmployees),
+          borderColor: "rgb(75, 192, 192)",
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          fill: true
+        }
+      ]
+    };
 
-      this.chartData = {
-        labels: dataStatistical.map((item: any) => item.statisticDate),
-        datasets: [
-          {
-            label: 'Số lượng nhân viên',
-            data: dataStatistical.map((item: any) => item.totalEmployees),
-            borderColor: 'rgb(75, 192, 192)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            fill: true,
-          },
-        ],
-      };
-
-      this.messageService.notiMessageSuccess('Tìm kiếm thành công');
-    } catch (err) {
-      console.error(err);
-      this.messageService.notiMessageError('Không tìm thấy dữ liệu phù hợp');
-    } finally {
-      this.dialogService.closeLoading();
-    }
+    this.dialogService.closeLoading();
   }
 
   async refreshData(): Promise<void> {
@@ -145,7 +125,7 @@ export class EmployeeComponent implements OnInit, OnChanges {
       this.loading = true;
       this.dialogService.openLoading();
       this.error = null;
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
     } catch (err) {
       this.error = 'Failed to fetch data. Please try again.';
     } finally {
@@ -154,13 +134,15 @@ export class EmployeeComponent implements OnInit, OnChanges {
     }
   }
 
+
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['chartType']) {
       this.renderChart(this.chartType);
     }
   }
 
-  renderChart(chartType: string = '') {
+  renderChart(chartType: string = "") {
     this.dialogService.openLoading();
     this.chartType = chartType;
     this.dialogService.closeLoading();
@@ -180,9 +162,11 @@ export class EmployeeComponent implements OnInit, OnChanges {
             'Ngày kết thúc không được nhỏ hơn ngày bắt đầu'
           )
         );
-      this.formSearch.get('dateTo')?.updateValueAndValidity();
+      this.formSearch
+        .get('dateTo')?.updateValueAndValidity();
     } else {
-      this.formSearch.get('dateTo')?.setErrors(null);
+      this.formSearch
+        .get('dateTo')?.setErrors(null);
     }
   }
 
@@ -192,13 +176,9 @@ export class EmployeeComponent implements OnInit, OnChanges {
     const params = this.formSearch.getRawValue();
 
     try {
-      const res: any = await this.employeeStatistics
-        .exportExcelStatistical(params)
-        .firstValueFrom();
+      const res: any = await this.employeeStatistics.exportExcelStatistical(params).firstValueFrom();
 
-      const blob = new Blob([res], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      });
+      const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -214,4 +194,6 @@ export class EmployeeComponent implements OnInit, OnChanges {
       this.dialogService.closeLoading();
     }
   }
+
+
 }

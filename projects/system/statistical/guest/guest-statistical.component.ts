@@ -55,7 +55,7 @@ export class GuestStatisticalComponent implements OnInit, OnChanges {
       y: {
         beginAtZero: false,
         min: 1,
-        max: 100,
+        max: 35,
         ticks: {
           stepSize: 10,
           callback: function (value) {
@@ -175,7 +175,7 @@ export class GuestStatisticalComponent implements OnInit, OnChanges {
     }
   }
 
-  
+
 
   async handleExportExcel() {
     // this.getData();
