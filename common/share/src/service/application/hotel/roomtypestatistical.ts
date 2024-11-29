@@ -17,12 +17,7 @@ export class RoomtypeStatistics extends BaseService {
   }
 
 
-  public getTotalRoomsByHotel(params: any = null) {
-    // API để lấy tổng số phòng hiện có (có thể tùy chọn thêm ngày)
-    return this.http.get<ResponseModel<any>>(`${this.baseUrl}/total-roomtype`, {
-      params: this.stringifyParams(params)
-    });
-  }
+
 
   public exportExcelTrans(params: any = null) {
     // API để xuất Excel
@@ -31,4 +26,10 @@ export class RoomtypeStatistics extends BaseService {
       responseType: 'blob'  // Để nhận file Excel dưới dạng blob
     });
   }
+   public getTotalRoomsByHotel(params: any = null) {
+    return this.http.get<ResponseModel<any>>(`${this.baseUrl}/total-roomtype`, {
+      params: this.stringifyParams(params)
+    });
+  }
+
 }

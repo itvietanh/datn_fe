@@ -11,7 +11,7 @@ import { RoomtypeStatistics } from 'common/share/src/service/application/hotel/r
 @Component({
   selector: 'app-roomtype',
   templateUrl: './roomtype.component.html',
-  styleUrls: ['./roomtype.component.scss']
+  styleUrls: ['./roomtype.component.scss'],
 })
 export class RoomTypeComponent implements OnInit, OnChanges {
   public formSearch!: FormGroup;
@@ -22,39 +22,42 @@ export class RoomTypeComponent implements OnInit, OnChanges {
 
   listChartType: any[] = [
     { value: 'bar', label: 'Biều đồ cột' },
-    { value: 'line', label: 'Biều đồ đường kẻ' }
+    // { value: 'line', label: 'Biều đồ đường kẻ' },
   ];
 
   chartData: any = {
     labels: [],
-    datasets: []
+    datasets: [],
   };
 
   options: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top'
+        position: 'top',
       },
       title: {
         display: true,
         text: 'Thống kê loại phòng',
-      }
+      },
     },
     interaction: {
       intersect: false,
-      mode: 'index'
+      mode: 'index',
     },
     scales: {
       y: {
-        beginAtZero: true,
+        beginAtZero: false,
+        min: 1,
+        max: 35,
         ticks: {
+          stepSize: 10,
           callback: function (value) {
-            return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }); // Định dạng tiền tệ
-          }
-        }
-      }
-    }
+            return value.toLocaleString('vi-VN', { maximumFractionDigits: 0 });
+          },
+        },
+      },
+    },
   };
 
   constructor(
@@ -68,7 +71,7 @@ export class RoomTypeComponent implements OnInit, OnChanges {
     this.formSearch = this.fb.group({
       dateFrom: [null, ValidatorExtension.required()],
       dateTo: [null, ValidatorExtension.required()],
-      chartType: [null]
+      chartType: [null],
     });
 
     this.formSearch
@@ -85,40 +88,53 @@ export class RoomTypeComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.refreshData();
   }
-
   async getData() {
     this.formSearch.markAllAsTouched();
     if (this.formSearch.invalid) return;
-
     this.dialogService.openLoading();
     const params = this.formSearch.getRawValue();
+    const res = await this.roomtypestatistical
+      .getDataStatistical(params)
+      .firstValueFrom();
+    const dataStatistical = res.data.statistical;
+    this.chartData = {
+      labels: dataStatistical.map((item: any) => item.Date),
+      datasets: [
+        {
+          label: 'Số lượng phòng',
+          data: dataStatistical.map((item: any) => item.total_room),
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgb(75, 192, 192)',
+          borderWidth: 1,
+        },
+      ],
+    };
 
-    try {
-      const res = await this.roomtypestatistical.getDataStatistical(params).firstValueFrom();
-      if (res && res.data && Array.isArray(res.data)) {
-        const dataStatistical = res.data;
+    this.dialogService.closeLoading();
+  }
+  public getTotalRoomsByHotel() {
+    this.dialogService.openLoading();
+    this.roomtypestatistical.getTotalRoomsByHotel().subscribe(
+      (response) => {
         this.chartData = {
-          labels: dataStatistical.map((item: any) => item.type_name),
+          labels: response.data.map((item: any) => item.room_type_name),
           datasets: [
             {
-              label: 'Số lượng phòng',
-              data: dataStatistical.map((item: any) => item.total_room),
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              label: 'Tổng Nhân Viên',
+              data: response.data.map((item: any) => item.total_rooms),
               borderColor: 'rgb(75, 192, 192)',
-              borderWidth: 1,
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              fill: true,
             },
           ],
         };
-        this.messageService.notiMessageSuccess('Lấy dữ liệu thành công!');
-      } else {
-        throw new Error('Dữ liệu trả về không hợp lệ');
+        this.dialogService.closeLoading();
+      },
+      (error) => {
+        this.error = 'Lỗi khi lấy dữ liệu thống kê.';
+        this.dialogService.closeLoading();
       }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      this.messageService.notiMessageError('Lỗi khi lấy dữ liệu thống kê.');
-    } finally {
-      this.dialogService.closeLoading();
-    }
+    );
   }
 
   async refreshData(): Promise<void> {
@@ -139,7 +155,7 @@ export class RoomTypeComponent implements OnInit, OnChanges {
     }
   }
 
-  renderChart(chartType: string = "") {
+  renderChart(chartType: string = '') {
     this.dialogService.openLoading();
     this.chartType = chartType;
     // Dưới đây là việc thực sự render lại biểu đồ nếu cần
@@ -161,11 +177,9 @@ export class RoomTypeComponent implements OnInit, OnChanges {
             'Ngày kết thúc không được nhỏ hơn ngày bắt đầu'
           )
         );
-      this.formSearch
-        .get('dateTo')?.updateValueAndValidity();
+      this.formSearch.get('dateTo')?.updateValueAndValidity();
     } else {
-      this.formSearch
-        .get('dateTo')?.setErrors(null);
+      this.formSearch.get('dateTo')?.setErrors(null);
     }
   }
 
@@ -174,8 +188,12 @@ export class RoomTypeComponent implements OnInit, OnChanges {
     const params = this.formSearch.getRawValue();
 
     try {
-      const res: any = await this.roomtypestatistical.exportExcelTrans(params).firstValueFrom();
-      const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const res: any = await this.roomtypestatistical
+        .exportExcelTrans(params)
+        .firstValueFrom();
+      const blob = new Blob([res], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -189,32 +207,5 @@ export class RoomTypeComponent implements OnInit, OnChanges {
     } finally {
       this.dialogService.closeLoading();
     }
-  }
-
-  public getRoomtypeStatisticsByDate() {
-    this.dialogService.openLoading();
-    const params = this.formSearch.getRawValue();
-
-    this.roomtypestatistical.getDataStatistical(params).subscribe(
-      (response) => {
-        this.chartData = {
-          labels: response.data.map((item: any) => item.date),
-          datasets: [
-            {
-              label: "Số lượng phòng",
-              data: response.data.map((item: any) => item.total_room),
-              borderColor: "rgb(75, 192, 192)",
-              backgroundColor: "rgba(75, 192, 192, 0.2)",
-              fill: true
-            }
-          ]
-        };
-        this.dialogService.closeLoading();
-      },
-      (error) => {
-        this.error = 'Lỗi khi lấy dữ liệu thống kê loại phòng.';
-        this.dialogService.closeLoading();
-      }
-    );
   }
 }
