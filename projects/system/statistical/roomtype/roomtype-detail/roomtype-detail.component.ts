@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { ExtentionService } from 'common/base/service/extention.service';
 import { MessageService } from 'common/base/service/message.service';
 import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
+import { RoomtypeStatistics } from 'common/share/src/service/application/hotel/roomtypestatistical';
 import { ValidatorExtension } from 'common/validator-extension';
 import { DialogService, DialogMode } from 'share';
 
@@ -27,6 +28,7 @@ export class RoomTypeDetailComponent implements OnInit {
     private dialogService: DialogService,
     public hotelService: HotelService,
     private ex: ExtentionService,
+
   ) {
     this.myForm = this.fb.group({
       name: [null, ValidatorExtension.required()],

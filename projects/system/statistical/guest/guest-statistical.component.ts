@@ -8,12 +8,10 @@ import { DialogService } from 'share';
 import { ChartConfiguration } from 'chart.js';
 import { Gueststatistics } from 'common/share/src/service/application/hotel/gueststatistics';
 
-
-
 @Component({
   selector: 'app-guest-statistical',
   templateUrl: './guest-statistical.component.html',
-  styleUrls: ['./guest-statistical.component.scss']
+  styleUrls: ['./guest-statistical.component.scss'],
 })
 export class GuestStatisticalComponent implements OnInit, OnChanges {
   public formSearch!: FormGroup;
@@ -22,51 +20,50 @@ export class GuestStatisticalComponent implements OnInit, OnChanges {
   loading: boolean = false;
   error: string | null = null;
 
-
   listChartType: any[] = [
     {
       value: 'bar',
-      label: 'Biều đồ cột'
+      label: 'Biều đồ cột',
     },
     {
       value: 'line',
-      label: 'Biều đồ đường kẻ'
-    }
+      label: 'Biều đồ đường kẻ',
+    },
   ];
 
   chartData: any = {
     labels: [],
-    datasets: []
+    datasets: [],
   };
 
   options: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top'
+        position: 'top',
       },
       title: {
         display: true,
         text: 'Thống kê khách hàng',
-      }
+      },
     },
     interaction: {
       intersect: false,
-      mode: 'index'
+      mode: 'index',
     },
     scales: {
       y: {
-        beginAtZero: false, 
-        min: 1, 
-        max: 100, 
+        beginAtZero: false,
+        min: 1,
+        max: 35,
         ticks: {
-          stepSize: 10, 
+          stepSize: 10,
           callback: function (value) {
-            return value.toLocaleString('vi-VN', { maximumFractionDigits: 0 }); 
-          }
-        }
-      }
-    }
+            return value.toLocaleString('vi-VN', { maximumFractionDigits: 0 });
+          },
+        },
+      },
+    },
   };
 
   constructor(
@@ -75,12 +72,12 @@ export class GuestStatisticalComponent implements OnInit, OnChanges {
     private messageService: MessageService,
     public hotelService: HotelService,
     private datePipe: DatePipe,
-    public gueststatistics: Gueststatistics,
+    public gueststatistics: Gueststatistics
   ) {
     this.formSearch = this.fb.group({
       dateFrom: [null, ValidatorExtension.required()],
       dateTo: [null, ValidatorExtension.required()],
-      chartType: [null]
+      chartType: [null],
     });
     this.formSearch
       .get('dateTo')
@@ -106,36 +103,38 @@ export class GuestStatisticalComponent implements OnInit, OnChanges {
     this.refreshData();
   }
 
-  async getData() {
-    this.formSearch.markAllAsTouched();
-    if (this.formSearch.invalid) return;
-    this.dialogService.openLoading();
+  public async getGuestStatisticsByDate() {
     const params = this.formSearch.getRawValue();
-    const res = await this.gueststatistics.getDataStatisticalTrans(params).firstValueFrom();
-    const dataStatistical = res.data.statistical;
+
+    // Thêm ngày bắt đầu và ngày kết thúc vào params
+    const startDate = params.dateFrom; // Ngày bắt đầu
+    const endDate = params.dateTo; // Ngày kết thúc
+
+    this.dialogService.openLoading();
+    const res = await this.gueststatistics
+      .getGuestStatisticsByDate({ dateFrom: startDate, dateTo: endDate })
+      .firstValueFrom();
+    this.dialogService.closeLoading();
 
     this.chartData = {
-      labels: dataStatistical.map((item: any) => item.transitionDate),
+      labels: res.data.map((item: any) => item.date),
       datasets: [
         {
-          label: "Tổng số lượng khách", 
-          data: dataStatistical.map((item: any) => item.totalAmount),
-          borderColor: "rgb(75, 192, 192)",
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
-          fill: true
-        }
-      ]
+          label: 'Số khách',
+          data: res.data.map((item: any) => item.total_guests),
+          borderColor: 'rgb(75, 192, 192)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          fill: true,
+        },
+      ],
     };
-
-    this.dialogService.closeLoading();
   }
-
   async refreshData(): Promise<void> {
     try {
       this.loading = true;
       this.dialogService.openLoading();
       this.error = null;
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     } catch (err) {
       this.error = 'Failed to fetch data. Please try again.';
     } finally {
@@ -150,7 +149,7 @@ export class GuestStatisticalComponent implements OnInit, OnChanges {
     }
   }
 
-  renderChart(chartType: string = "") {
+  renderChart(chartType: string = '') {
     this.dialogService.openLoading();
     this.chartType = chartType;
     this.dialogService.closeLoading();
@@ -170,23 +169,27 @@ export class GuestStatisticalComponent implements OnInit, OnChanges {
             'Ngày kết thúc không được nhỏ hơn ngày bắt đầu'
           )
         );
-      this.formSearch
-        .get('dateTo')?.updateValueAndValidity();
+      this.formSearch.get('dateTo')?.updateValueAndValidity();
     } else {
-      this.formSearch
-        .get('dateTo')?.setErrors(null);
+      this.formSearch.get('dateTo')?.setErrors(null);
     }
   }
 
+
+
   async handleExportExcel() {
-    this.getData();
+    // this.getData();
     this.dialogService.openLoading();
     const params = this.formSearch.getRawValue();
 
     try {
-      const res: any = await this.gueststatistics.exportExcelTrans(params).firstValueFrom();
+      const res: any = await this.gueststatistics
+        .exportExcelTrans(params)
+        .firstValueFrom();
 
-      const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const blob = new Blob([res], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
 
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
