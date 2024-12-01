@@ -44,7 +44,11 @@ export class TabContractService {
       phoneNumber: [null],
       idNumber: [null],
       address: [null],
-      paymentMethod: [null]
+      paymentMethod: [null],
+      gender: [null],
+      natId: [null],
+      addressDetail: [null],
+      passportNumber: [null]
     });
   }
 
@@ -62,10 +66,12 @@ export class TabContractService {
     this.dialogService.openLoading();
     this.myForm.disable();
     const item = this.item;
+    // Khách đại diện
     const dataRuRes = await this.homeHotelService.findOne(item.roomUuid).firstValueFrom();
     const data = dataRuRes.data;
     data.checkInTxt = this.datePipe.transform(data.checkIn, 'dd/MM/yyyy HH:MM');
     data.checkOutTxt = this.datePipe.transform(data.checkOut, 'dd/MM/yyyy HH:MM');
+    // Danh sách khách
     const dataRugRes = await this.homeHotelService.getPaging({ uuid: data.transUuid }).firstValueFrom();
     const dataGuest = dataRugRes.data!.items;
     dataGuest.forEach(item => {
@@ -76,6 +82,10 @@ export class TabContractService {
 
     // Thêm tổng khách đang ở vào list
     data.totalGuests = dataGuest.length;
+    if (data.addressDetail) {
+      const contactDetails = JSON.parse(data.addressDetail);
+      data.addressDetail = contactDetails.addressDetail;
+    }
     this.item = data;
     this.listGuest = dataRugRes.data!.items;
     this.myForm.patchValue(data);

@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { UserProfile } from 'share';
+import { DialogService, UserProfile } from 'share';
 import { API_BASE_URL } from '../../tokens/api-base-url.token';
 import { environment } from '@env/environment';
 import { Location } from '@angular/common';
@@ -13,7 +13,8 @@ export class AutService {
   constructor(
     private http: HttpClient,
     @Inject(API_BASE_URL) private baseUrl: string,
-    private location: Location
+    private location: Location,
+    private dialogService: DialogService
   ) { }
 
   protected stringifyParams(query: any) {

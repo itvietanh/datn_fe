@@ -31,6 +31,7 @@ export class NavbarComponent implements OnInit {
   public curentOffice: any;
   public dropdownOpen: boolean = false;
   public paging?: PagingModel;
+  username: any;
 
   constructor(
     private messageService: MessageService,

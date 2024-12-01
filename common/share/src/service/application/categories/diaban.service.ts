@@ -37,4 +37,10 @@ export class DiaBanService extends BaseService {
       params: this.stringifyParams(params),
     });
   }
+
+  public getComboboxQT<T = PagedListModel>(params: any = null) {
+    return this.http.get<ResponseModel<T>>(`${this.baseUrl}/quoc-tich`, {
+      params: this.stringifyParams(params),
+    });
+  }
 }
