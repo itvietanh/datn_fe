@@ -1,11 +1,9 @@
 <form [formGroup]="myForm">
   <div class="row">
-    <div
-      [ngClass]="{
+    <div [ngClass]="{
         'col-md-8': shareData.step === 0,
         'col-md-4': shareData.step === 2
-      }"
-    >
+      }">
       <div class="row">
         <div class="col-md-12">
           <div class="group-header">
@@ -36,9 +34,7 @@
 
         <div class="col-md-6">
           <nz-form-item>
-            <nz-form-label [nzRequired]="false"
-              >Thời gian nhận phòng</nz-form-label
-            >
+            <nz-form-label [nzRequired]="false">Thời gian nhận phòng</nz-form-label>
             <nz-form-control>
               <input-text formControlName="checkInTxt"></input-text>
             </nz-form-control>
@@ -47,9 +43,7 @@
 
         <div class="col-md-6">
           <nz-form-item>
-            <nz-form-label [nzRequired]="false"
-              >Thời gian trả phòng</nz-form-label
-            >
+            <nz-form-label [nzRequired]="false">Thời gian trả phòng</nz-form-label>
             <nz-form-control>
               <input-text formControlName="checkOutTxt"></input-text>
             </nz-form-control>
@@ -75,6 +69,12 @@
         </div>
 
         <div class="col-md-6">
+          <app-form-control label="Giới tính">
+            <input-select [items]="listGender" formControlName="gender"></input-select>
+          </app-form-control>
+        </div>
+
+        <div class="col-md-6">
           <nz-form-item>
             <nz-form-label [nzRequired]="false">Số điện thoại</nz-form-label>
             <nz-form-control>
@@ -84,18 +84,35 @@
         </div>
 
         <div class="col-md-6">
+          <app-form-control label="Quốc tịch">
+            <input-select-api [apiService]="diaBanService" [actionName]="'getComboboxQT'" formControlName="natId">
+            </input-select-api>
+          </app-form-control>
+        </div>
+
+        <div class="col-md-6" *ngIf="myForm.get('natId')?.value === 196">
           <nz-form-item>
-            <nz-form-label [nzRequired]="false">Số giấy tờ</nz-form-label>
+            <nz-form-label [nzRequired]="false">Số CCCD</nz-form-label>
             <nz-form-control>
               <input-text formControlName="idNumber"></input-text>
             </nz-form-control>
           </nz-form-item>
         </div>
+
+        <div class="col-md-6" *ngIf="myForm.get('natId')?.value !== 196">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="false">Số hộ chiếu</nz-form-label>
+            <nz-form-control>
+              <input-text formControlName="passportNumber"></input-text>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
         <div class="col-md-6">
           <nz-form-item>
             <nz-form-label [nzRequired]="false">Địa chỉ</nz-form-label>
             <nz-form-control>
-              <input-text formControlName="address"></input-text>
+              <input-text formControlName="addressDetail"></input-text>
             </nz-form-control>
           </nz-form-item>
         </div>
@@ -109,20 +126,14 @@
             </div>
 
             <div class="resident-list">
-              <div
-                class="resident-item selected"
-                *ngFor="let item of shareData.listGuest"
-              >
+              <div class="resident-item selected" *ngFor="let item of shareData.listGuest">
                 <div class="name">
-                  <i
-                    class="mr-1"
-                    [ngClass]="{
+                  <i class="mr-1" [ngClass]="{
                       'isax-man1': item.gender === 'Nam',
                       'isax-woman1': item.gender === 'Nữ'
-                    }"
-                  ></i>
+                    }"></i>
                   {{
-                    item.name.toUpperCase() ?? "Đang nhập thông tin khách..."
+                  item.name.toUpperCase() ?? "Đang nhập thông tin khách..."
                   }}
                 </div>
                 <div class="birth">
@@ -136,7 +147,7 @@
       </div>
     </div>
 
-    <div class="col-4" *ngIf="shareData.step === 1">
+    <div class="col-4" *ngIf="shareData.step === 0">
       <div class="customer-list">
         <div class="title-group">
           <div class="title-label">
@@ -145,18 +156,12 @@
         </div>
 
         <div class="resident-list">
-          <div
-            class="resident-item selected"
-            *ngFor="let item of shareData.listGuest"
-          >
+          <div class="resident-item selected" *ngFor="let item of shareData.listGuest">
             <div class="name">
-              <i
-                class="mr-1"
-                [ngClass]="{
+              <i class="mr-1" [ngClass]="{
                   'isax-man1': item.gender === 'Nam',
                   'isax-woman1': item.gender === 'Nữ'
-                }"
-              ></i>
+                }"></i>
               {{ item.name.toUpperCase() ?? "Đang nhập thông tin khách..." }}
             </div>
             <div class="birth">
@@ -167,111 +172,10 @@
         </div>
       </div>
     </div>
-
-    <div class="col-4" *ngIf="shareData.step === 2">
-      <div class="customer-list">
-        <div class="title-group">
-          <div class="title-label">
-            <i class="isax-house-21"></i> Phương thức thanh toán
-          </div>
-        </div>
-
-        <div class="resident-list">
-          <nz-form-item>
-            <nz-form-label [nzRequired]="false"
-              >Phương thức thanh toán</nz-form-label
-            >
-            <nz-form-control>
-              <input-select  [items]="shareData.paymentMethod" formControlName="paymentMethod"
-              (onChange)="handleChangeMethod()">
-
-              </input-select>
-            </nz-form-control>
-          </nz-form-item>
-
-          <div class="qr-code" *ngIf="qrCode">
-            <img
-              src="data:image/png;base64,{{ qrCode }}"
-              style="width: 220px; height: 220px"
-              alt="qrCode"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4" *ngIf="shareData.step === 2">
-      x
-
-
-      <div class="card my-2">
-        <h1>Tóm tắt hoá đơn</h1>
-        <div class="pay-data">
-          <div class="pay-item">
-            <div *ngIf="roomAmount !== undefined">
-              <p>
-                Tổng tiền phòng: <strong>{{ roomAmount | number }} </strong> đ
-              </p>
-            </div>
-            <div *ngIf="roomAmount === undefined">
-              <p>Không có dữ liệu.</p>
-            </div>
-          </div>
-          <div class="pay-item">
-            <p>
-              Thuế (10%) :
-              <strong> {{ vatAmount | moneyFormat }} </strong>đ
-            </p>
-          </div>
-
-          <div class="pay-item">
-            <div>
-              <label for="prepayment">Trả trước:</label>
-              <input
-                id="prepayment"
-                type="text"
-                [value]="formattedPrepayment"
-                (input)="onPrepaymentInput($event)"
-                placeholder="Nhập số tiền"
-              />
-            </div>
-          </div>
-          <div class="pay-item">
-            <p>
-              Cần thanh toán :
-              <strong> {{ remainingAmount | moneyFormat }} </strong>đ
-            </p>
-          </div>
-        </div>
-        <div class="return-money">
-          <div class="name">Còn lại</div>
-          <div class="value">
-            <strong>{{ remainingAmount | number }}</strong
-            >đ
-            <!-- Hiển thị số tiền còn lại -->
-          </div>
-        </div>
-        <div></div>
-      </div>
-      <button nz-button type="button" class="btn btn-primary" (click)="handlePaymentSuccess()">
-        <i nz-icon nzType="save" nzTheme="outline"></i>
-        Thanh toán 
-      </button>
-
-      <button nz-button type="button" class="btn btn-warning ml-2">
-        <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i>
-        Xuất hóa đơn
-      </button>
-    </div>
   </div>
 
   <div class="list-control-footer">
-    <button
-      nz-button
-      type="button"
-      class="btn btn-default"
-      (click)="shareData.closeDialog()"
-    >
+    <button nz-button type="button" class="btn btn-default" (click)="shareData.closeDialog()">
       <i nz-icon nzType="close" nzTheme="outline"></i>
       Đóng
     </button>

@@ -31,7 +31,7 @@
           <span nz-icon nzType="sync" nzTheme="outline" class="mr-2"></span>Đổi phòng
         </button>
 
-        <button type="button" class="btn btn-primary ml-2">
+        <button type="button" class="btn btn-primary ml-2" (click)="handleOutRoom()">
           <span nz-icon nzType="logout" nzTheme="outline" class="mr-2"></span>Trả phòng
         </button>
       </div>
@@ -167,7 +167,7 @@
   </div>
 
   <div class="room-money">
-    <div class="title-group2 mt-2">
+    <div class="title-group2 mt-2" *ngIf="!listService.length">
       <div class="title-label2"><i class="isax-card-slash1"></i> Dịch vụ</div>
       <div class="title-control2">
         <span class="mr-2"></span>
@@ -176,11 +176,14 @@
       </div>
     </div>
 
-    <nz-collapse>
-      <nz-collapse-panel class="has-icon my-2" [ngClass]="" [nzHeader]="'Dịch vụ'">
+    <nz-collapse *ngIf="listService.length">
+      <nz-collapse-panel class="has-icon my-2 collapse-bg" [ngClass]="" [nzHeader]="'Dịch vụ'" [nzActive]="true">
         <i class="isax-card-slash1"></i>
+        <span class="mt-1 float-right cursor-pointer color-primary" nz-icon nzType="plus-circle" nzTheme="fill"
+          (click)="hanldeOpenTabService()"></span>
+
         <div *ngFor="let item of listService">
-          <p>{{item.catName}}: {{item.serviceName}}       - {{item.price | moneyFormat}} VNĐ</p>
+          <p>{{item.catName}}: {{item.serviceName}} - {{item.price | moneyFormat}} VNĐ</p>
         </div>
       </nz-collapse-panel>
     </nz-collapse>
