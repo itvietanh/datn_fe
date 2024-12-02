@@ -7,6 +7,7 @@ import { DatePipe } from '@angular/common';
 import { MessageService } from 'common/base/service/message.service';
 import { FloorService } from 'common/share/src/service/application/hotel/floor.service';
 import { BuildingDetailsComponent } from './building-detail/building-details.component';
+import { TabContractComponent } from '../home-hotel/tab-contract/tab-contract.component';
 
 interface Room {
   number: string;
@@ -91,7 +92,7 @@ export class BuildingComponent implements OnInit {
       async (option) => {
         option.title = mode === 'add-floor' ? 'Thêm tầng mới' : 'Thêm phòng mới';
         option.size = DialogSize.large;
-        option.component = BuildingDetailsComponent;// open component;
+        option.component = TabContractComponent;// open component;
         option.inputs = {
           id: item?.id,
           mode: mode
@@ -103,6 +104,24 @@ export class BuildingComponent implements OnInit {
           if (eventValue) {
             this.getData({ ...this.paging });
           }
+        }
+      }
+    );
+  }
+  handlerOpenTab(item: any = null) {
+    const dialog = this.dialogService.openDialog(
+      async (option) => {
+        option.title = 'Thông tin phòng';
+        option.size = DialogSize.tab;
+        option.component = BuildingDetailsComponent;
+        option.inputs = {
+          item: item
+        };
+      },
+      (eventName, eventValue) => {
+        if (eventName === 'onClose') {
+          this.dialogService.closeDialogById(dialog.id);
+          this.getData({ ...this.paging });
         }
       }
     );

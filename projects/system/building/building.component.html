@@ -1,87 +1,221 @@
 <div class="page-header page-header-light">
-    <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
-        <div class="d-flex">
-            <div class="d-flex">
-                <div class="breadcrumb-title">Quản Lý Tầng & Phòng</div>
-            </div>
-            <div class="d-flex align-items-center">
-                <div class="breadcrumb">
-                    <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog('add-floor')">
-                        Thêm tầng
-                    </button>
-                </div>
-
-                <div class="breadcrumb ml-3">
-                    <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog('add-room')">
-                        Thêm phòng
-                    </button>
-                </div>
-            </div>
+  <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
+    <div class="d-flex">
+      <div class="d-flex">
+        <div class="breadcrumb-title">Quản Lý Tầng & Phòng</div>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="breadcrumb">
+          <button
+            nz-button
+            type="button"
+            class="btn btn-primary"
+            (click)="handlerOpenDialog('add-floor')"
+          >
+            Thêm tầng
+          </button>
         </div>
+
+        <div class="breadcrumb ml-3">
+          <button
+            nz-button
+            type="button"
+            class="btn btn-primary"
+            (click)="handlerOpenDialog('add-room')"
+          >
+            Thêm phòng
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
-<div class="hotel-management">
-    <div class="main-interface">
-        <div class="floors-container">
-            <div *ngFor="let floor of listFloor" class="floor">
-                <h4>Tầng {{floor.floorNumber}}</h4>
-                <div class="rooms-grid">
-                    <div *ngFor="let room of floor.rooms" class="room"
-                        [ngClass]="{'available': room.status === 1, 'occupied': room.status === 2, 'cleaning': room.status === 3}"
-                        (click)="selectRoom(room)">
-                        <div class="room-left">
-                            <h5>Phòng {{room.roomNumber}}</h5>
-                            <p>
-                                <span nz-icon nzType="user" nzTheme="outline"></span>
-                                {{room.numberOfPeople}}
-                            </p>
-                        </div>
+<!-- <div class="hotel-management">
+  <div class="main-interface">
+      <div class="floors-container">
+          <div *ngFor="let floor of listFloor" class="floor">
+              <h4>Tầng {{floor.floorNumber}}</h4>
+              <div class="rooms-grid">
+                  <div *ngFor="let room of floor.rooms" class="room"
+                      [ngClass]="{'available': room.status === 1, 'occupied': room.status === 2, 'cleaning': room.status === 3}"
+                      (click)="selectRoom(room)">
+                      <div class="room-left">
+                          <h5>Phòng {{room.roomNumber}}</h5>
+                          <p>
+                              <span nz-icon nzType="user" nzTheme="outline"></span>
+                              {{room.numberOfPeople}}
+                          </p>
+                      </div>
 
-                        <div class="room-right">
-                            <p>Trạng thái: {{room.status | labelValue: listRoomStatus}}</p>
-                            <p>{{room.type}}</p>
-                            <button *ngIf="room.status === 1" class="book-room-btn">Đặt phòng</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                      <div class="room-right">
+                          <p>Trạng thái: {{room.status | labelValue: listRoomStatus}}</p>
+                          <p>{{room.type}}</p>
+                          <button *ngIf="room.status === 1" class="book-room-btn">Đặt phòng</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div> -->
 
 <div *ngIf="selectedRoom" class="room-details-popup">
-    <div class="popup-content">
-        <h3>Room Details</h3>
-        <p>Room Number: {{selectedRoom.number}}</p>
-        <p>Type: {{selectedRoom.type}}</p>
-        <p>Max Guests: {{selectedRoom.maxGuests}}</p>
-        <p>Status: {{selectedRoom.status}}</p>
-        <p>Amenities: {{selectedRoom.amenities.join(', ')}}</p>
-        <button (click)="closeRoomDetails()">Close</button>
-    </div>
+  <div class="popup-content">
+    <h3>Room Details</h3>
+    <p>Room Number: {{ selectedRoom.number }}</p>
+    <p>Type: {{ selectedRoom.type }}</p>
+    <p>Max Guests: {{ selectedRoom.maxGuests }}</p>
+    <p>Status: {{ selectedRoom.status }}</p>
+    <p>Amenities: {{ selectedRoom.amenities.join(", ") }}</p>
+    <button (click)="closeRoomDetails()">Close</button>
+  </div>
 </div>
 
 <div *ngIf="showBookingPopup" class="booking-popup">
-    <div class="popup-content">
-        <h3>Book Room</h3>
-        <form (ngSubmit)="bookRoom()">
-            <div>
-                <label for="guestName">Guest Name:</label>
-                <input type="text" id="guestName" [(ngModel)]="bookingDetails.guestName" name="guestName" required>
-            </div>
-            <div>
-                <label for="checkInDate">Check-in Date:</label>
-                <input type="date" id="checkInDate" [(ngModel)]="bookingDetails.checkInDate" name="checkInDate"
-                    required>
-            </div>
-            <div>
-                <label for="checkOutDate">Check-out Date:</label>
-                <input type="date" id="checkOutDate" [(ngModel)]="bookingDetails.checkOutDate" name="checkOutDate"
-                    required>
-            </div>
-            <button type="submit">Confirm Booking</button>
-            <button type="button" (click)="closeBookingPopup()">Cancel</button>
-        </form>
-    </div>
+  <div class="popup-content">
+    <h3>Book Room</h3>
+    <form (ngSubmit)="bookRoom()">
+      <div>
+        <label for="guestName">Guest Name:</label>
+        <input
+          type="text"
+          id="guestName"
+          [(ngModel)]="bookingDetails.guestName"
+          name="guestName"
+          required
+        />
+      </div>
+      <div>
+        <label for="checkInDate">Check-in Date:</label>
+        <input
+          type="date"
+          id="checkInDate"
+          [(ngModel)]="bookingDetails.checkInDate"
+          name="checkInDate"
+          required
+        />
+      </div>
+      <div>
+        <label for="checkOutDate">Check-out Date:</label>
+        <input
+          type="date"
+          id="checkOutDate"
+          [(ngModel)]="bookingDetails.checkOutDate"
+          name="checkOutDate"
+          required
+        />
+      </div>
+      <button type="submit">Confirm Booking</button>
+      <button type="button" (click)="closeBookingPopup()">Cancel</button>
+    </form>
+  </div>
 </div>
+<!-- ////////// -->
+<div class="hotel-management" style="background-color: #ccc6">
+  <div class="main-interface">
+    <div class="floors-container">
+      <div *ngFor="let floor of listFloor" class="floor">
+        <div class="title">
+          <div class="name">
+            <i class="isax-house-21"></i>
+            Tầng {{ floor.floorNumber }}
+          </div>
+        </div>
+        <div class="rooms-grid shadow-lg p-4">
+          <div
+            *ngFor="let room of floor.rooms"
+            class="room"
+            [ngClass]="{
+              available: room.status === 1,
+              occupied: room.status === 2,
+              overtime: room.status === 3,
+              cleaning: room.status === 4
+            }"
+            (click)="handlerOpenTab(room)"
+          >
+            <div class="room-left">
+              <h5 class="text-center mt-2" style="font-weight: 700">
+                Phòng {{ room.roomNumber }}
+              </h5>
+              <p class="text-center" style="font-weight: 600">
+                {{ room.typeName }}
+              </p>
+
+              <span
+                class="mt-2 ml-2"
+                *ngIf="room.status === 2 || room.status === 3"
+                >{{ room.status | labelValue : listRoomStatus }}</span
+              >
+
+              <p class="mb-2 float-right">
+                <span nz-icon nzType="user" nzTheme="outline"></span>
+                {{ room.totalGuests }}/{{ room.numberOfPeople }}
+              </p>
+            </div>
+
+            <div class="room-right text-center">
+              <p class="mt-2" *ngIf="room.status === 1">
+                {{ room.status | labelValue : listRoomStatus }}
+              </p>
+
+              <div
+                class="d-flex justify-content-center align-items-center"
+                *ngIf="room.status === 2 || room.status === 3"
+              >
+                <ng-container *ngFor="let guest of room.room_using_guest">
+                  <p
+                    class="mt-2 mb-0"
+                    style="font-weight: 700"
+                    *ngIf="guest.representative"
+                  >
+                    {{ guest.name }}
+                  </p>
+                </ng-container>
+              </div>
+
+              <div
+                class="d-flex mt-4"
+                *ngIf="room.status === 2 || room.status === 3"
+              >
+                <div class="col">
+                  <p class="m-0">{{ room.checkIn | dateFormat }}</p>
+                  <p class="m-0">
+                    {{ room.checkIn | datetimeFormat : "HH:mm" }}
+                  </p>
+                </div>
+
+                <div class="col">
+                  <p class="m-0">{{ room.checkOut | dateFormat }}</p>
+                  <p class="m-0">
+                    {{ room.checkOut | datetimeFormat : "HH:mm" }}
+                  </p>
+                </div>
+              </div>
+              <button
+                *ngIf="room.status === 1"
+                class="book-room-btn"
+                (click)="handlerOpenTab(room)"
+              >
+                Đặt phòng
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <div *ngIf="selectedRoom" class="room-details-popup">
+  <div class="popup-content">
+    <h3>Thông Tin Phòng</h3>
+    <p>Số Phòng: {{selectedRoom.number}}</p>
+    <p>Loại Phòng: {{selectedRoom.type}}</p>
+    <p>Số Khách Tối Đa: {{selectedRoom.maxGuests}}</p>
+    <p>Trạng Thái: {{selectedRoom.status | labelValue: listRoomStatus}}</p>
+    <p>Tiện Nghi: {{selectedRoom.amenities.join(', ')}}</p>
+    <button (click)="closeRoomDetails()">Đóng</button>
+  </div>
+</div> -->
+<!-- //////// -->
+<!-- demo -->
