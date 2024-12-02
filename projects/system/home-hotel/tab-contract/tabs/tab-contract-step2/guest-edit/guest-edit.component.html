@@ -60,54 +60,11 @@
     </div>
   </div>
 
-  <div class="hearder-table mt-1">
-    <nz-tabset>
-      <nz-tab nzTitle="Danh sách khách">
-        <ng-template [ngTemplateOutlet]="tab1"></ng-template>
-      </nz-tab>
-    </nz-tabset>
-    <div class="lst-controls">
-      <div class="breadcrumb">
-        <div class="list-control-main">
-          <button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
-            <i class="isax-scan-barcode1 mr-2"></i>Quét CCCD
-          </button>
-
-          <button nz-button type="button" class="btn btn-primary" (click)="addGuestToList()" *ngIf="mode !== 'view'">
-            <i class="icon-plus-circle2 mr-2"></i>
-            Thêm vào danh sách
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <ng-template #tab1>
-    <app-table [columns]="columns" [items]="listGuest">
-      <ng-template [appCellTemplate]="'action'" let-item>
-        <div class="list-icons list-icons-extended text-center">
-          <a class="list-icons-item action-view">
-            <span nz-tooltip nzTooltipTitle="Xem thông tin khách" class="isax-eye1"
-              (click)="handleListGuest(item, 'view')"></span>
-          </a>
-          <a class="list-icons-item action-delete">
-            <span nz-tooltip nzTooltipTitle="Xóa khách" class="isax-trash1" (click)="handleListGuest(item, 'delete')"></span>
-          </a>
-          <a class="list-icons-item action-edit">
-            <span nz-tooltip nzTooltipTitle="Sửa thông tin khách" class="isax-edit-21"
-              (click)="handleListGuest(item, 'edit')"></span>
-          </a>
-        </div>
-      </ng-template>
-    </app-table>
-    <!-- <app-paging [data]="paging" [changeListPage]="0" (onChange)="getData($event)"></app-paging> -->
-  </ng-template>
-
   <div class="list-control-search">
     <button nz-button type="button" class="btn btn-default" (click)="close()">
       <i nz-icon nzType="close" nzTheme="outline"></i>Hủy
     </button>
-    <!-- lưu và đóng -->
+
     <button nz-button type="button" class="btn btn-primary" (click)="handlerSubmitData()" *ngIf="mode !== 'view'">
       <i class="icon-plus-circle2 mr-2"></i>
       Lưu và đóng

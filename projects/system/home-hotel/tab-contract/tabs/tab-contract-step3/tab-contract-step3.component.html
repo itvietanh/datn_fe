@@ -6,13 +6,13 @@
 <form [formGroup]="myForm">
     <div class="row">
         <div class="col-md-4">
-            <div class="customer-list">
-                <div class="title-group">
+            <div class="bill-summary">
+                <h3>Thông tin phòng</h3>
+                <div class="title-group" *ngIf="listGuest.length">
                     <div class="title-label">
                         <i class="isax-house-21"></i> Danh sách khách
                     </div>
                 </div>
-
                 <div class="resident-list">
                     <div class="resident-item selected" *ngFor="let item of listGuest">
                         <div class="name">
@@ -28,10 +28,26 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="title-group" *ngIf="listService.length">
+                    <div class="title-label">
+                        <i class="isax-house-21"></i> Dịch vụ sử dụng
+                    </div>
+                </div>
+                <div class="resident-list" *ngIf="listService.length">
+                    <div class="resident-item selected d-flex justify-content-between" *ngFor="let item of listService">
+                        <div class="name">
+                            {{item.catName}}: {{item.serviceName}}
+                        </div>
+                        <div class="birth">
+                            {{item.price | moneyFormat}} VNĐ
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
             <div class="customer-list">
                 <div class="title-group">
                     <div class="title-label">
@@ -41,7 +57,7 @@
                 <div class="resident-list mt-1">
 
                     <nz-form-item>
-                        <!-- <nz-form-label [nzRequired]="false">Phương thức thanh toán</nz-form-label> -->
+                        <nz-form-label [nzRequired]="false">Phương thức thanh toán</nz-form-label>
                         <nz-form-control>
                             <input-select [items]="shareData.paymentMethod" formControlName="paymentMethod"
                                 (onChange)="handleChangeMethod()">
@@ -56,9 +72,26 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="col-md-4">
+            <div class="bill-summary">
+                <h3>Phương thức thanh toán</h3>
+                <div class="payment-methods">
+                    <div *ngFor="let method of shareData.paymentMethod" class="payment-method"
+                        [class.selected]="selectedPayment === method.value" (click)="handleChangeMethod(method.value)">
+                        <img src="data:image/png;base64,{{method.icon}}" [alt]="method.label">
+                        <span>{{method.label}}</span>
+                    </div>
+                </div>
+
+                <div class="qr-code text-center" *ngIf="qrCode">
+                    <img src="data:image/png;base64,{{ qrCode }}" style="width: 220px; height: 220px" alt="qrCode" />
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="col-md-4">
             <div class="title-group">
                 <div class="title-label">
                     <i class="isax-house-21"></i> Hóa đơn
@@ -102,6 +135,46 @@
                     </div>
                 </div>
             </div>
+        </div> -->
+
+        <div class="col-md-4">
+            <div class="bill-summary" id="bill-summary">
+                <h3>Hóa đơn</h3>
+                <div class="pay-data">
+                    <div class="bill-items">
+                        <div class="bill-item">
+                            <span>Tổng tiền phòng</span>
+                            <span><strong>{{ roomAmount | moneyFormat }} </strong> VNĐ</span>
+                        </div>
+                        <div class="bill-item">
+                            <span>Thuế (10%)</span>
+                            <span><strong>{{ vatAmount | moneyFormat }} </strong> VNĐ</span>
+                        </div>
+                        <div class="bill-item">
+                            <span>Trả trước</span>
+                            <span><app-form-control>
+                                    <input-number (onChange)="onPrepayment()"
+                                        formControlName="prepayment"></input-number>
+                                </app-form-control>
+                            </span>
+                        </div>
+                        <div class="bill-item">
+                            <span>
+                                Cần thanh toán
+                            </span>
+                            <span>
+                                <strong>{{ remainingAmount | moneyFormat }} </strong> VNĐ
+                            </span>
+                        </div>
+
+                        <div class="bill-total">
+                            <span>Còn lại</span>
+                            <span><strong>{{ remainingAmount | moneyFormat }}</strong> VNĐ</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 </form>
@@ -116,4 +189,9 @@
         <i nz-icon nzType="save" nzTheme="outline"></i>
         Trả phòng
     </button>
+
+    <!-- <button nz-button type="button" class="btn btn-warning" (click)="exportToPDF()">
+        <i nz-icon nzType="save" nzTheme="outline"></i>
+        Xuất hóa đơn
+    </button> -->
 </div>

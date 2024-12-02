@@ -67,12 +67,12 @@ export class TabContractService {
     this.myForm.disable();
     const item = this.item;
     // Khách đại diện
-    const dataRuRes = await this.homeHotelService.findOne(item.roomUuid).firstValueFrom();
+    const dataRuRes = await this.homeHotelService.findOne(item.ruUuid).firstValueFrom();
     const data = dataRuRes.data;
     data.checkInTxt = this.datePipe.transform(data.checkIn, 'dd/MM/yyyy HH:MM');
     data.checkOutTxt = this.datePipe.transform(data.checkOut, 'dd/MM/yyyy HH:MM');
     // Danh sách khách
-    const dataRugRes = await this.homeHotelService.getPaging({ uuid: data.transUuid }).firstValueFrom();
+    const dataRugRes = await this.homeHotelService.getPaging({ uuid: data.ruUuid }).firstValueFrom();
     const dataGuest = dataRugRes.data!.items;
     dataGuest.forEach(item => {
       if (item.birthDate) {

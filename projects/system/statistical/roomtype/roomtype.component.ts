@@ -22,7 +22,7 @@ export class RoomTypeComponent implements OnInit, OnChanges {
 
   listChartType: any[] = [
     { value: 'bar', label: 'Biều đồ cột' },
-    // { value: 'line', label: 'Biều đồ đường kẻ' },
+    { value: 'line', label: 'Biều đồ đường kẻ' },
   ];
 
   chartData: any = {
@@ -68,50 +68,13 @@ export class RoomTypeComponent implements OnInit, OnChanges {
     private datePipe: DatePipe,
     public roomtypestatistical: RoomtypeStatistics
   ) {
-    this.formSearch = this.fb.group({
-      dateFrom: [null, ValidatorExtension.required()],
-      dateTo: [null, ValidatorExtension.required()],
-      chartType: [null],
-    });
 
-    this.formSearch
-      .get('dateTo')
-      ?.addValidators(
-        ValidatorExtension.gteDateValidator(
-          this.formSearch,
-          'dateFrom',
-          'Ngày kết thúc không được nhỏ hơn ngày bắt đầu'
-        )
-      );
   }
 
   ngOnInit(): void {
-    this.refreshData();
+    this.getTotalRoomsByHotel();
   }
-  async getData() {
-    this.formSearch.markAllAsTouched();
-    if (this.formSearch.invalid) return;
-    this.dialogService.openLoading();
-    const params = this.formSearch.getRawValue();
-    const res = await this.roomtypestatistical
-      .getDataStatistical(params)
-      .firstValueFrom();
-    const dataStatistical = res.data.statistical;
-    this.chartData = {
-      labels: dataStatistical.map((item: any) => item.Date),
-      datasets: [
-        {
-          label: 'Số lượng phòng',
-          data: dataStatistical.map((item: any) => item.total_room),
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderColor: 'rgb(75, 192, 192)',
-          borderWidth: 1,
-        },
-      ],
-    };
 
-    this.dialogService.closeLoading();
-  }
   public getTotalRoomsByHotel() {
     this.dialogService.openLoading();
     this.roomtypestatistical.getTotalRoomsByHotel().subscribe(
@@ -120,7 +83,7 @@ export class RoomTypeComponent implements OnInit, OnChanges {
           labels: response.data.map((item: any) => item.room_type_name),
           datasets: [
             {
-              label: 'Tổng Nhân Viên',
+              label: 'Số phòng',
               data: response.data.map((item: any) => item.total_rooms),
               borderColor: 'rgb(75, 192, 192)',
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -129,24 +92,13 @@ export class RoomTypeComponent implements OnInit, OnChanges {
           ],
         };
         this.dialogService.closeLoading();
+        
       },
       (error) => {
         this.error = 'Lỗi khi lấy dữ liệu thống kê.';
         this.dialogService.closeLoading();
       }
     );
-  }
-
-  async refreshData(): Promise<void> {
-    this.loading = true;
-    this.error = null;
-    try {
-      await this.getData();
-    } catch (err) {
-      this.error = 'Không thể tải dữ liệu. Vui lòng thử lại.';
-    } finally {
-      this.loading = false;
-    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -161,26 +113,6 @@ export class RoomTypeComponent implements OnInit, OnChanges {
     // Dưới đây là việc thực sự render lại biểu đồ nếu cần
     // Bạn có thể thêm logic cập nhật biểu đồ cho các loại khác nhau ở đây.
     this.dialogService.closeLoading();
-  }
-
-  handlerSearchDate() {
-    const dateFrom = this.formSearch.get('dateFrom')?.value;
-    const dateTo = this.formSearch.get('dateTo')?.value;
-
-    if (dateTo < dateFrom) {
-      this.formSearch
-        .get('dateTo')
-        ?.setValidators(
-          ValidatorExtension.gteDateValidator(
-            this.formSearch,
-            'dateFrom',
-            'Ngày kết thúc không được nhỏ hơn ngày bắt đầu'
-          )
-        );
-      this.formSearch.get('dateTo')?.updateValueAndValidity();
-    } else {
-      this.formSearch.get('dateTo')?.setErrors(null);
-    }
   }
 
   async handleExportExcel() {

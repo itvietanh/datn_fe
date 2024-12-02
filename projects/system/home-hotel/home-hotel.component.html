@@ -48,7 +48,7 @@
         <div class="rooms-grid shadow-lg p-4">
           <div *ngFor="let room of floor.rooms" class="room"
             [ngClass]="{'available': room.status === 1, 'occupied': room.status === 2, 'overtime': room.status === 3, 'cleaning': room.status === 4 }"
-            (click)="(room.status === 2 ||room.status === 3) ? handlerOpenTab(room) : (room.status !== 2 ? handlerOpenDialog(room) : null)">
+            (click)="(room.status === 2 || room.status === 3) ? handlerOpenTab(room) : (room.status === 1 ? handlerOpenDialog(room) : null)">
             <div class="room-left">
               <h5 class="text-center mt-2" style="font-weight: 700;">Phòng {{room.roomNumber}}</h5>
               <p class="text-center" style="font-weight: 600;">
@@ -65,7 +65,8 @@
             </div>
 
             <div class="room-right text-center">
-              <p class="mt-2" *ngIf="room.status === 1">{{room.status | labelValue: listRoomStatus}}</p>
+              <p class="mt-2" *ngIf="room.status === 1 || room.status === 3 || room.status === 4">{{room.status |
+                labelValue: listRoomStatus}}</p>
 
               <div class="d-flex justify-content-center align-items-center"
                 *ngIf="room.status === 2 || room.status === 3">
@@ -88,6 +89,8 @@
                 </div>
               </div>
               <button *ngIf="room.status === 1" class="book-room-btn">Đặt phòng</button>
+              <button *ngIf="room.status === 4" class="btn btn-success"
+                (click)="handleChangeRoomStatus(room)">Sẵn sàng</button>
             </div>
           </div>
         </div>

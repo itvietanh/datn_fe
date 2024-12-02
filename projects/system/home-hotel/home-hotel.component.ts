@@ -1,3 +1,4 @@
+import { RoomService } from './../../../common/share/src/service/application/hotel/room.service';
 import { OrderRoomService } from 'common/share/src/service/application/hotel/order-room.service';
 import { ShrContractService } from '../../../common/share/src/service/application/accom/shr-contract.service';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
@@ -90,7 +91,8 @@ export class HomeHotelComponent implements OnInit {
     private messageService: MessageService,
     private datePipe: DatePipe,
     public floorService: FloorService,
-    private orderRoomService: OrderRoomService
+    private orderRoomService: OrderRoomService,
+    private roomService: RoomService
   ) {
     this.formSearch = this.fb.group({
       floor_id: [null],
@@ -206,5 +208,18 @@ export class HomeHotelComponent implements OnInit {
     }
 
     this.getData(this.paging);
+  }
+
+  async handleChangeRoomStatus(value: any) {
+    const confirm = await this.messageService.confirm(`Xác nhận phòng số ${value.roomNumber} đã được dọn?`);
+    if (confirm) {
+      this.dialogService.openLoading();
+      const res = await this.roomService.changeRoomStatus({ uuid: value?.roomUuid }).firstValueFrom();
+      this.dialogService.closeLoading();
+      if (res.data) {
+        this.messageService.notiMessageSuccess("Phòng đã sẵn sàng để đặt");
+        this.getData(this.paging);
+      }
+    }
   }
 }

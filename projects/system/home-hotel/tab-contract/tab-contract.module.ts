@@ -10,6 +10,7 @@ import { TabContactStep1Component } from "./tabs/tab-contact-step1/tab-contact-s
 import { TabContactStep2Component } from "./tabs/tab-contract-step2/tab-contract-step2.component";
 import { TabContactStep3Component } from "./tabs/tab-contract-step3/tab-contract-step3.component";
 import { GuestDetailComponent } from "./tabs/tab-contract-step2/guest-detail/guest-detail.component";
+import { GuestEditComponent } from "./tabs/tab-contract-step2/guest-edit/guest-edit.component";
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { GuestDetailComponent } from "./tabs/tab-contract-step2/guest-detail/gue
     TabContactStep1Component,
     TabContactStep2Component,
     TabContactStep3Component,
-    GuestDetailComponent
+    GuestDetailComponent,
+    GuestEditComponent
   ],
 })
 export class TabContractModule { }

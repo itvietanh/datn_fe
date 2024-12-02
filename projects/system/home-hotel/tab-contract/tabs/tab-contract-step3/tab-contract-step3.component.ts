@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { TabContractService } from "../../tab-contract.service";
@@ -10,6 +11,8 @@ import { RoomService } from "common/share/src/service/application/hotel/room.ser
 import { HomeHotelService } from "common/share/src/service/application/hotel/home-hotel.service";
 import { DatePipe } from "@angular/common";
 import { MessageService } from "common/base/service/message.service";
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 @Component({
   selector: 'app-tab-contract-step3',
@@ -23,6 +26,8 @@ export class TabContactStep3Component implements OnInit {
   @Output() onClose = new EventEmitter<any | null>();
 
   listGuest: any[] = [];
+  selectedPayment: any = 2; // Phương thức thanh đoán đã chọn
+  listService: any[] = [];
 
   roomAmount: number = 0; // Tổng tiền phòng
   qrCode: string | null = null; // QR Code thanh toán
@@ -54,38 +59,65 @@ export class TabContactStep3Component implements OnInit {
     this.onDate();
     this.getPaymentMethod();
     this.getData();
+    this.getListService();
   }
 
   async getData() {
     // Danh sách khách
     this.dialogService.openLoading();
-    const dataRugRes = await this.homeHotelService.getPaging({ uuid: this.items.transUuid }).firstValueFrom();
+    const dataRugRes = await this.homeHotelService.getPaging({ uuid: this.items.ruUuid }).firstValueFrom();
     this.dialogService.closeLoading();
     const dataGuest = dataRugRes.data!.items;
     dataGuest.forEach(item => {
       if (item.birthDate) {
-        item.birthDate = this.datePipe.transform(item.birthDate, 'dd/MM/yyyy');
+        item.birthDate = this.transformBirthDate(item.birthDate);
       }
     });
-
     this.listGuest = dataGuest;
+  }
 
+  async getListService() {
+    this.dialogService.openLoading();
+    const res = await this.orderRoomService.getListService({ ruUuid: this.items.ruUuid }).firstValueFrom();
+    const data = res.data?.items;
+    if (data) {
+      data.forEach(item => {
+        this.listService.push(item);
+      });
+    }
+    this.dialogService.closeLoading();
+  }
+
+  transformBirthDate(dateString: string): string {
+    const parts = dateString.split('-');
+    const year = parts[0];
+    const day = parts[1];
+    const month = parts[2];
+
+    return `${day}/${month}/${year}`;
   }
 
   async getPaymentMethod() {
     this.dialogService.openLoading();
     const res = await this.paymentMethod.getCombobox().firstValueFrom();
     this.shareData.paymentMethod = res.data?.items;
-    if (this.shareData.paymentMethod[1]?.qrCode) {
-      this.qrCode = this.shareData.paymentMethod[1]?.qrCode;
-    }
+    this.shareData.paymentMethod.filter((x: any) => {
+      if (x.value === 2) {
+        this.qrCode = x?.qrCode;
+      }
+    });
     this.dialogService.closeLoading();
   }
 
-  handleChangeMethod() {
-    const method = this.myForm.get('paymentMethod')?.value;
-    if (method === 2) {
-      this.qrCode = this.shareData.paymentMethod[1]?.qrCode;
+  handleChangeMethod(value: any) {
+    this.selectedPayment = value;
+    this.myForm.get('paymentMethod')?.setValue(value);
+    if (value === 2) {
+      this.shareData.paymentMethod.filter((x: any) => {
+        if (x.value === 2) {
+          this.qrCode = x?.qrCode;
+        }
+      });
     } else {
       this.qrCode = null;
     }
@@ -93,7 +125,11 @@ export class TabContactStep3Component implements OnInit {
 
   onPrepayment() {
     const prepayment = this.myForm.get('prepayment')?.value;
-    this.remainingAmount = this.remainingAmount - prepayment;
+    if (prepayment) {
+      this.remainingAmount = this.remainingAmount - prepayment;
+    } else {
+      this.remainingAmount = this.roomAmount + this.vatAmount;
+    }
   }
 
   calculateRemainingAmount() {
@@ -129,6 +165,7 @@ export class TabContactStep3Component implements OnInit {
 
     const data = {
       total_amount: this.remainingAmount,
+      payment_method: this.selectedPayment,
       uuid: this.items.roomUuid
     }
 
@@ -138,6 +175,20 @@ export class TabContactStep3Component implements OnInit {
     if (res.data) {
       this.messageService.notiMessageSuccess('Trả phòng thành công');
       this.onClose.emit();
+    }
+  }
+
+  exportToPDF() {
+    const element = document.getElementById('bill-summary');
+    if (element) {
+      html2canvas(element).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgWidth = 190;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+        pdf.save('hoa-don.pdf');
+      });
     }
   }
 

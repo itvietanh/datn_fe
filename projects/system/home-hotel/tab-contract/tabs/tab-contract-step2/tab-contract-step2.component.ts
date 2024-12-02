@@ -161,7 +161,7 @@ export class TabContactStep2Component implements OnInit {
     const dialog = this.dialogService.openDialog(
       async (option) => {
         option.title = 'Trả Phòng';
-        option.size = DialogSize.xxl_large;
+        option.size = DialogSize.tab;
         option.component = TabContactStep3Component;
         option.inputs = {
           items: this.shareData?.item,

@@ -10,6 +10,7 @@ import { ValidatorExtension } from 'common/validator-extension';
 import { DiaBanService } from 'share';
 import { ColumnConfig } from 'common/base/models';
 import { QrCodeDetailsComponent } from 'projects/system/home-hotel/tab-home-hotel/tab-qrcode/qrcode-details.component';
+import { GuestEditComponent } from '../guest-edit/guest-edit.component';
 
 @Component({
   selector: 'app-guest-detail',
@@ -115,6 +116,16 @@ export class GuestDetailComponent implements OnInit {
     }
     this.dialogService.closeLoading();
   }
+
+  addGuestToList() {
+    this.dialogService.openLoading();
+    const formData = this.myForm.getRawValue();
+    this.listGuest = [...this.listGuest, formData];
+    this.myForm.reset();
+    this.dialogService.closeLoading();
+    this.messageService.notiMessageSuccess('Thêm vào danh sách thành công!')
+  }
+
   async handlerSubmitData() {
     this.myForm.markAllAsDirty();
     if (this.myForm.invalid) return;
@@ -191,6 +202,33 @@ export class GuestDetailComponent implements OnInit {
     this.myForm.get('gender')?.setValue(item[4]);
     this.myForm.get('address_detail')?.setValue(item[5]);
 
+  }
+
+  handleListGuest(item: any = null, mode: any = "") {
+    const dialog = this.dialogService.openDialog(
+      async (option) => {
+        option.title = 'Sửa thông tin khách hàng'
+        option.size = DialogSize.small;
+        option.component = GuestEditComponent;
+        option.inputs = {
+          item: item,
+          mode: mode,
+        };
+      },
+      (eventName, eventValue) => {
+        if (eventName === 'onClose') {
+          this.dialogService.closeDialogById(dialog.id);
+          if (eventValue) {
+            const index = this.listGuest.findIndex(guest => guest.uuid === item.uuid);
+            if (index !== -1) {
+              this.listGuest.splice(index, 1);
+            }
+
+            this.listGuest = [...this.listGuest, eventValue];
+          }
+        }
+      }
+    );
   }
 
   close(data?: any) {
