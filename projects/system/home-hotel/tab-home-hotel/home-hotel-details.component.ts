@@ -284,6 +284,10 @@ export class HomeHotelDetailsComponent implements OnInit {
       this.handleAddGuest();
     }
 
+    if (this.listGuest.length) {
+      this.clearValidator();
+    }
+
     const body = this.myForm.getRawValue();
     if (body.guests.natId !== 196) {
       body.guests.identityNo = null;
@@ -338,6 +342,19 @@ export class HomeHotelDetailsComponent implements OnInit {
       this.messageService.notiMessageError("Lỗi hệ thống, vui lòng thực hiện lại");
     }
     this.close(true);
+  }
+
+  clearValidator() {
+    this.myForm.get('guests.identityNo')?.clearValidators();
+    this.myForm.get('guests.fullName')?.clearValidators();
+    this.myForm.get('guests.gender')?.clearValidators();
+    this.myForm.get('guests.phoneNumber')?.clearValidators();
+    this.myForm.get('guests.dateOfBirth')?.clearValidators();
+    this.myForm.get('guests.addressDetail')?.clearValidators();
+    this.myForm.get('guests.provinceId')?.clearValidators();
+    this.myForm.get('guests.wardId')?.clearValidators();
+    this.myForm.get('guests.natId')?.clearValidators();
+    this.myForm.get('guests.passportNumber')?.clearValidators();
   }
 
   close(data?: any) {

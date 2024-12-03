@@ -56,7 +56,7 @@ export class GuestDetailComponent implements OnInit {
       header: 'Số điện thoại',
     },
     {
-      key: 'address',
+      key: 'address_detail',
       header: 'Địa chỉ',
     },
     {
@@ -64,7 +64,7 @@ export class GuestDetailComponent implements OnInit {
       header: 'Số giấy tờ',
     },
     {
-      key: 'nat_id',
+      key: 'quocTichTxt',
       header: 'Quốc tịch',
     },
     {
@@ -86,7 +86,7 @@ export class GuestDetailComponent implements OnInit {
     private datePipe: DatePipe,
   ) {
     this.myForm = this.fb.group({
-      uuid: [ex.newGuid()],
+      uuid: [null],
       name: [null, ValidatorExtension.required()],
       phone_number: [null, ValidatorExtension.phoneNumberVN()],
       id_number: [null, ValidatorExtension.required()],
@@ -97,7 +97,7 @@ export class GuestDetailComponent implements OnInit {
       nat_id: [196, ValidatorExtension.required()],
       birth_date: [null, ValidatorExtension.required()],
       gender: [null, ValidatorExtension.required()],
-      address_detail: [null, ValidatorExtension.required()]
+      address_detail: [null, ValidatorExtension.required()],
     });
   }
 
@@ -114,23 +114,51 @@ export class GuestDetailComponent implements OnInit {
     if (rs.data) {
       this.myForm.patchValue(rs.data);
     }
+    const dataTemp = JSON.parse(rs.data.contact_details);
+    if (dataTemp.addressDetail) {
+      this.myForm.get('address_detail')?.setValue(dataTemp.addressDetail);
+    }
+
     this.dialogService.closeLoading();
   }
 
-  addGuestToList() {
+  async addGuestToList() {
     this.dialogService.openLoading();
     const formData = this.myForm.getRawValue();
+    formData.uuid = this.ex.newGuid();
+    if (formData.nat_id) {
+      const params = {
+        page: 1,
+        size: 1,
+        values: formData.nat_id,
+        countable: false
+      }
+      const res = await this.diaBanService.getComboboxQT(params).firstValueFrom();
+      res.data?.items.forEach(item => {
+        item.value === formData.nat_id ? formData.quocTichTxt = item.label : '';
+      });
+    }
     this.listGuest = [...this.listGuest, formData];
     this.myForm.reset();
+    this.myForm.get('nat_id')?.setValue(196);
     this.dialogService.closeLoading();
     this.messageService.notiMessageSuccess('Thêm vào danh sách thành công!')
   }
 
   async handlerSubmitData() {
-    this.myForm.markAllAsDirty();
-    if (this.myForm.invalid) return;
+    if (!this.listGuest.length) {
+      if (this.myForm.get('nat_id')?.value === 196) {
+        this.myForm.get('passport_number')?.clearValidators();
+      }
+      this.myForm.markAllAsDirty();
+      if (this.myForm.invalid) return;
+    } else {
+      this.clearValidator();
+    }
+
     const formData = this.myForm.getRawValue();
     this.listGuest = formData;
+
     this.dialogService.openLoading();
     if (this.uuid) {
       //Update
@@ -229,6 +257,30 @@ export class GuestDetailComponent implements OnInit {
         }
       }
     );
+  }
+
+  handleDeleteGuest(item: any) {
+    const index = this.listGuest.findIndex(guest => guest.uuid === item.uuid);
+    debugger;
+    if (index !== -1) {
+      this.listGuest.splice(index, 1);
+    }
+
+    this.listGuest = [...this.listGuest];
+  }
+
+  clearValidator() {
+    this.myForm.get('name')?.clearValidators();
+    this.myForm.get('phone_number')?.clearValidators();
+    this.myForm.get('id_number')?.clearValidators();
+    this.myForm.get('passport_number')?.clearValidators();
+    this.myForm.get('province_id')?.clearValidators();
+    this.myForm.get('district_id')?.clearValidators();
+    this.myForm.get('ward_id')?.clearValidators();
+    this.myForm.get('nat_id')?.clearValidators();
+    this.myForm.get('birth_date')?.clearValidators();
+    this.myForm.get('gender')?.clearValidators();
+    this.myForm.get('address_detail')?.clearValidators();
   }
 
   close(data?: any) {

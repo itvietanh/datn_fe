@@ -116,9 +116,10 @@ export class TabContactStep2Component implements OnInit {
       async (option) => {
         option.title = mode === 'view' ? 'Xem Chi Tiết Khách Hàng' : 'Thêm Mới Khách Hàng';
         if (mode === 'edit') option.title = 'Cập Nhật Khách Hàng';
-        option.size = DialogSize.xlarge;
+        option.size = DialogSize.xxl_large;
         option.component = GuestDetailComponent;
         option.inputs = {
+          mode: mode,
           uuid: item?.guestUuid,
           item: this.shareData?.item
         };

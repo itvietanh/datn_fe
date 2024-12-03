@@ -60,7 +60,7 @@
     </div>
   </div>
 
-  <div class="hearder-table mt-1">
+  <div class="hearder-table mt-1" *ngIf="mode !== 'edit'">
     <nz-tabset>
       <nz-tab nzTitle="Danh sách khách">
         <ng-template [ngTemplateOutlet]="tab1"></ng-template>
@@ -91,7 +91,7 @@
               (click)="handleListGuest(item, 'view')"></span>
           </a>
           <a class="list-icons-item action-delete">
-            <span nz-tooltip nzTooltipTitle="Xóa khách" class="isax-trash1" (click)="handleListGuest(item, 'delete')"></span>
+            <span nz-tooltip nzTooltipTitle="Xóa khách" class="isax-trash1" (click)="handleDeleteGuest(item)"></span>
           </a>
           <a class="list-icons-item action-edit">
             <span nz-tooltip nzTooltipTitle="Sửa thông tin khách" class="isax-edit-21"
