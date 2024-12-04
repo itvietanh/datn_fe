@@ -58,12 +58,13 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="false">Menu Cha</nz-form-label>
         <nz-form-control [nzErrorTip]="controlErrorTpl">
-          <input-select
-            [items]="listMenu"
+          <input-select-api
+            [apiService]="menuService"
+            [actionName]="'getCombobox'"
             placeholder="Chọn menu cha"
             formControlName="parentUid"
           >
-          </input-select>
+          </input-select-api>
         </nz-form-control>
       </nz-form-item>
     </div>

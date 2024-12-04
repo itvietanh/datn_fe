@@ -34,4 +34,10 @@ export class MenuService extends BaseService {
     });
   }
 
+  public override getCombobox<T = PagedListModel>(params: any = null) {
+    return this.http.get<ResponseModel<T>>(`${this.baseUrl}/get-list-parent`, {
+      params: this.stringifyParams(params),
+    });
+  }
+
 }

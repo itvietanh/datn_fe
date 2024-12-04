@@ -145,7 +145,7 @@
         <div class="ux-pc mt-1">
           <app-table [showIndex]="false" [showPagination]="false" [columns]="columns" [items]="items" [loading]="false">
             <ng-template [appCellTemplate]="'roomTypeName'" let-item>
-              {{ item.roomTypeName }}
+              {{ item.typeName }}
             </ng-template>
             <ng-template [appCellTemplate]="'numberOfPeople'" let-item>
               <div class="row">
@@ -155,7 +155,7 @@
                     [nzStep]="1"></nz-input-number>
                 </div>
                 <div class="col-md-6 m-auto" nz-tooltip nzTooltipTitle="Trống/Tổng">
-                  0/{{ item.numberOfPeople }}
+                  {{ item.phongtrong }}/{{ item.dango }}
                 </div>
               </div>
             </ng-template>
@@ -167,8 +167,8 @@
                   <ng-template #priceDetail>
                     <div style="white-space: pre-line">
                       <p>{{ item.pricePerHour }}</p>
-                      <p>{{ item.pricerPerDay }}</p>
-                      <p>{{ item.priceOverTime }}</p>
+                      <p>{{ item.pricePerDay }}</p>
+                      <p>{{ item.priceOvertime }}</p>
                     </div>
                   </ng-template>
                   <span nz-icon nzType="info-circle" nzTheme="outline"></span>

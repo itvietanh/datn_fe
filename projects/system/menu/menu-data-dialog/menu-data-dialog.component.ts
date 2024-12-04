@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MessageService } from 'common/base/service/message.service';
-import { MenuService } from 'ng-zorro-antd/menu';
+import { MenuService } from 'common/share/src/service/application/hotel/menu.service';
 import { DialogMode, DialogService, PrivilegeService, DialogSize } from 'share';
 
 @Component({
@@ -10,7 +10,6 @@ import { DialogMode, DialogService, PrivilegeService, DialogSize } from 'share';
   styleUrls: ['./menu-data-dialog.component.scss']
 })
 export class MenuDataDialogComponent implements OnInit {
-
   @Input() id: any;
   @Input() data: any;
   @Input() mode: string = DialogMode.view;
