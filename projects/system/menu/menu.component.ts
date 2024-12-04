@@ -17,7 +17,7 @@ export class MenuComponent implements OnInit {
   public listOfData: any[] = [];
   public dataRaw: any[] = [];
   public isLoading?: boolean;
-
+  public paging: any;
   public showTree = false;
 
   public tableTreeConfig: TableTreeConfigModel = new TableTreeConfigModel({
@@ -130,7 +130,6 @@ export class MenuComponent implements OnInit {
         option.component = MenuDataDialogComponent;
         option.inputs = {
           id: item.id,
-          data: item,
           mode: DialogMode.edit
         };
       },
@@ -144,14 +143,17 @@ export class MenuComponent implements OnInit {
       }
     );
   }
-
-  async deleteData(item: any) {
-    const confirm = await this.messageService.confirm('Bạn có chắc chắn muốn xóa dữ liệu này?');
-    if (!confirm) return;
-    this.dialogService.openLoading();
-    // await this.menuService.delete(item.id).firstValueFrom();
-    this.messageService.showNotification('Đã xóa dữ liệu thành công');
-    this.getData();
-    this.dialogService.closeLoading();
+  async handlerDelete(item: any) {
+    const confirm = await this.messageService.confirm(
+      'Bạn có muốn xóa dữ liệu này không?'
+    );
+    if (confirm) {
+      const rs = await this.menuService.delete(item?.id).firstValueFrom();
+      if (rs.data) {
+        this.messageService.notiMessageSuccess('Xóa dữ liệu thành công');
+        return this.getData();
+      }
+    }
   }
+
 }
