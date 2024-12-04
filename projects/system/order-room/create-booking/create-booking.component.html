@@ -144,7 +144,7 @@
 
         <div class="ux-pc mt-1">
           <app-table [showIndex]="false" [showPagination]="false" [columns]="columns" [items]="items" [loading]="false">
-            <ng-template [appCellTemplate]="'roomTypeName'" let-item>
+            <ng-template [appCellTemplate]="'typeName'" let-item>
               {{ item.typeName }}
             </ng-template>
             <ng-template [appCellTemplate]="'numberOfPeople'" let-item>

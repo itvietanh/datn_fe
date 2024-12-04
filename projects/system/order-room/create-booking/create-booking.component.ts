@@ -36,7 +36,7 @@ export class CreateBookingComponent implements OnInit {
   isCustomerGroup = false;
   columns: ColumnConfig[] = [
     {
-      key: 'roomTypeName',
+      key: 'typeName',
       header: 'Loại phòng',
       // pipe: 'template',
       tdClass: 'text-center',
@@ -465,11 +465,11 @@ export class CreateBookingComponent implements OnInit {
           }
 
           if (item.pricerPerDay) {
-            item.pricerPerDay = `Giá theo ngày: ${item.pricerPerDay}/ngày`;
+            item.pricePerHour = `Giá theo ngày: ${item.pricePerHour}/ngày`;
           }
 
           if (item.priceOverTime) {
-            item.priceOverTime = `Giá quá giờ: ${item.priceOverTime}/giờ`;
+            item.priceOvertime = `Giá quá giờ: ${item.priceOvertime}/giờ`;
           }
         }
       });

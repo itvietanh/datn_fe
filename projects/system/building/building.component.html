@@ -72,46 +72,7 @@
   </div>
 </div>
 
-<div *ngIf="showBookingPopup" class="booking-popup">
-  <div class="popup-content">
-    <h3>Book Room</h3>
-    <form (ngSubmit)="bookRoom()">
-      <div>
-        <label for="guestName">Guest Name:</label>
-        <input
-          type="text"
-          id="guestName"
-          [(ngModel)]="bookingDetails.guestName"
-          name="guestName"
-          required
-        />
-      </div>
-      <div>
-        <label for="checkInDate">Check-in Date:</label>
-        <input
-          type="date"
-          id="checkInDate"
-          [(ngModel)]="bookingDetails.checkInDate"
-          name="checkInDate"
-          required
-        />
-      </div>
-      <div>
-        <label for="checkOutDate">Check-out Date:</label>
-        <input
-          type="date"
-          id="checkOutDate"
-          [(ngModel)]="bookingDetails.checkOutDate"
-          name="checkOutDate"
-          required
-        />
-      </div>
-      <button type="submit">Confirm Booking</button>
-      <button type="button" (click)="closeBookingPopup()">Cancel</button>
-    </form>
-  </div>
-</div>
-<!-- ////////// -->
+
 <div class="hotel-management" style="background-color: #ccc6">
   <div class="main-interface">
     <div class="floors-container">
@@ -132,7 +93,7 @@
               overtime: room.status === 3,
               cleaning: room.status === 4
             }"
-            (click)="handlerOpenTab(room)"
+            
           >
             <div class="room-left">
               <h5 class="text-center mt-2" style="font-weight: 700">
@@ -166,7 +127,7 @@
                 <ng-container *ngFor="let guest of room.room_using_guest">
                   <p
                     class="mt-2 mb-0"
-                    style="font-weight: 700"
+                    style="font-weight: 700; font-size: 14px"
                     *ngIf="guest.representative"
                   >
                     {{ guest.name }}
@@ -192,13 +153,13 @@
                   </p>
                 </div>
               </div>
-              <button
+              <!-- <button
                 *ngIf="room.status === 1"
                 class="book-room-btn"
                 (click)="handlerOpenTab(room)"
               >
                 Đặt phòng
-              </button>
+              </button> -->
             </div>
           </div>
         </div>
@@ -206,16 +167,3 @@
     </div>
   </div>
 </div>
-<!-- <div *ngIf="selectedRoom" class="room-details-popup">
-  <div class="popup-content">
-    <h3>Thông Tin Phòng</h3>
-    <p>Số Phòng: {{selectedRoom.number}}</p>
-    <p>Loại Phòng: {{selectedRoom.type}}</p>
-    <p>Số Khách Tối Đa: {{selectedRoom.maxGuests}}</p>
-    <p>Trạng Thái: {{selectedRoom.status | labelValue: listRoomStatus}}</p>
-    <p>Tiện Nghi: {{selectedRoom.amenities.join(', ')}}</p>
-    <button (click)="closeRoomDetails()">Đóng</button>
-  </div>
-</div> -->
-<!-- //////// -->
-<!-- demo -->
