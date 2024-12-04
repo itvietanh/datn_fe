@@ -10,15 +10,6 @@
           <div class="list-control-main">
             <div class="contract-time">
               <nz-spin [nzSpinning]="false">
-                <!-- <app-form-control>
-                  <input-date-range-picker
-                    [placeholder]="['Từ ngày', 'Tới ngày']"
-                    formControlName="dateRange"
-                    [disabledDate]="disabledDate"
-                    [disabledTime]="disabledTime"
-                  ></input-date-range-picker>
-                </app-form-control> -->
-
                 <div class="ux-mobile">
                   <div class="row">
                     <div class="col-12">
@@ -71,7 +62,8 @@
 
               <div class="contract-type">
                 <!-- <input-radio formControlName="contractType"></input-radio> -->
-                <input-radio formControlName="contractType" [items]="types"></input-radio>
+                <input-radio formControlName="contractType" [items]="types"
+                  (onChange)="handleContractType($event)"></input-radio>
               </div>
             </div>
           </div>
@@ -161,14 +153,16 @@
             </ng-template>
             <ng-template [appCellTemplate]="'priceId'" let-item>
               <div class="price-type">
-                <input-select [allowClear]="false" [items]="pricesDict"
-                  (onChange)="onInputSelectChange(item)"></input-select>
+                <app-form-control>
+                  <input-select [allowClear]="false" [items]="pricesDict" formControlName="pricesDict"
+                    (onChange)="onInputSelectChange(item)"></input-select>
+                </app-form-control>
                 <div class="price-type-info" nz-tooltip [nzTooltipTitle]="priceDetail">
                   <ng-template #priceDetail>
                     <div style="white-space: pre-line">
-                      <p>{{ item.pricePerHour }}</p>
-                      <p>{{ item.pricePerDay }}</p>
-                      <p>{{ item.priceOvertime }}</p>
+                      <p>{{ item.pricePerHourTxt }}</p>
+                      <p>{{ item.pricePerDayTxt }}</p>
+                      <p>{{ item.priceOvertimeTxt }}</p>
                     </div>
                   </ng-template>
                   <span nz-icon nzType="info-circle" nzTheme="outline"></span>
@@ -185,61 +179,6 @@
               {{ item.final_price | moneyFormat }}
             </ng-template>
           </app-table>
-        </div>
-
-        <div class="ux-mobile mt-1">
-          <div *ngFor="let item of items" class="card-container">
-            <nz-card [nzLoading]="loading" class="custom-card">
-              <div class="title-card">
-                {{ item.name }}
-              </div>
-              <hr />
-
-              <div class="row mb-2">
-                <div class="col-md-6">
-                  <strong>Số lượng phòng:</strong>
-                  <br />
-                  <nz-input-number [ngModelOptions]="{ standalone: true }" [(ngModel)]="item.quantity"
-                    (ngModelChange)="onQuantityChange()" [nzMin]="0" [nzMax]="item.available"
-                    [nzStep]="1"></nz-input-number>
-                </div>
-              </div>
-
-              <div class="col-md-6 mb-title-room">
-                <div nz-tooltip nzTooltipTitle="Trống/Tổng">
-                  {{ item.available - item.quantity }} Phòng trống / Tổng số :
-                  {{ item.total }}
-                </div>
-              </div>
-
-              <div class="price-type mb-2">
-                <strong>Loại giá:</strong>
-                <input-select [allowClear]="false" [items]="pricesDict"
-                  (onChange)="onInputSelectChange(item)"></input-select>
-                <div class="price-type-info" nz-tooltip [nzTooltipTitle]="priceDetail">
-                  <ng-template #priceDetail>
-                    <div style="white-space: pre-line">
-                      {{ item.description }}
-                    </div>
-                  </ng-template>
-                  <span class="info-circle" nz-icon nzType="info-circle" nzTheme="outline"></span>
-                </div>
-              </div>
-              <div class="mb-2">
-                <nz-spin [nzSpinning]="item.loading">
-                  <strong>Giá phòng dự kiến: </strong>
-                  <input-number [(ngModel)]="item.totalAmount" [ngModelOptions]="{ standalone: true }" [min]="0"
-                    [integerLimit]="10"></input-number>
-                  <!-- <input-number [(ngModel)]="item.totalAmount" [ngModelOptions]="{ standalone: true }"
-                    (ngModelChange)="updateInvoice()" [min]="0" [integerLimit]="10"></input-number> -->
-                </nz-spin>
-              </div>
-              <div>
-                <strong>Tổng cộng:</strong>
-                {{ item.totalAmount * item.quantity | moneyFormat }}
-              </div>
-            </nz-card>
-          </div>
         </div>
       </div>
 
@@ -290,21 +229,16 @@
     </div>
 
     <div class="mt-2">
-      <ng-container>
+      <ng-container *ngIf="checkType === 2">
         <div class="title-group">
           <div class="title-label">
-            <i class="isax-crown-11"></i>Thông tin lưu trú
+            <i class="isax-user-tick1"></i> Thông tin đoàn khách
           </div>
         </div>
         <div class="row mt-2">
           <div class="col-md-3">
             <app-form-control label="Tên đoàn">
               <input-text formControlName="groupName" [toUper]="true"></input-text>
-            </app-form-control>
-          </div>
-          <div class="col-md-3">
-            <app-form-control label="Lý do lưu trú">
-              <input-select-api formControlName="reasonStayId"></input-select-api>
             </app-form-control>
           </div>
           <div class="col-md-6">
@@ -315,25 +249,27 @@
         </div>
       </ng-container>
 
-      <div class="title-group">
-        <div class="title-label">
-          <i class="isax-user-tick1"></i> Thông tin người đại diện
+      <ng-container *ngIf="checkType === 1">
+        <div class="title-group">
+          <div class="title-label">
+            <i class="isax-user-tick1"></i> Thông tin người đại diện
+          </div>
+          <div class="title-control"></div>
         </div>
-        <div class="title-control"></div>
-      </div>
 
-      <div class="row mt-2 mb-3">
-        <div class="col-md-3">
-          <app-form-control label="Họ tên">
-            <input-text formControlName="representativeName" [toUper]="true"></input-text>
-          </app-form-control>
+        <div class="row mt-2 mb-3">
+          <div class="col-md-3">
+            <app-form-control label="Họ tên">
+              <input-text formControlName="representativeName" [toUper]="true"></input-text>
+            </app-form-control>
+          </div>
+          <div class="col-md-3">
+            <app-form-control label="Số điện thoại">
+              <input-text formControlName="phoneNumber"></input-text>
+            </app-form-control>
+          </div>
         </div>
-        <div class="col-md-3">
-          <app-form-control label="Số điện thoại">
-            <input-text formControlName="phoneNumber"></input-text>
-          </app-form-control>
-        </div>
-      </div>
+      </ng-container>
 
       <div class="customer-data">
         <div class="customer-detail">
@@ -346,12 +282,14 @@
                 *ngIf="residentIndex === -1">
                 <i class="isax-rotate-left1 mr-2"></i>Làm mới
               </button>
-              <button (click)="cancelResident()" nz-button type="button" class="btn btn-default mr-2"
-                *ngIf="residentIndex !== -1">
+              <button (click)="resetForm()" nz-button type="button" class="btn btn-default mr-2"
+                *ngIf="residentIndex === -1">
+                <i class="isax-rotate-left1 mr-2"></i>Thêm khách
+              </button>
+              <button (click)="cancelResident()" nz-button type="button" class="btn btn-default mr-2">
                 <i class="isax-rotate-left1 mr-2"></i>Hủy
               </button>
-              <button (click)="updateResident()" nz-button type="button" class="btn btn-primary mr-2"
-                *ngIf="residentIndex !== -1">
+              <button (click)="updateResident()" nz-button type="button" class="btn btn-primary mr-2">
                 <i class="isax-import-11 mr-2"></i>Cập nhật
               </button>
               <!-- <app-customer-scanner-button #btnScaner (success)="data = $event"
@@ -418,12 +356,12 @@
                 <i class="isax-clipboard-import mr-2"></i>Thêm danh sách khách
               </button>
 
-              <button *ngIf="residentIndex !== -1" type="button" class="btn btn-default" (click)="deleteResident()">
+              <button type="button" class="btn btn-default" (click)="deleteResident()">
                 <i class="isax-trash1 mr-2"></i>Xóa khách
               </button>
-              <button *ngIf="residentIndex === -1" type="button" class="btn btn-primary" (click)="addResident()">
+              <!-- <button *ngIf="residentIndex === -1" type="button" class="btn btn-primary" (click)="addResident()">
                 <i class="isax-add-circle1 mr-2"></i>Thêm khách
-              </button>
+              </button> -->
             </div>
           </div>
 
