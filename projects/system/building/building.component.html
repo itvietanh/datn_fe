@@ -4,6 +4,28 @@
       <div class="d-flex">
         <div class="breadcrumb-title">Quản Lý Tầng & Phòng</div>
       </div>
+      <form>
+        <div class="d-flex hd-room">
+          <div class="breadcrumb-title">
+
+         
+            <ng-container>
+              <div class="mo-ta">
+                <div
+                  *ngFor="let item of statusOptions"
+                  (click)="handleFilter(item.value)"
+                  class="status"
+                  [attr.class]="item.class"
+                  [ngClass]="{ selected: item.value === selectedStatus }"
+                >
+                  {{ item.label }}
+                  {{ item.count ? "(" + item.count + ")" : "" }}
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </form>
       <div class="d-flex align-items-center">
         <div class="breadcrumb">
           <button
@@ -72,7 +94,6 @@
   </div>
 </div>
 
-
 <div class="hotel-management" style="background-color: #ccc6">
   <div class="main-interface">
     <div class="floors-container">
@@ -93,7 +114,6 @@
               overtime: room.status === 3,
               cleaning: room.status === 4
             }"
-            
           >
             <div class="room-left">
               <h5 class="text-center mt-2" style="font-weight: 700">

@@ -31,11 +31,11 @@ export class BuildingComponent implements OnInit {
   public myForm: FormGroup;
   public paging: any;
   public listFloor: any;
-
+  selectedStatus: number | null = null;
   public listRoomStatus: any[] = [
     {
       value: 1,
-      label: "Đang trống"
+      label: "Phòng trống"
     },
     {
       value: 2,
@@ -43,9 +43,46 @@ export class BuildingComponent implements OnInit {
     },
     {
       value: 3,
-      label: "Đang dọn"
+      label: "Quá giờ"
     },
-  ]
+    {
+      value: 4,
+      label: "Đang dọn"
+    }
+  ];
+
+  statusOptions = [
+    {
+      class: '',
+      value: null,
+      label: 'Tất cả',
+      count: null,
+    },
+    {
+      class: 'available ml-3',
+      value: 1,
+      label: 'P. trống',
+      count: 0,
+    },
+    {
+      class: 'occupied ml-3',
+      value: 2,
+      label: 'Đang ở',
+      count: 0,
+    },
+    {
+      class: 'overtime ml-3',
+      value: 3,
+      label: 'Quá giờ',
+      count: 0,
+    },
+    {
+      class: 'cleaning ml-3',
+      value: 4,
+      label: 'Đang dọn',
+      count: 0,
+    }
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -78,14 +115,21 @@ export class BuildingComponent implements OnInit {
   }
 
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
-    const searchParams = {
-      ...paging
+    const searchParams: any = {
+      ...paging,
     };
+
+    // Thêm điều kiện lọc trạng thái
+    if (this.selectedStatus !== null) {
+      searchParams.status = this.selectedStatus;
+    }
+
     this.dialogService.openLoading();
     const res = await this.floorService.getPaging(searchParams).firstValueFrom();
     this.listFloor = res.data?.items;
     this.dialogService.closeLoading();
   }
+
 
   handlerOpenDialog(mode: any = '', item: any = null) {
     const dialog = this.dialogService.openDialog(
@@ -126,7 +170,15 @@ export class BuildingComponent implements OnInit {
       }
     );
   }
+  handleFilter(selectedValue: number | null) {
+    if (this.selectedStatus === selectedValue) {
+      this.selectedStatus = null;
+    } else {
+      this.selectedStatus = selectedValue;
+    }
 
+    this.getData(this.paging);
+  }
   initializeHotel() {
     // Mock data for demonstration
     for (let i = 1; i <= 5; i++) {
