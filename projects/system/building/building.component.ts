@@ -8,6 +8,7 @@ import { MessageService } from 'common/base/service/message.service';
 import { FloorService } from 'common/share/src/service/application/hotel/floor.service';
 import { BuildingDetailsComponent } from './building-detail/building-details.component';
 import { TabContractComponent } from '../home-hotel/tab-contract/tab-contract.component';
+import { OrderRoomService } from 'common/share/src/service/application/hotel/order-room.service';
 
 interface Room {
   number: string;
@@ -28,7 +29,8 @@ interface Floor {
   styleUrls: ['./building.component.scss']
 })
 export class BuildingComponent implements OnInit {
-  public myForm: FormGroup;
+  // public myForm: FormGroup;
+  public formSearch: FormGroup;
   public paging: any;
   public listFloor: any;
   selectedStatus: number | null = null;
@@ -90,11 +92,31 @@ export class BuildingComponent implements OnInit {
     private messageService: MessageService,
     private shrContractService: ShrContractService,
     private datePipe: DatePipe,
-    private floorService: FloorService,
+    public floorService: FloorService,
+    private orderRoomService: OrderRoomService,
   ) {
-    this.myForm = this.fb.group({
-
+    this.formSearch = this.fb.group({
+      floor_id: [null],
+      // status: [null]
     });
+    this.formSearch
+      .get('outEndDate')
+      ?.addValidators(
+        ValidatorExtension.gteDateValidator(
+          this.formSearch,
+          'signEndDate',
+          'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
+        )
+      );
+    this.formSearch
+      .get('outEndDate')
+      ?.addValidators(
+        ValidatorExtension.gteDateValidator(
+          this.formSearch,
+          'outStartDate',
+          'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
+        )
+      );
   }
 
   floors: Floor[] = [];
@@ -115,21 +137,20 @@ export class BuildingComponent implements OnInit {
   }
 
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
-    const searchParams: any = {
-      ...paging,
-    };
-
-    // Thêm điều kiện lọc trạng thái
-    if (this.selectedStatus !== null) {
-      searchParams.status = this.selectedStatus;
+    const params = this.formSearch.getRawValue();
+    if (this.selectedStatus) {
+      params.status = this.selectedStatus
     }
-
+    const searchParams = {
+      ...paging,
+      ...params
+    };
     this.dialogService.openLoading();
     const res = await this.floorService.getPaging(searchParams).firstValueFrom();
+    await this.handleRoomOverTime(res.data!.items)
     this.listFloor = res.data?.items;
     this.dialogService.closeLoading();
   }
-
 
   handlerOpenDialog(mode: any = '', item: any = null) {
     const dialog = this.dialogService.openDialog(
@@ -151,7 +172,26 @@ export class BuildingComponent implements OnInit {
         }
       }
     );
-  }
+  };
+  async handleRoomOverTime(data: any) {
+    const datePipe = new DatePipe('en-US');
+    const dateNow = datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');
+    for (const item of data) {
+      for (const room of item.rooms) {
+        const roomCheckOut = datePipe.transform(room.checkOut, 'yyyy-MM-dd HH:mm:ss');
+        if (room.status !== 3) {
+          if ((roomCheckOut && dateNow) && roomCheckOut < dateNow) {
+            this.dialogService.openLoading();
+            const res = await this.orderRoomService.hanldeRoomOverTime(room.roomUuid).firstValueFrom();
+            if (res.data) {
+              this.getData(this.paging);
+            }
+            this.dialogService.closeLoading();
+          }
+        }
+      }
+    }
+  };
   handlerOpenTab(item: any = null) {
     const dialog = this.dialogService.openDialog(
       async (option) => {

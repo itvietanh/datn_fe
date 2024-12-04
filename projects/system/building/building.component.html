@@ -4,11 +4,18 @@
       <div class="d-flex">
         <div class="breadcrumb-title">Quản Lý Tầng & Phòng</div>
       </div>
-      <form>
+      <form [formGroup]="formSearch">
         <div class="d-flex hd-room">
           <div class="breadcrumb-title">
+            <div class="chon-tang">
+              <input-select-api
+                [apiService]="floorService"
+                formControlName="floor_id"
+                (onChange)="handleFilter(null)"
+                [placeholder]="'Tầng...'"
+              ></input-select-api>
+            </div>
 
-         
             <ng-container>
               <div class="mo-ta">
                 <div
