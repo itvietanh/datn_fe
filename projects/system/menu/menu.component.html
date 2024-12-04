@@ -33,24 +33,6 @@
       </div>
     </div>
   </div>
-
-  <!-- <div class="hearder-table mt-m-25">
-    <nz-tabset>
-      <nz-tab nzTitle="Kết quả tìm kiếm">
-        <ng-template [ngTemplateOutlet]="tab1"></ng-template>
-      </nz-tab>
-    </nz-tabset>
-    <div class="lst-controls">
-      <button nz-button type="button" class="btn btn-default btn-view">
-        <i class="isax-eye1 mr-2"></i>Import
-      </button>
-      <button nz-button type="button" class="btn btn-default btn-edit">
-        <i class="isax-edit1 mr-2"></i>Kết xuất
-      </button>
-    </div>
-  </div> -->
-
-  <!-- <ng-template #tab1> -->
   <nz-table
     [nzData]="listOfData"
     [nzBordered]="true"
@@ -147,7 +129,7 @@
                 </a>
                 <a
                   class="list-icons-item action-delete"
-                  (click)="deleteData(item)"
+                  (click)="handlerDelete(item)"
                 >
                   <span nz-tooltip nzTooltipTitle="Xóa">
                     <i class="isax-trash1"></i>

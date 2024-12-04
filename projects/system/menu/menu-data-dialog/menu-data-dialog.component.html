@@ -154,7 +154,7 @@
       nz-button
       type="button"
       class="btn btn-default"
-      (click)="closeDialog()"
+      (click)="close()"
     >
       <i nz-icon nzType="close" nzTheme="outline"></i>Hủy
     </button>
@@ -162,7 +162,7 @@
       nz-button
       type="button"
       class="btn"
-      (click)="saveData(1)"
+      (click)="handlerSubmitData()"
       [ngClass]="{
         'btn-primary': mode === 'edit',
         'btn-default': mode === 'add'
@@ -176,7 +176,7 @@
       type="button"
       class="btn btn-primary"
       *ngIf="mode === 'add'"
-      (click)="saveData(2)"
+      (click)="handlerSubmitData()"
     >
       <i class="icon-plus-circle2 mr-2"></i>Lưu và thêm mới
     </button>
