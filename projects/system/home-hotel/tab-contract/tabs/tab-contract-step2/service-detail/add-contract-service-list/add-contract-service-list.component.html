@@ -5,7 +5,7 @@
       </nz-skeleton>
       <li nz-menu-item *ngFor="let category of categories; let isFirst = first" class="category-list"
         [nzSelected]="isFirst" (click)="getServices(category.id)">
-        {{ category.service_name }}
+        {{ category.name }}
       </li>
     </ul>
   </div>
@@ -13,7 +13,7 @@
     <nz-list [nzLoading]="loadingService">
       <nz-list-item *ngFor="let item of items" (click)="selectedServiceChange.emit(item)" class="list-item">
         <div class="d-flex justify-content-sm-between w-100">
-          <div class="name">{{ item.name }}</div>
+          <div class="name">{{ item.service_name }}</div>
           <div class="amout">
             {{ item.price | moneyFormat }}
           </div>

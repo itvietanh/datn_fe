@@ -7,6 +7,7 @@ import { OrderRoomService } from "common/share/src/service/application/hotel/ord
 import { RoomChangeComponent } from "projects/system/home-hotel/room-change/room-change.component";
 import { GuestDetailComponent } from "./guest-detail/guest-detail.component";
 import { ServiceDetailComponent } from "./service-detail/service-detail.component";
+import { TabContactStep3Component } from "../tab-contract-step3/tab-contract-step3.component";
 
 @Component({
   selector: 'app-tab-contract-step2',
@@ -17,6 +18,7 @@ export class TabContactStep2Component implements OnInit {
 
   public myForm: FormGroup;
   roomAmount: any;
+  listService: any[] = [];
 
   columns: ColumnConfig[] = [
     {
@@ -49,13 +51,14 @@ export class TabContactStep2Component implements OnInit {
     public shareData: TabContractService,
     private orderRoomService: OrderRoomService,
     private dialogService: DialogService
-    
+
   ) {
     this.myForm = shareData.myForm;
   }
 
   ngOnInit() {
     this.onDate();
+    this.getListService();
   }
 
   async onDate() {
@@ -76,6 +79,13 @@ export class TabContactStep2Component implements OnInit {
 
   async getListService() {
     this.dialogService.openLoading();
+    const res = await this.orderRoomService.getListService({ ruUuid: this.shareData.item.ruUuid }).firstValueFrom();
+    const data = res.data?.items;
+    if (data) {
+      data.forEach(item => {
+        this.listService.push(item);
+      });
+    }
     this.dialogService.closeLoading();
   }
 
@@ -106,9 +116,10 @@ export class TabContactStep2Component implements OnInit {
       async (option) => {
         option.title = mode === 'view' ? 'Xem Chi Tiết Khách Hàng' : 'Thêm Mới Khách Hàng';
         if (mode === 'edit') option.title = 'Cập Nhật Khách Hàng';
-        option.size = DialogSize.medium;
+        option.size = DialogSize.xxl_large;
         option.component = GuestDetailComponent;
         option.inputs = {
+          mode: mode,
           uuid: item?.guestUuid,
           item: this.shareData?.item
         };
@@ -134,6 +145,27 @@ export class TabContactStep2Component implements OnInit {
         option.inputs = {
           uuid: item?.guestUuid,
           item: this.shareData?.item
+        };
+      },
+      (eventName, eventValue) => {
+        if (eventName === 'onClose') {
+          this.dialogService.closeDialogById(dialog.id);
+          if (eventValue) {
+            this.shareData.getDataTab1();
+          }
+        }
+      }
+    );
+  }
+
+  handleOutRoom() {
+    const dialog = this.dialogService.openDialog(
+      async (option) => {
+        option.title = 'Trả Phòng';
+        option.size = DialogSize.tab;
+        option.component = TabContactStep3Component;
+        option.inputs = {
+          items: this.shareData?.item,
         };
       },
       (eventName, eventValue) => {

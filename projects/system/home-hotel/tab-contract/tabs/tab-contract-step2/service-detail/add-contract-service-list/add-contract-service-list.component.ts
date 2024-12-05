@@ -27,7 +27,7 @@ export class AddContractServiceListComponent implements OnInit {
 
   async getCategories() {
     this.dialogService.openLoading();
-    const res = await this.service.getPaging().firstValueFrom();
+    const res = await this.service.getListService().firstValueFrom();
     this.categories = res.data!.items;
     if (this.categories) {
       this.getServices(this.categories[0].id);
@@ -37,7 +37,7 @@ export class AddContractServiceListComponent implements OnInit {
 
   async getServices(id: any) {
     this.dialogService.openLoading();
-    const res = await this.service.getListService({ id }).firstValueFrom();
+    const res = await this.service.getPaging({ catId: id }).firstValueFrom();
     this.items = res.data!.items;
     this.dialogService.closeLoading();
   }

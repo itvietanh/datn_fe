@@ -36,7 +36,7 @@ export class CreateBookingComponent implements OnInit {
   isCustomerGroup = false;
   columns: ColumnConfig[] = [
     {
-      key: 'roomTypeName',
+      key: 'typeName',
       header: 'Loại phòng',
       // pipe: 'template',
       tdClass: 'text-center',
@@ -79,6 +79,7 @@ export class CreateBookingComponent implements OnInit {
   remainingAmount = 0;
   residents: any[] = [];
   resident = new FormGroup<any>({});
+  checkType: any;
 
   listHour: any[] = [
     { value: '0800', label: '8:00 AM' },
@@ -117,7 +118,7 @@ export class CreateBookingComponent implements OnInit {
   ) {
     this.myForm = this.fb.group({
       // dateRange: [null],
-      checkInTime: [null, ValidatorExtension.required()],
+      checkInTime: [new Date(), ValidatorExtension.required()],
       checkOutTime: [null, ValidatorExtension.required()],
       checkInTimeHour: [null],
       checkOutTimeHour: [null],
@@ -145,6 +146,8 @@ export class CreateBookingComponent implements OnInit {
         [ValidatorExtension.required(), ValidatorExtension.phoneNumber()],
       ],
       prepayment: [0, ValidatorExtension.min(0)],
+      pricesDict: [1],
+      contractType: [1],
 
       guests: this.fb.group({
         uuid: [ex.newGuid()],
@@ -185,13 +188,13 @@ export class CreateBookingComponent implements OnInit {
   }
 
   async ngOnInit() {
-    //check in h
-    let checkInhourDefault = localStorage.getItem('checkInhourDefault');
-    if (checkInhourDefault) {
-      this.myForm.get('checkInTimeHour')?.setValue(checkInhourDefault);
-    } else {
-      this.myForm.get('checkInTimeHour')?.setValue('1400');
-    }
+    // Set mặc định ban đầu là khách lẻ
+    this.handleContractType(1);
+
+    const now = new Date();
+    const currentTime = `${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}`;
+    debugger;
+    this.myForm.get('checkInTimeHour')?.setValue(currentTime);
 
     //check out h
     let checkOuthourDefault = localStorage.getItem('checkOuthourDefault');
@@ -219,14 +222,6 @@ export class CreateBookingComponent implements OnInit {
 
   dowloadFile() {
     this.dialogService.openLoading();
-    // this.importBookingService
-    //   .exportTemplate('file-mau.xlsx')
-    //   .pipe(
-    //     finalize(() => {
-    //       this.dialogService.closeLoading();
-    //     })
-    //   )
-    //   .subscribe();
   }
 
   updateResident() {
@@ -355,33 +350,7 @@ export class CreateBookingComponent implements OnInit {
     let listResident = this.residents.map((x: any) => {
 
       let identityType = 1;
-      // switch (x.identityType) {
-      //   case IdentityType.CCCD:
-      //     identityType = 1;
-      //     break;
-      //   case IdentityType.CMND:
-      //     identityType = 2;
-      //     break;
-      //   case IdentityType.HC:
-      //     identityType = 3;
-      //     break;
-      //   case IdentityType.GTK:
-      //     identityType = 4;
-      //     break;
-      // }
 
-      // let addressType = 1;
-      // switch (x.addressType) {
-      //   case AddressType.THUONGTRU:
-      //     addressType = 1;
-      //     break;
-      //   case AddressType.TAMTRU:
-      //     addressType = 2;
-      //     break;
-      //   case AddressType.KHAC:
-      //     addressType = 3;
-      //     break;
-      // }
 
       let b = {
         identityType: identityType,
@@ -404,23 +373,10 @@ export class CreateBookingComponent implements OnInit {
     body.data = listResident;
 
     this.loading = true;
-    // this.contractService
-    //   .booking({ ...body })
-    //   .pipe(finalize(() => (this.loading = false)))
-    //   .subscribe(() => {
-    //     this.messageService.notiMessageSuccess('Đặt phòng thành công');
-    //     this.router.navigate(['/khach']);
-    //   });
+
   }
 
-  // onTypeChange(type: any) {
-  //   this.isCustomerGroup = ;
-  //   this.myForm
-  //     .get('groupName')
-  //     ?.setValidators(
-  //       this.isCustomerGroup ? ValidatorExtension.required() : null
-  //     );
-  // }
+
 
   async onDateRangeChange() {
     this.myForm.get('checkInTime')?.markAsDirty();
@@ -459,17 +415,17 @@ export class CreateBookingComponent implements OnInit {
     if (res.data.items.length) {
       this.items = res.data.items;
       this.items.forEach(item => {
-        if (item.pricePerHour || item.pricerPerDay || item.priceOverTime) {
+        if (item.pricePerHour || item.pricePerDay || item.priceOvertime) {
           if (item.pricePerHour) {
-            item.pricePerHour = `Giá theo giờ: ${item.pricePerHour}/giờ`;
+            item.pricePerHourTxt = `Giá theo giờ: ${item.pricePerHour} (1 giờ)`;
           }
 
-          if (item.pricerPerDay) {
-            item.pricerPerDay = `Giá theo ngày: ${item.pricerPerDay}/ngày`;
+          if (item.pricePerDay) {
+            item.pricePerDayTxt = `Giá theo ngày: ${item.pricePerDay} / (1 ngày)`;
           }
 
-          if (item.priceOverTime) {
-            item.priceOverTime = `Giá quá giờ: ${item.priceOverTime}/giờ`;
+          if (item.priceOvertime) {
+            item.priceOvertimeTxt = `Giá quá giờ: ${item.priceOvertime} / (1 giờ)`;
           }
         }
       });
@@ -478,6 +434,14 @@ export class CreateBookingComponent implements OnInit {
       if (this.items) {
         this.items = [];
       }
+    }
+  }
+
+  handleContractType(event: any) {
+    if (event === 1) {
+      this.checkType = 1;
+    } else if (event === 2) {
+      this.checkType = 2;
     }
   }
 
@@ -505,35 +469,7 @@ export class CreateBookingComponent implements OnInit {
       priceId: item.priceId,
       serviceId: item.id,
     };
-    // const key = values(params).join(':');
-    // const cache = this.cache[key];
-    // if (cache) {
-    //   item.totalAmount = cache.totalAmount;
-    //   item.taxAmount = cache.taxAmount;
-    //   item.params = cache.params;
-    //   item.detail = cache.detail;
-    //   this.items = [...this.items];
-    //   this.updateInvoice();
-    //   return;
-    // }
     item.loading = true;
-    // this.serviceService
-    //   .calculateTotalAmount(params)
-    //   .pipe(finalize(() => (item.loading = false)))
-    //   .subscribe((res) => {
-    //     item.totalAmount = res.data.totalAmount;
-    //     item.taxAmount = res.data.vat;
-    //     item.params = res.data.params;
-    //     item.detail = res.data.detail;
-    //     this.items = [...this.items];
-    //     this.cache[key] = {
-    //       totalAmount: item.totalAmount,
-    //       taxAmount: item.taxAmount,
-    //       params: item.params,
-    //       detail: item.detail,
-    //     };
-    //     this.updateInvoice();
-    //   });
   }
 
   onQuantityChange() {

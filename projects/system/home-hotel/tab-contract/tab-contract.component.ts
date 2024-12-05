@@ -14,7 +14,7 @@ export class TabContractComponent implements OnInit {
   @Input() mode: string = DialogMode.add;
   @Input() item: any;
   @Output() onClose = new EventEmitter<any | null>();
-  
+
   public initForm = false;
   constructor(
     public accommodationFacilityService: AccommodationFacilityService,
@@ -34,6 +34,8 @@ export class TabContractComponent implements OnInit {
   async intData() {
     await this.shareData.getDataTab1();
     this.initForm = true;
+    this.shareData.step = 2;
+    this.shareData.setStepMax();
   }
 
   changeFacility(event: any) {

@@ -68,7 +68,7 @@ app-create-booking {
     .acction-back {
       position: absolute;
       font-size: 25px;
-      color: #2d78d7;
+      color: #1A5B92;
       left: 0;
       top: 6px;
       cursor: pointer;
@@ -84,7 +84,7 @@ app-create-booking {
     z-index: 10;
 
     .ant-picker {
-      border-color: #2d78d7;
+      border-color: #1A5B92;
       border-radius: 5px;
     }
   }
@@ -282,7 +282,7 @@ app-create-booking {
       display: flex;
       border-radius: 4px;
       background-color: rgba(50, 123, 199, 0.1);
-      color: #2d78d7;
+      color: #1A5B92;
       font-weight: 600;
       font-size: 14px;
       align-items: center;
@@ -296,7 +296,7 @@ app-create-booking {
     display: flex;
     border-radius: 4px;
     background-color: rgba(50, 123, 199, 0.1);
-    color: #2d78d7;
+    color: #1A5B92;
     font-weight: 600;
     font-size: 14px;
     align-items: center;
@@ -327,4 +327,12 @@ app-create-booking {
     margin-top: -7px;
     margin-bottom: 8px;
   }
+}
+
+.title-group2 {
+  padding: 10px 0;
+}
+
+.title-label {
+  padding-bottom: 5px;
 }

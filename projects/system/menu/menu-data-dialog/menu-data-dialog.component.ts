@@ -1,7 +1,8 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { ExtentionService } from 'common/base/service/extention.service';
 import { MessageService } from 'common/base/service/message.service';
-import { MenuService } from 'ng-zorro-antd/menu';
+import { MenuService } from 'common/share/src/service/application/hotel/menu.service';
 import { DialogMode, DialogService, PrivilegeService, DialogSize } from 'share';
 
 @Component({
@@ -10,8 +11,8 @@ import { DialogMode, DialogService, PrivilegeService, DialogSize } from 'share';
   styleUrls: ['./menu-data-dialog.component.scss']
 })
 export class MenuDataDialogComponent implements OnInit {
-
   @Input() id: any;
+  @Input() uuid:any;
   @Input() data: any;
   @Input() mode: string = DialogMode.view;
   @Output() onClose = new EventEmitter<any | null>();
@@ -24,6 +25,7 @@ export class MenuDataDialogComponent implements OnInit {
   public listMenu: any[] = [];
 
   public formDataOrgine?: string;
+
   public hasChange = false;
 
   constructor(
@@ -31,10 +33,10 @@ export class MenuDataDialogComponent implements OnInit {
     private dialogService: DialogService,
     private messageService: MessageService,
     public menuService: MenuService,
-    private privilegeService: PrivilegeService,
-    private ref: ElementRef
+    private ex: ExtentionService,
   ) {
     this.myForm = this.fb.group({
+      id: [null],
       code: [null],
       name: [null],
       icon: [null],
@@ -55,18 +57,20 @@ export class MenuDataDialogComponent implements OnInit {
     this.myForm.reset();
 
     this.dialogService.openLoading();
-    await this.getMenu();
+    if (this.id) {
+      const res = await this.menuService.findOne(this.id).firstValueFrom();
+      const data = res.data;
+      if (data.is_show === 1) {
+        data.isShow = true;
+      }
+      this.myForm.patchValue(data);
+    }
 
     if (this.mode === DialogMode.add) {
       this.myForm.patchValue({
-        ...this.data,
-        isShow: true,
+        isShow: 1,
       });
-    } else {
-      this.getData();
     }
-
-    await this.getAction();
 
     if (this.mode === DialogMode.view) this.myForm.disable();
     // this.myForm.get('parentUid')?.disable();
@@ -79,67 +83,35 @@ export class MenuDataDialogComponent implements OnInit {
     this.formDataOrgine = JSON.stringify(this.myForm.getRawValue());
   }
 
-  getData() {
-    this.myForm.patchValue(this.data);
-  }
 
-  async getMenu() {
-    // const rs = await this.menuService.getAll().firstValueFrom();
-    // this.listMenu = rs.data!.items.map(x => {
-    //   return {
-    //     label: x.name,
-    //     value: x.id
-    //   }
-    // })
-  }
-
-  async getAction() {
-    this.isLoading = true;
-    this.listAction = [];
-    let privileges: any[] = this.myForm.get('privileges')?.value;
-    if (!privileges) privileges = [];
-    for (const item of privileges) {
-      let rs = await this.privilegeService.findOne(item).firstValueFrom();
-      this.listAction.push({
-        id: item,
-        code: rs.data.code,
-        name: rs.data.name
-      });
-    }
-    this.isLoading = false;
-  }
-
-  async saveData(type: number) {
-    this.dialogService.openLoading();
+  async handlerSubmitData() {
     this.myForm.markAllAsDirty();
+    if (this.myForm.invalid)
+    return;
 
-    if (this.myForm.invalid) {
-      this.dialogService.closeLoading();
-      this.messageService.alert('Dữ liệu nhập liệu chưa đúng vui lòng kiểm tra lại!');
-      this.myForm.focusError(this.ref);
-      return;
+    const formData = this.myForm.getRawValue();
+
+    this.dialogService.openLoading();
+    if (this.id) {
+      //Update
+      if (formData.isShow) {
+        formData.is_show = 1;
+      } else {
+        formData.is_show = 0;
+      }
+      await this.menuService.edit(this.id, formData).firstValueFrom();
+    } else {
+      //Create
+      formData.id = this.ex.newGuid();
+      await this.menuService.add(formData).firstValueFrom();
     }
-
-    let formData = this.myForm.getRawValue();
-    if (!formData.privileges) formData.privileges = [];
-    if (!formData.description) formData.description = this.mode;
-    const optionBindForm = { myForm: this.myForm, elementForm: this.ref };
-    // if (this.mode === DialogMode.add) {
-    //   await this.menuService.add(formData).firstValueFrom(optionBindForm);
-    // }
-    // if (this.mode === DialogMode.edit) {
-    //   await this.menuService.edit(this.id, formData).firstValueFrom(optionBindForm);
-    // }
-    this.hasChange = true;
-
-    if (type === 1) {
-      this.closeDialog();
-      this.dialogService.closeLoading();
-      return;
-    }
-
-    this.initData();
     this.dialogService.closeLoading();
+    this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
+    this.close(true);
+  }
+
+  close(data?: any) {
+    this.onClose.emit(data);
   }
 
   selectPrivilegeData() {
@@ -156,7 +128,6 @@ export class MenuDataDialogComponent implements OnInit {
           this.dialogService.closeDialogById(dialog.id);
           if (eventValue) {
             this.myForm.get('privileges')?.setValue(eventValue);
-            this.getAction();
           }
         }
       }
@@ -171,7 +142,6 @@ export class MenuDataDialogComponent implements OnInit {
     let privileges: any[] = this.myForm.get('privileges')?.value;
     privileges = privileges.filter(x => x !== item.id);
     this.myForm.get('privileges')?.setValue(privileges);
-    this.getAction();
     this.dialogService.closeLoading();
   }
 

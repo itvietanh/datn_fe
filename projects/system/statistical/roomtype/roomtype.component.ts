@@ -5,15 +5,13 @@ import { MessageService } from 'common/base/service/message.service';
 import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
 import { ValidatorExtension } from 'common/validator-extension';
 import { DialogService } from 'share';
-import { RoomtypeStatistics } from 'common/share/src/service/application/hotel/roomtypestatistical';
 import { ChartConfiguration } from 'chart.js';
-
-
+import { RoomtypeStatistics } from 'common/share/src/service/application/hotel/roomtypestatistical';
 
 @Component({
   selector: 'app-roomtype',
   templateUrl: './roomtype.component.html',
-  styleUrls: ['./roomtype.component.scss']
+  styleUrls: ['./roomtype.component.scss'],
 })
 export class RoomTypeComponent implements OnInit, OnChanges {
   public formSearch!: FormGroup;
@@ -22,48 +20,44 @@ export class RoomTypeComponent implements OnInit, OnChanges {
   loading: boolean = false;
   error: string | null = null;
 
-
   listChartType: any[] = [
-    {
-      value: 'bar',
-      label: 'Biều đồ cột'
-    },
-    {
-      value: 'line',
-      label: 'Biều đồ đường kẻ'
-    }
+    { value: 'bar', label: 'Biều đồ cột' },
+    { value: 'line', label: 'Biều đồ đường kẻ' },
   ];
 
   chartData: any = {
     labels: [],
-    datasets: []
+    datasets: [],
   };
 
   options: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top'
+        position: 'top',
       },
       title: {
         display: true,
         text: 'Thống kê loại phòng',
-      }
+      },
     },
     interaction: {
       intersect: false,
-      mode: 'index'
+      mode: 'index',
     },
     scales: {
       y: {
-        beginAtZero: true,
+        beginAtZero: false,
+        min: 1,
+        max: 35,
         ticks: {
+          stepSize: 10,
           callback: function (value) {
-            return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }); // Định dạng tiền tệ
-          }
-        }
-      }
-    }
+            return value.toLocaleString('vi-VN', { maximumFractionDigits: 0 });
+          },
+        },
+      },
+    },
   };
 
   constructor(
@@ -72,85 +66,40 @@ export class RoomTypeComponent implements OnInit, OnChanges {
     private messageService: MessageService,
     public hotelService: HotelService,
     private datePipe: DatePipe,
-    public RoomtypeStatistics: RoomtypeStatistics,
+    public roomtypestatistical: RoomtypeStatistics
   ) {
-    this.formSearch = this.fb.group({
-      dateFrom: [null, ValidatorExtension.required()],
-      dateTo: [null, ValidatorExtension.required()],
-      chartType: [null]
-    });
-    this.formSearch
-      .get('dateTo')
-      ?.addValidators(
-        ValidatorExtension.gteDateValidator(
-          this.formSearch,
-          'dateFrom',
-          'Ngày kết thúc không được nhỏ hơn ngày bắt đầu'
-        )
-      );
-    this.formSearch
-      .get('dateTo')
-      ?.addValidators(
-        ValidatorExtension.gteDateValidator(
-          this.formSearch,
-          'dateTo',
-          'Ngày kết thúc không được nhỏ hơn ngày bắt đầu'
-        )
-      );
+
   }
 
   ngOnInit(): void {
-    this.refreshData();
+    this.getTotalRoomsByHotel();
   }
 
-  async getData() {
-    this.formSearch.markAllAsTouched();
-    if (this.formSearch.invalid) return;
-
+  public getTotalRoomsByHotel() {
     this.dialogService.openLoading();
-    const params = this.formSearch.getRawValue();
-
-    try {
-        const res = await this.RoomtypeStatistics.getTransactionsByDate(params).firstValueFrom();
-        if (res && Array.isArray(res.data)) {
-            const dataStatistical = res.data;
-            this.chartData = {
-                labels: dataStatistical.map((item: any) => item.type_name),
-                datasets: [
-                    {
-                        label: 'Số lượng phòng',
-                        data: dataStatistical.map((item: any) => item.total_room),
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgb(75, 192, 192)',
-                        borderWidth: 1,
-                    },
-                ],
-            };
-            this.messageService.notiMessageSuccess('Lấy dữ liệu thành công!');
-        } else {
-            throw new Error('Dữ liệu trả về không hợp lệ');
-        }
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        this.messageService.notiMessageError('Lỗi khi lấy dữ liệu thống kê.');
-    } finally {
+    this.roomtypestatistical.getTotalRoomsByHotel().subscribe(
+      (response) => {
+        this.chartData = {
+          labels: response.data.map((item: any) => item.room_type_name),
+          datasets: [
+            {
+              label: 'Số phòng',
+              data: response.data.map((item: any) => item.total_rooms),
+              borderColor: 'rgb(75, 192, 192)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              fill: true,
+            },
+          ],
+        };
         this.dialogService.closeLoading();
-    }
+        
+      },
+      (error) => {
+        this.error = 'Lỗi khi lấy dữ liệu thống kê.';
+        this.dialogService.closeLoading();
+      }
+    );
   }
-
-
-  async refreshData(): Promise<void> {
-    this.loading = true;
-    this.error = null;
-    try {
-        await this.getData();
-    } catch (err) {
-        this.error = 'Không thể tải dữ liệu. Vui lòng thử lại.';
-    } finally {
-        this.loading = false;
-    }
-  }
-
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['chartType']) {
@@ -158,44 +107,25 @@ export class RoomTypeComponent implements OnInit, OnChanges {
     }
   }
 
-  renderChart(chartType: string = "") {
+  renderChart(chartType: string = '') {
     this.dialogService.openLoading();
     this.chartType = chartType;
+    // Dưới đây là việc thực sự render lại biểu đồ nếu cần
+    // Bạn có thể thêm logic cập nhật biểu đồ cho các loại khác nhau ở đây.
     this.dialogService.closeLoading();
   }
 
-  handlerSearchDate() {
-    const dateFrom = this.formSearch.get('dateFrom')?.value;
-    const dateTo = this.formSearch.get('dateTo')?.value;
-
-    if (dateTo < dateFrom) {
-      this.formSearch
-        .get('dateTo')
-        ?.setValidators(
-          ValidatorExtension.gteDateValidator(
-            this.formSearch,
-            'dateFrom',
-            'Ngày kết thúc không được nhỏ hơn ngày bắt đầu'
-          )
-        );
-      this.formSearch
-        .get('dateTo')?.updateValueAndValidity();
-    } else {
-      this.formSearch
-        .get('dateTo')?.setErrors(null);
-    }
-  }
-
   async handleExportExcel() {
-    this.getData();
     this.dialogService.openLoading();
     const params = this.formSearch.getRawValue();
 
     try {
-      const res: any = await this.RoomtypeStatistics.exportExcelTrans(params).firstValueFrom();
-
-      const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
+      const res: any = await this.roomtypestatistical
+        .exportExcelTrans(params)
+        .firstValueFrom();
+      const blob = new Blob([res], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -210,31 +140,4 @@ export class RoomTypeComponent implements OnInit, OnChanges {
       this.dialogService.closeLoading();
     }
   }
-  public getTransactionStatisticsByDate() {
-    this.dialogService.openLoading();
-    const params = this.formSearch.getRawValue();
-
-    this.RoomtypeStatistics.getTransactionsByDate(params).subscribe(
-      (response) => {
-        this.chartData = {
-          labels: response.data.map((item: any) => item.date),
-          datasets: [
-            {
-              label: "Tổng tiền",
-              data: response.data.map((item: any) => item.total_amount),
-              borderColor: "rgb(75, 192, 192)",
-              backgroundColor: "rgba(75, 192, 192, 0.2)",
-              fill: true
-            }
-          ]
-        };
-        this.dialogService.closeLoading();
-      },
-      (error) => {
-        this.error = 'Lỗi khi lấy dữ liệu thống kê giao dịch.';
-        this.dialogService.closeLoading();
-      }
-    );
-  }
-
 }

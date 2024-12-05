@@ -39,6 +39,18 @@ export class HomeHotelDetailsComponent implements OnInit {
   dataRoom: any;
   listGuest: any[] = [];
   representative: boolean = false;
+  natId: number | null = null;
+
+  listGender: any[] = [
+    {
+      value: 'Nam',
+      label: 'Nam'
+    },
+    {
+      value: 'Nữ',
+      label: 'Nữ'
+    }
+  ]
 
   columns: ColumnConfig[] = [
     {
@@ -86,13 +98,13 @@ export class HomeHotelDetailsComponent implements OnInit {
   ) {
     this.myForm = this.fb.group({
       checkInTime: [{ value: this.now.toNumberYYYYMMDDHHmmss(), disabled: true }, ValidatorExtension.required()],
-      checkOutTime: [null, ValidatorExtension.required()],
+      checkOutTime: [null],
       groupName: [null],
       note: [null],
       numOfResidents: [0],
       reasonStayId: [null],
-      roomTypeId: [null],
-      roomId: [null],
+      roomTypeId: [null, ValidatorExtension.required()],
+      roomId: [null, ValidatorExtension.required()],
       priceId: [null],
       totalPrice: [{ value: 0, disabled: true }],
       finalPrice: [{ value: 0, disabled: true }],
@@ -101,7 +113,7 @@ export class HomeHotelDetailsComponent implements OnInit {
 
       guests: this.fb.group({
         uuid: [ex.newGuid()],
-        identityNo: [null],
+        identityNo: [null, ValidatorExtension.required()],
         fullName: [
           null,
           [
@@ -114,14 +126,15 @@ export class HomeHotelDetailsComponent implements OnInit {
             ValidatorExtension.maxLength(40, 'Họ tên tối đa 40 ký tự'),
           ],
         ],
-        gender: [null],
-        phoneNumber: [null, ValidatorExtension.phoneNumber()],
-        dateOfBirth: [null],
-        addressDetail: [null],
-        provinceId: [null],
-        districtId: [null],
-        wardId: [null],
-        workplace: [null],
+        gender: [null, ValidatorExtension.required()],
+        phoneNumber: [null, [ValidatorExtension.phoneNumber()]],
+        dateOfBirth: [null, ValidatorExtension.required()],
+        addressDetail: [null, ValidatorExtension.required()],
+        provinceId: [null, ValidatorExtension.required()],
+        districtId: [null, ValidatorExtension.required()],
+        wardId: [null, ValidatorExtension.required()],
+        natId: [196, ValidatorExtension.required()],
+        passportNumber: [null, ValidatorExtension.required()]
       })
     })
   }
@@ -267,22 +280,35 @@ export class HomeHotelDetailsComponent implements OnInit {
   }
 
   async handlerSubmit() {
-    // debugger;
-    this.myForm.markAllAsDirty();
-    if (this.myForm.invalid) return;
-    this.dialogService.openLoading();
+    if (!this.listGuest.length) {
+      this.handleAddGuest();
+    }
+
+    if (this.listGuest.length) {
+      this.clearValidator();
+    }
+
+    const body = this.myForm.getRawValue();
+    if (body.guests.natId !== 196) {
+      body.guests.identityNo = null;
+    } else {
+      body.guests.passportNumber = null;
+    }
 
     const guests = this.listGuest.map(x => ({
       uuid: this.ex.newGuid(),
       name: x.fullName,
       id_number: x.identityNo,
+      passport_number: x.passportNumber,
       phone_number: x.phoneNumber,
       province_id: x.provinceId,
       district_id: x.districtId,
       ward_id: x.wardId,
       gender: x.gender,
       birth_date: x.dateOfBirth,
-      representative: x.representative
+      representative: x.representative,
+      nat_id: x.natId,
+      contact_details: JSON.stringify({ addressDetail: x.addressDetail })
     }));
 
     const formData = {
@@ -307,11 +333,28 @@ export class HomeHotelDetailsComponent implements OnInit {
       }
     };
 
-    await this.orderRoomService.add(formData).firstValueFrom();
-
+    this.dialogService.openLoading();
+    const res = await this.orderRoomService.add(formData).firstValueFrom();
     this.dialogService.closeLoading();
-    this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
+    if (res.data) {
+      this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
+    } else {
+      this.messageService.notiMessageError("Lỗi hệ thống, vui lòng thực hiện lại");
+    }
     this.close(true);
+  }
+
+  clearValidator() {
+    this.myForm.get('guests.identityNo')?.clearValidators();
+    this.myForm.get('guests.fullName')?.clearValidators();
+    this.myForm.get('guests.gender')?.clearValidators();
+    this.myForm.get('guests.phoneNumber')?.clearValidators();
+    this.myForm.get('guests.dateOfBirth')?.clearValidators();
+    this.myForm.get('guests.addressDetail')?.clearValidators();
+    this.myForm.get('guests.provinceId')?.clearValidators();
+    this.myForm.get('guests.wardId')?.clearValidators();
+    this.myForm.get('guests.natId')?.clearValidators();
+    this.myForm.get('guests.passportNumber')?.clearValidators();
   }
 
   close(data?: any) {

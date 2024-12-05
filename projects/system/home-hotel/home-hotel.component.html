@@ -6,17 +6,27 @@
       </div>
       <form [formGroup]="formSearch">
         <div class="d-flex hd-room">
-          <div class="breadcrumb-title ">
+          <div class="breadcrumb-title">
             <div class="chon-tang">
-              <input-select-api [apiService]="floorService" formControlName="floor_id" (onChange)="handleFilter(null)"
-                [placeholder]="'Tầng...'"></input-select-api>
+              <input-select-api
+                [apiService]="floorService"
+                formControlName="floor_id"
+                (onChange)="handleFilter(null)"
+                [placeholder]="'Tầng...'"
+              ></input-select-api>
             </div>
 
             <ng-container>
               <div class="mo-ta">
-                <div *ngFor="let item of statusOptions" (click)="handleFilter(item.value)" class="status"
-                  [attr.class]="item.class" [ngClass]="{ selected: item.value === selectedStatus }">
-                  {{ item.label }} {{ item.count ? '(' + item.count + ')' : '' }}
+                <div
+                  *ngFor="let item of statusOptions"
+                  (click)="handleFilter(item.value)"
+                  class="status"
+                  [attr.class]="item.class"
+                  [ngClass]="{ selected: item.value === selectedStatus }"
+                >
+                  {{ item.label }}
+                  {{ item.count ? "(" + item.count + ")" : "" }}
                 </div>
               </div>
             </ng-container>
@@ -26,68 +36,116 @@
 
       <div class="d-flex align-items-center">
         <div class="breadcrumb">
-          <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
+          <!-- <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
             Nhận phòng nhanh
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="hotel-management" style="background-color: #ccc6;">
+<div class="hotel-management" style="background-color: #ccc6">
   <div class="main-interface">
     <div class="floors-container">
       <div *ngFor="let floor of listFloor" class="floor">
         <div class="title">
           <div class="name">
             <i class="isax-house-21"></i>
-            Tầng {{floor.floorNumber}}
+            Tầng {{ floor.floorNumber }}
           </div>
         </div>
         <div class="rooms-grid shadow-lg p-4">
-          <div *ngFor="let room of floor.rooms" class="room"
-            [ngClass]="{'available': room.status === 1, 'occupied': room.status === 2, 'overtime': room.status === 3, 'cleaning': room.status === 4 }"
-            (click)="(room.status === 2 ||room.status === 3) ? handlerOpenTab(room) : (room.status !== 2 ? handlerOpenDialog(room) : null)">
+          <div
+            *ngFor="let room of floor.rooms"
+            class="room"
+            [ngClass]="{
+              available: room.status === 1,
+              occupied: room.status === 2,
+              overtime: room.status === 3,
+              cleaning: room.status === 4
+            }"
+            (click)="
+              room.status === 2 || room.status === 3
+                ? handlerOpenTab(room)
+                : room.status === 1
+                ? handlerOpenDialog(room)
+                : null
+            "
+          >
             <div class="room-left">
-              <h5 class="text-center mt-2" style="font-weight: 700;">Phòng {{room.roomNumber}}</h5>
-              <p class="text-center" style="font-weight: 600;">
-                {{room.typeName}}
+              <h5 class="text-center mt-2" style="font-weight: 700">
+                Phòng {{ room.roomNumber }}
+              </h5>
+              <p class="text-center" style="font-weight: 600">
+                {{ room.typeName }}
               </p>
 
-              <span class="mt-2 ml-2" *ngIf="room.status === 2 || room.status === 3">{{room.status | labelValue:
-                listRoomStatus}}</span>
+              <span
+                class="mt-2 ml-2"
+                *ngIf="room.status === 2 || room.status === 3"
+                >{{ room.status | labelValue : listRoomStatus }}</span
+              >
 
               <p class="mb-2 float-right">
                 <span nz-icon nzType="user" nzTheme="outline"></span>
-                {{room.totalGuests}}/{{room.numberOfPeople}}
+                {{ room.totalGuests }}/{{ room.numberOfPeople }}
               </p>
             </div>
 
             <div class="room-right text-center">
-              <p class="mt-2" *ngIf="room.status === 1">{{room.status | labelValue: listRoomStatus}}</p>
+              <p
+                class="mt-2"
+                *ngIf="
+                  room.status === 1 || room.status === 3 || room.status === 4
+                "
+              >
+                {{ room.status | labelValue : listRoomStatus }}
+              </p>
 
-              <div class="d-flex justify-content-center align-items-center"
-                *ngIf="room.status === 2 || room.status === 3">
+              <div
+                class="d-flex justify-content-center align-items-center"
+                *ngIf="room.status === 2 || room.status === 3"
+              >
                 <ng-container *ngFor="let guest of room.room_using_guest">
-                  <p class="mt-2 mb-0" style="font-weight: 700;" *ngIf="guest.representative">
+                  <p
+                    class="mt-2 mb-0"
+                    style="font-weight: 700"
+                    *ngIf="guest.representative"
+                  >
                     {{ guest.name }}
                   </p>
                 </ng-container>
               </div>
 
-              <div class="d-flex mt-4" *ngIf="room.status === 2 || room.status === 3">
+              <div
+                class="d-flex mt-4"
+                *ngIf="room.status === 2 || room.status === 3"
+              >
                 <div class="col">
-                  <p class="m-0">{{room.checkIn | dateFormat}}</p>
-                  <p class="m-0">{{room.checkIn | datetimeFormat : "HH:mm"}}</p>
+                  <p class="m-0">{{ room.checkIn | dateFormat }}</p>
+                  <p class="m-0">
+                    {{ room.checkIn | datetimeFormat : "HH:mm" }}
+                  </p>
                 </div>
 
                 <div class="col">
-                  <p class="m-0">{{room.checkOut | dateFormat}}</p>
-                  <p class="m-0">{{room.checkOut | datetimeFormat : "HH:mm"}}</p>
+                  <p class="m-0">{{ room.checkOut | dateFormat }}</p>
+                  <p class="m-0">
+                    {{ room.checkOut | datetimeFormat : "HH:mm" }}
+                  </p>
                 </div>
               </div>
-              <button *ngIf="room.status === 1" class="book-room-btn">Đặt phòng</button>
+              <button *ngIf="room.status === 1" class="book-room-btn">
+                Đặt phòng
+              </button>
+              <button
+                *ngIf="room.status === 4"
+                class="btn btn-success"
+                (click)="handleChangeRoomStatus(room)"
+              >
+                Sẵn sàng
+              </button>
             </div>
           </div>
         </div>

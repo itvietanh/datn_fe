@@ -22,7 +22,7 @@ export class EmployeeStatistics extends BaseService {
   }
 
   public getEmployeesByDate(params: any = null) {
-    return this.http.get<ResponseModel<any>>(`${this.baseUrl}/by-date`, {
+    return this.http.get<ResponseModel<any>>(`${this.baseUrl}/Allin`, {
       params: this.stringifyParams(params)
     });
   }

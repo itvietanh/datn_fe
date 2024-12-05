@@ -31,7 +31,7 @@
           <span nz-icon nzType="sync" nzTheme="outline" class="mr-2"></span>Đổi phòng
         </button>
 
-        <button type="button" class="btn btn-primary ml-2">
+        <button type="button" class="btn btn-primary ml-2" (click)="handleOutRoom()">
           <span nz-icon nzType="logout" nzTheme="outline" class="mr-2"></span>Trả phòng
         </button>
       </div>
@@ -171,26 +171,18 @@
       <div class="title-label2"><i class="isax-card-slash1"></i> Dịch vụ</div>
       <div class="title-control2">
         <span class="mr-2"></span>
-        <span class="mt-1 float-right cursor-pointer color-primary" nz-icon nzType="plus-circle" nzTheme="fill" (click)="hanldeOpenTabService()"></span>
+        <span class="mt-1 float-right cursor-pointer color-primary" nz-icon nzType="plus-circle" nzTheme="fill"
+          (click)="hanldeOpenTabService()"></span>
       </div>
     </div>
 
-    <!-- <nz-collapse>
-      <nz-collapse-panel class="has-icon my-2" [ngClass]="" [nzHeader]="'Dịch vụ'">
-        <i class="isax-card-slash1"></i>
-        <div class="point-target" id="panel1"></div>
-      </nz-collapse-panel>
-    </nz-collapse> -->
-
-    <div class="d-flex justify-content-between w-100">
-      <div class="name-service-container">
-      </div>
-      <div class="amount-container">
-        <div class="original">
+    <div class="resident-list" *ngIf="listService.length">
+      <div class="resident-item selected d-flex justify-content-between" *ngFor="let item of listService">
+        <div class="name">
+          {{item.catName}}: {{item.serviceName}}
         </div>
-        <div class="replacement">
-          <i class="isax-edit-21 mr-2 edit"></i>
-          <i class="isax-trash del"></i>
+        <div class="birth">
+          {{item.price | moneyFormat}} VNĐ
         </div>
       </div>
     </div>

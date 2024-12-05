@@ -32,10 +32,17 @@ export class RoomService extends BaseService {
       params: this.stringifyParams({ uuid: uuid }),
     });
   }
-  public updateRoomStatus<T = any>(uuid: string) {
-    return this.http.put<ResponseModel<T>>(`${this.baseUrl}/${uuid}`, { status: 1 });
+
+  public outRoom<T = any>(params: any) {
+    return this.http.put<ResponseModel<T>>(`${this.baseUrl}/out-room`, {
+      ...params
+    });
   }
 
-
+  public changeRoomStatus<T = any>(params: any) {
+    return this.http.put<ResponseModel<T>>(`${this.baseUrl}/change-status`, {
+      ...params
+    });
+  }
 
 }

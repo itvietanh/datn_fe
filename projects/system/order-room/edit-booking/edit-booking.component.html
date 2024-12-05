@@ -53,7 +53,7 @@
           <app-table [showIndex]="false" [showPagination]="false" [columns]="columns" [items]="items"
             [loading]="loading">
             <ng-template [appCellTemplate]="'name'" let-item>
-              {{ item.name }}
+              {{ item.typeName }}
             </ng-template>
             <ng-template [appCellTemplate]="'room'" let-item>
               <div class="row">
