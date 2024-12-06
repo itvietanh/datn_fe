@@ -26,7 +26,7 @@ export class EmployeeComponent implements OnInit {
   public formSearch: FormGroup;
   public listOfData: any[] = [];
   public isLoading?: boolean;
-  selectedStatus: number | null = null;
+  // selectedStatus: number | null = null;
   public paging: any;
   items: any[] = [];
   loading = false;
@@ -61,7 +61,7 @@ export class EmployeeComponent implements OnInit {
     private dialogService: DialogService,
     private messageService: MessageService,
     public hotelService: HotelService,
-    public employeeService:EmployeeService,
+    private employeeService:EmployeeService,
     // private guestService : GuestService,
 
     private datePipe: DatePipe
