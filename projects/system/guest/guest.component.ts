@@ -38,6 +38,18 @@ export class GuestComponent implements OnInit {
       header: 'Ngày tạo',
     },
     {
+      key: 'province_name', 
+      header: 'Tỉnh',
+    },
+    {
+      key: 'district_name', 
+      header: 'Quận',
+    },
+    {
+      key: 'ward_name',
+      header: 'Phường',
+    },
+    {
       key: 'action',
       header: 'Thao tác',
       tdClass: 'text-center',
@@ -93,13 +105,13 @@ export class GuestComponent implements OnInit {
     const dataRaw = rs.data!.items;
     for (const item of dataRaw) {
       if (item.created_at) {
-        item.created_at = this.datePipe.transform(
-          item.created_at,
-          'dd-MM-yyyy'
-        );
+        item.created_at = this.datePipe.transform(item.created_at, 'dd-MM-yyyy');
       }
+      item.province_name = item.province?.name || ''; 
+      item.district_name = item.district?.name || '';  
+      item.ward_name = item.ward?.name || '';      
     }
-    this.items = rs.data!.items;
+    this.items = dataRaw;
     this.paging = rs.data?.meta;
     this.dialogService.closeLoading();
   }

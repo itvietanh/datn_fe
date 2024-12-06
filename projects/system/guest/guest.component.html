@@ -107,6 +107,15 @@
           </a>
         </div>
       </ng-template>
+      <ng-template [appCellTemplate]="'province_name'" let-item>
+        {{ item.province_name }}
+      </ng-template>
+      <ng-template [appCellTemplate]="'district_name'" let-item>
+        {{ item.district_name }}
+      </ng-template>
+      <ng-template [appCellTemplate]="'ward_name'" let-item>
+        {{ item.ward_name }}
+      </ng-template>
     </app-table>
     <app-paging [data]="paging" [changeListPage]="0" (onChange)="getData($event)"></app-paging>
   </ng-template>
