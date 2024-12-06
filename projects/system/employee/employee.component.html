@@ -4,6 +4,19 @@
       <div class="breadcrumb-title">
         Quản lý tài khoản
       </div>
+      <!-- <form action="">
+        <div class="d-flex hd-room">
+          <div class="breadcrumd-title">
+            <div class="chon-nv">
+              <input-select-api [apiService]="employeeService"
+              formControlName="emplplyee_name"
+              (onChange)="handleFilter(null)"
+              [placeholder]="'Tên nhân viên'">
+            </input-select-api>
+            </div>
+          </div>
+        </div>
+      </form> -->
       <div class="breadcrumb">
         <div class="list-control-main">
           <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
@@ -34,6 +47,25 @@
               <span nz-icon nzType="search" nzTheme="outline"></span>Tìm kiếm
             </button>
           </div> -->
+          <div class="row">
+            <div class="col-md-2">
+              <nz-form-item>
+                <nz-form-control>
+                   <input nz-input
+                    placeholder="Tên nhân viên"
+                    formControlName="name"
+                    
+
+  >
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+          <div class="text-center mt-0">
+            <button nz-button type="submit" class="btn btn-primary ml-2">
+              <span nz-icon nzType="search" nzTheme="outline"></span>Tìm kiếm
+            </button>
+          </div>
         </form>
       </div>
     </div>
