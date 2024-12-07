@@ -14,6 +14,7 @@ import { GuestService } from 'common/share/src/service/application/hotel/guest.s
 // import { EmployeeService } from 'common/share/src/service/application/hotel/employee.service';
 import { EmployeeDetailComponent } from './employee-detail/employee-detail.component';
 import { EmployeeService } from 'common/share/src/service/application/hotel/employee.service';
+import { filter } from 'rxjs';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class EmployeeComponent implements OnInit {
   public formSearch: FormGroup;
   public listOfData: any[] = [];
   public isLoading?: boolean;
+  // selectedStatus: number | null = null;
   public paging: any;
   items: any[] = [];
   loading = false;
@@ -63,6 +65,7 @@ export class EmployeeComponent implements OnInit {
     // private guestService : GuestService,
 
     private datePipe: DatePipe
+
   ) {
     this.formSearch = this.fb.group({
       name:[null, ValidatorExtension.required()],
@@ -118,6 +121,8 @@ export class EmployeeComponent implements OnInit {
     this.paging = rs.data?.meta;
     this.dialogService.closeLoading();
   }
+
+
 
   async handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
     const dialog = this.dialogService.openDialog(
