@@ -9,7 +9,7 @@
         <span class="m-2 text-danger">đã trả</span>
       </li>
     </ul>
-    <button *ngIf="allowAuto" (click)="auto()" nz-button type="button" class="btn btn-default"
+    <button nz-button type="button" class="btn btn-default"
       style="margin-top: 10px;">
       Tự Động Chia Phòng
     </button>
@@ -23,10 +23,8 @@
       </div>
       <div class="title-control">
         <div *ngIf="!service?.residenceName" class="d-flex">
-          <input-select style="width: 150px; margin-right: 8px" placeholder="Chọn loại phòng" [allowClear]="false"
-            [items]="roomTypes" [(ngModel)]="selectedRoomTypes" (onChange)="roomType($event)"></input-select>
-          <input-select style="width: 130px" placeholder="Chọn phòng" [allowClear]="false" [items]="rooms"
-            [(ngModel)]="selectedRoom" (onChange)="onRoomChange($event)"></input-select>
+          <input-select-api [apiService]="roomTypeService" style="width: 150px; margin-right: 8px" placeholder="Chọn loại phòng" (onChange)="roomType($event)"></input-select-api>
+          <input-select-api [apiService]="roomService" [apiParams]="roomTypes" style="width: 130px" placeholder="Chọn phòng" (onChange)="onRoomChange($event)"></input-select-api>
           <a class="cancel" (click)="cancel()">
             <span nz-tooltip nzTooltipTitle="Hủy phòng" class="isax-trash1"></span>
           </a>

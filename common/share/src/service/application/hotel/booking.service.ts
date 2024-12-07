@@ -14,4 +14,8 @@ export class BookingService extends BaseService {
       params: this.stringifyParams(params)
     });
   }
+
+  public override add<T = any>(body: any = null) {
+    return this.http.post<ResponseModel<T>>(`${this.baseUrl}`, body);
+  }
 }

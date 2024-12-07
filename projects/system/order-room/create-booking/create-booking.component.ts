@@ -25,6 +25,7 @@ import { ExtentionService } from 'common/base/service/extention.service';
 import { OrderRoomService } from 'common/share/src/service/application/hotel/order-room.service';
 import { DatePipe } from '@angular/common';
 import { QrCodeDetailsComponent } from 'projects/system/home-hotel/tab-home-hotel/tab-qrcode/qrcode-details.component';
+import { BookingService } from 'common/share/src/service/application/hotel/booking.service';
 
 @Component({
   selector: 'app-create-booking',
@@ -123,7 +124,7 @@ export class CreateBookingComponent implements OnInit {
     },
   ];
 
-  listRoomTypeId: any;
+  listRoomTypeId: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -137,11 +138,11 @@ export class CreateBookingComponent implements OnInit {
     private orderRoomService: OrderRoomService,
     public diaBanService: DiaBanService,
     private datePipe: DatePipe,
+    private bookingService: BookingService
 
 
   ) {
     this.myForm = this.fb.group({
-      // dateRange: [null],
       checkInTime: [this.now.toNumberYYYYMMDDHHmmss(), ValidatorExtension.required()],
       checkOutTime: [null, ValidatorExtension.required()],
       groupName: [null],
@@ -150,23 +151,7 @@ export class CreateBookingComponent implements OnInit {
         0,
         [ValidatorExtension.required(), ValidatorExtension.min(0)],
       ],
-      reasonStayId: [null, ValidatorExtension.required()],
-      representativeName: [
-        null,
-        [
-          ValidatorExtension.required('Họ và tên không được để trống'),
-          ValidatorExtension.validNameVN(
-            "Họ và tên chỉ được sử dụng chữ cái, dấu khoảng trắng và dấu '"
-          ),
-          ValidatorExtension.validateUnicode(
-            'Bạn đang sử dụng bảng mã Unicode tổ hợp! Vui lòng sử dụng bảng mã Unicode dựng sẵn'
-          ),
-        ],
-      ],
-      phoneNumber: [
-        null,
-        [ValidatorExtension.required(), ValidatorExtension.phoneNumber()],
-      ],
+
       prepayment: [0, ValidatorExtension.min(0)],
       prepaid: [0, ValidatorExtension.min(0)],
       pricesDict: [1],
@@ -318,51 +303,6 @@ export class CreateBookingComponent implements OnInit {
     this.resetForm();
   }
 
-  submit() {
-    FormUtil.validate(this.myForm);
-
-    if (!this.numOfRooms) {
-      this.messageService.alert('Vui lòng chọn số lượng phòng!');
-      return;
-    }
-
-    const body = this.myForm.getRawValue();
-    if (body.checkInTime) {
-      body.checkInTime = `${body.checkInTime}${body.checkInTimeHour}00`;
-    }
-    if (body.checkOutTime) {
-      body.checkOutTime = `${body.checkOutTime}${body.checkOutTimeHour}00`;
-    }
-
-    body.residenceServices = this.items.filter((x) => x.quantity);
-    // lay list khach truoc
-    let listResident = this.residents.map((x: any) => {
-
-      let identityType = 1;
-
-      let b = {
-        identityType: identityType,
-        identityNo: x.identityNo,
-        fullName: x.fullName,
-        sex: x.gender,
-        telephone: x.phoneNumber,
-        birthday: x.dateOfBirth,
-        nationalityId: x.nationalityId,
-        countryId: x.nationalityId,
-        addressDetail: x.addressDetail,
-        provinceId: x.provinceId,
-        districtId: x.districtId,
-        wardId: x.wardId,
-        note: x.note
-      };
-      return b;
-    });
-    body.data = listResident;
-
-    this.loading = true;
-
-  }
-
   async onDateRangeChange() {
     this.numOfRooms = 0;
     this.myForm.get('checkInTime')?.markAsDirty();
@@ -440,6 +380,9 @@ export class CreateBookingComponent implements OnInit {
   }
 
   handleCalPrice(values: any) {
+    if (values.id && this.listRoomTypeId.indexOf(values.id) === -1) {
+      this.listRoomTypeId.push(values.id);
+    }
     this.numOfRooms = sumBy(this.items, (x: any) => x.quantity || 0);
     this.updateInvoice();
   }
@@ -517,19 +460,6 @@ export class CreateBookingComponent implements OnInit {
     });
   }
 
-  async getData(paging: PagingModel = { page: 1, size: 20 }) {
-    // this.dialogService.openLoading();
-    // const res = await this.roomService.findOne(this.uuid).firstValueFrom();
-    // const data = {
-    //   roomTypeId: res.data.room_type_id,
-    //   roomId: res.data.id,
-    // }
-    // this.dataRoom = res.data;
-    // this.myForm.patchValue(data);
-    // this.whereRoom = res.data.hotel_id;
-    // this.dialogService.closeLoading();
-  }
-
   handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
     const dialog = this.dialogService.openDialog(
       async (option) => {
@@ -546,7 +476,6 @@ export class CreateBookingComponent implements OnInit {
           this.dialogService.closeDialogById(dialog.id);
           if (eventValue) {
             this.handlerGetDataQrCode(eventValue);
-            this.getData({ ...this.paging });
           }
         }
       }
@@ -579,68 +508,85 @@ export class CreateBookingComponent implements OnInit {
   }
 
   async handlerSubmit() {
-    // if (!this.listGuest.length) {
-    //   this.handleAddGuest();
-    // }
+    if (!this.listGuest.length) {
+      this.handleAddGuest();
+    }
 
-    // if (this.listGuest.length) {
-    //   this.clearValidator();
-    // }
+    if (this.listGuest.length) {
+      this.clearValidator();
+    }
 
-    // const body = this.myForm.getRawValue();
-    // if (body.guests.natId !== 196) {
-    //   body.guests.identityNo = null;
-    // } else {
-    //   body.guests.passportNumber = null;
-    // }
+    const body = this.myForm.getRawValue();
+    if (body.guests.natId !== 196) {
+      body.guests.identityNo = null;
+    } else {
+      body.guests.passportNumber = null;
+    }
 
-    // const guests = this.listGuest.map(x => ({
-    //   uuid: this.ex.newGuid(),
-    //   name: x.fullName,
-    //   id_number: x.identityNo,
-    //   passport_number: x.passportNumber,
-    //   phone_number: x.phoneNumber,
-    //   province_id: x.provinceId,
-    //   district_id: x.districtId,
-    //   ward_id: x.wardId,
-    //   gender: x.gender,
-    //   birth_date: x.dateOfBirth,
-    //   representative: x.representative,
-    //   nat_id: x.natId,
-    //   contact_details: JSON.stringify({ addressDetail: x.addressDetail })
-    // }));
+    const guests = this.listGuest.map(x => ({
+      uuid: this.ex.newGuid(),
+      name: x.fullName,
+      id_number: x.identityNo,
+      passport_number: x.passportNumber,
+      phone_number: x.phoneNumber,
+      province_id: x.provinceId,
+      district_id: x.districtId,
+      ward_id: x.wardId,
+      gender: x.gender,
+      birth_date: x.dateOfBirth,
+      representative: x.representative,
+      nat_id: x.natId,
+      contact_details: JSON.stringify({ addressDetail: x.addressDetail })
+    }));
 
-    // const formData = {
-    //   guests: guests,
+    const formData = {
 
-    //   transition: {
-    //     uuid: this.ex.newGuid(),
-    //     guest_id: null,
-    //     transition_date: this.myForm.get('checkInTime')?.value,
-    //     payment_status: 1,
-    //   },
-    //   roomUsing: {
-    //     uuid: this.ex.newGuid(),
-    //     trans_id: null,
-    //     room_id: this.dataRoom.id,
-    //     check_in: this.myForm.get('checkInTime')?.value,
-    //     total_amount: this.remainingAmount ? this.remainingAmount : this.myForm.get('finalPrice')?.value
-    //   },
-    //   roomUsingGuest: {
-    //     check_in: this.myForm.get('checkInTime')?.value,
-    //     check_out: this.myForm.get('checkOutTime')?.value,
-    //   }
-    // };
+      listRoomTypeId: this.listRoomTypeId,
 
-    // this.dialogService.openLoading();
-    // const res = await this.orderRoomService.add(formData).firstValueFrom();
-    // this.dialogService.closeLoading();
-    // if (res.data) {
-    //   this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
-    // } else {
-    //   this.messageService.notiMessageError("Lỗi hệ thống, vui lòng thực hiện lại");
-    // }
-    // this.close(true);
+      bookings: {
+        room_type_id: null,
+        guest_count: this.myForm.get('numOfResidents')?.value,
+        check_in: this.myForm.get('checkInTime')?.value,
+        check_out: this.myForm.get('checkOutTime')?.value,
+        status: 1,
+        representative_id: null,
+        room_using_id: null,
+        order_date: this.myForm.get('checkInTime')?.value,
+        room_quantity: this.numOfRooms,
+        group_name: this.myForm.get('groupName')?.value
+      },
+
+      transition: {
+        uuid: this.ex.newGuid(),
+        guest_id: null,
+        transition_date: this.myForm.get('checkInTime')?.value,
+        payment_status: 1,
+      },
+
+      guests: guests,
+
+      roomUsing: {
+        uuid: this.ex.newGuid(),
+        trans_id: null,
+        room_id: null,
+        check_in: this.myForm.get('checkInTime')?.value,
+        total_amount: this.remainingAmount
+      },
+      roomUsingGuest: {
+        check_in: this.myForm.get('checkInTime')?.value,
+        check_out: this.myForm.get('checkOutTime')?.value,
+      }
+    };
+
+    this.dialogService.openLoading();
+    const res = await this.bookingService.add(formData).firstValueFrom();
+    this.dialogService.closeLoading();
+    if (res.data) {
+      this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
+    } else {
+      this.messageService.notiMessageError("Lỗi hệ thống, vui lòng thực hiện lại");
+    }
+    this.close(true);
   }
 
   clearValidator() {

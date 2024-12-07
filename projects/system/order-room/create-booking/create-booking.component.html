@@ -179,7 +179,7 @@
         </div>
       </ng-container>
 
-      <ng-container *ngIf="checkType === 1">
+      <!-- <ng-container *ngIf="checkType === 1">
         <div class="title-group">
           <div class="title-label">
             <i class="isax-user-tick1"></i> Thông tin người đại diện
@@ -199,7 +199,7 @@
             </app-form-control>
           </div>
         </div>
-      </ng-container>
+      </ng-container> -->
 
       <div class="customer-data">
         <div class="customer-detail">
@@ -219,6 +219,11 @@
               </button> -->
               <button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
                 <i class="isax-scan-barcode1 mr-2"></i>Quét CCCD
+              </button>
+
+
+              <button type="button" class="btn btn-primary ml-2" (click)="handleAddGuest()">
+                <i class="isax-add-circle1 mr-2"></i>Thêm khách
               </button>
 
               <!-- <app-customer-scanner-button (success)="data = $event"></app-customer-scanner-button> -->
@@ -281,17 +286,17 @@
           </div>
         </div>
         <div class="customer-list">
-          <div class="title-group">
+          <div class="title-group2">
             <div class="title-label">
               <i class="isax-house-21"></i> Danh sách khách
             </div>
             <div class="title-control">
-              <button type="button" class="btn btn-default" (click)="handleRemoveGuest()">
-                <i class="isax-trash1 mr-2"></i>Xóa khách
+              <button type="button" class="btn btn-default mr-2" (click)="addModel()">
+                <i class="isax-clipboard-import mr-2"></i>Thêm danh sách khách
               </button>
 
-              <button type="button" class="btn btn-primary ml-2" (click)="handleAddGuest()">
-                <i class="isax-add-circle1 mr-2"></i>Thêm khách
+              <button *ngIf="residentIndex !== -1" type="button" class="btn btn-default" (click)="deleteResident()">
+                <i class="isax-trash1 mr-2"></i>Xóa khách
               </button>
             </div>
           </div>
@@ -323,7 +328,7 @@
       <i nz-icon nzType="close" nzTheme="outline"></i>
       Đóng
     </button>
-    <button [nzLoading]="loading" nz-button type="button" class="btn btn-primary ml-2" (click)="submit()">
+    <button [nzLoading]="loading" nz-button type="button" class="btn btn-primary ml-2" (click)="handlerSubmit()">
       <i nz-icon nzType="save" nzTheme="outline"></i>
       Đặt phòng
     </button>

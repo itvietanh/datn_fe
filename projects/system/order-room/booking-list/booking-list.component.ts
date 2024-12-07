@@ -131,7 +131,7 @@ export class BookingListComponent implements OnInit {
     this.dialogService.openLoading();
     const rs = await this.bookingService.getPaging(params).firstValueFrom();
     this.dialogService.closeLoading();
-    this.items = rs.data!.items;
+    this.items = rs.data!.items;  
     this.paging = rs.data?.meta;
   }
 

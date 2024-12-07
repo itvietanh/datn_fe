@@ -174,7 +174,7 @@ export class TabContactStep3Component implements OnInit {
     this.dialogService.closeLoading();
     if (res.data) {
       this.messageService.notiMessageSuccess('Trả phòng thành công');
-      this.onClose.emit();
+      this.onClose.emit(true);
     }
   }
 

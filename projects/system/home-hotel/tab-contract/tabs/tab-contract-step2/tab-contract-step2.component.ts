@@ -18,7 +18,7 @@ export class TabContactStep2Component implements OnInit {
 
   public myForm: FormGroup;
   roomAmount: any;
-  listService: any[] = [];
+  listService: any;
 
   columns: ColumnConfig[] = [
     {
@@ -81,11 +81,7 @@ export class TabContactStep2Component implements OnInit {
     this.dialogService.openLoading();
     const res = await this.orderRoomService.getListService({ ruUuid: this.shareData.item.ruUuid }).firstValueFrom();
     const data = res.data?.items;
-    if (data) {
-      data.forEach(item => {
-        this.listService.push(item);
-      });
-    }
+    this.listService = data;
     this.dialogService.closeLoading();
   }
 
@@ -153,6 +149,7 @@ export class TabContactStep2Component implements OnInit {
           if (eventValue) {
             this.shareData.getDataTab1();
           }
+          this.getListService();
         }
       }
     );
@@ -172,7 +169,7 @@ export class TabContactStep2Component implements OnInit {
         if (eventName === 'onClose') {
           this.dialogService.closeDialogById(dialog.id);
           if (eventValue) {
-            this.shareData.getDataTab1();
+            this.shareData.closeDialog();
           }
         }
       }

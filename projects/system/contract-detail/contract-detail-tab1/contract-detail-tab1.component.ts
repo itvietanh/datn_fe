@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ColumnConfig } from 'common/base/models';
 import { MessageService } from 'common/base/service/message.service';
-import { sumBy } from 'lodash-es';
+import { sumBy, values } from 'lodash-es';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { filter, finalize } from 'rxjs';
 import {
@@ -14,6 +14,8 @@ import {
   ServiceService,
 } from 'share';
 import { ResidentDataComponent } from '../resident-data/resident-data.component';
+import { RoomTypeService } from 'common/share/src/service/application/hotel/room-type.service';
+import { RoomService } from 'common/share/src/service/application/hotel/room.service';
 
 @Component({
   selector: 'app-contract-detail-tab1',
@@ -52,7 +54,7 @@ export class ContractDetailTab1Component implements OnInit {
   services: any[] = [];
   service: any;
   rooms: any[] = [];
-  roomTypes: any[] = [];
+  roomTypes: any;
   selectedRoom: any;
   selectedRoomTypes: any;
   selectedType: any;
@@ -73,7 +75,9 @@ export class ContractDetailTab1Component implements OnInit {
     private contractService: ContractService,
     private contractResidentService: ContractResidentService,
     private serviceservice: ServiceService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    public roomTypeService: RoomTypeService,
+    public roomService: RoomService,
   ) { }
 
   ngOnInit() {
@@ -90,24 +94,28 @@ export class ContractDetailTab1Component implements OnInit {
   }
 
   async roomType(option: any) {
-    const ok = await this.messageService.confirm(
-      'Bạn có muốn đổi sang loại phòng này không?'
-    );
-    if (!ok) {
-      this.selectedRoomTypes = this.selectedType;
-      return;
-    }
+    this.roomTypes = {
+      room_type_id: option.value
+    };
+    debugger;
+    // const ok = await this.messageService.confirm(
+    //   'Bạn có muốn đổi sang loại phòng này không?'
+    // );
+    // if (!ok) {
+    //   this.selectedRoomTypes = this.selectedType;
+    //   return;
+    // }
 
   }
 
   async onRoomChange(option: any) {
-    const ok = await this.messageService.confirm(
-      'Bạn có muốn gán phòng này không?'
-    );
-    if (!ok) {
-      this.selectedRoom = null;
-      return;
-    }
+    // const ok = await this.messageService.confirm(
+    //   'Bạn có muốn gán phòng này không?'
+    // );
+    // if (!ok) {
+    //   this.selectedRoom = null;
+    //   return;
+    // }
 
   }
 
