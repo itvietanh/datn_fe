@@ -111,6 +111,13 @@ const routes: Routes = [
             (x) => x.OrderRoomModule
           ),
       },
+      {
+        path: 'lich-su',
+        loadChildren: () =>
+          import('./order-history/order-history.module').then(
+            (x) => x.OrderHistoryModule
+          ),
+      },
     ],
   },
 ];

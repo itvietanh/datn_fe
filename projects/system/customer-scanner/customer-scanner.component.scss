@@ -1,0 +1,76 @@
+@import "variables";
+
+.title {
+  font-style: italic;
+}
+
+zxing-scanner {
+  width: 300px;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+.tab-title {
+  width: 120px;
+  text-align: center;
+}
+
+.status {
+  text-align: center;
+  color: #d71920;
+}
+
+.navigation-icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.nz-tabset {
+  flex: 1;
+  /* Để tabset chiếm phần giữa */
+}
+
+
+.nav-left,
+.nav-right {
+  display: none;
+
+}
+
+.qr-close {
+  left: 43%;
+}
+
+.multiScan {
+  position: absolute;
+  left: 63px;
+
+}
+
+@include mobile {
+
+  .nav-left,
+  .nav-right {
+    display: block;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    /* Kích thước icon */
+    margin-bottom: -15%;
+    color: #a5a5a5;
+  }
+
+  .qr-close {
+    left: 33%;
+    margin-top: 50px;
+    margin-bottom: -20px;
+  }
+
+  .multiScan {
+    margin-top: 10px;
+
+  }
+}

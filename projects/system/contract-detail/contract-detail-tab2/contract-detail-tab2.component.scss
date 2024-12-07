@@ -1,0 +1,192 @@
+app-contract-detail-tab2 {
+
+  @import "variables";
+
+  .list-control-footer {
+    @include mobile {
+      left: 0px !important;
+    }
+  }
+
+  .ant-collapse>.ant-collapse-item>.ant-collapse-header {
+    border-bottom: solid 1px #f0f0f0;
+    background: none;
+    color: #201f1e;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 0px;
+    padding-left: 10px;
+
+
+  }
+
+  .list-room {
+    margin-top: 15px;
+
+    .room-item {
+      position: relative;
+
+      .check-in-out {
+        width: 329px;
+        display: flex;
+        justify-content: space-between;
+        text-align: center;
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+
+        @include mobile {
+          padding-top: 30px;
+        }
+
+        .check-space {
+          width: 20px;
+        }
+
+        .isax-calendar-tick1 {
+          color: #08962b;
+        }
+
+        .isax-calendar-remove1 {
+          color: #ab0909;
+        }
+      }
+
+      .total-money {
+        position: absolute;
+        top: 12px;
+        right: 40px;
+        font-weight: 500;
+        font-size: 15px;
+        color: #da130e;
+      }
+
+      .room-data {
+        @include mobile {
+          padding-top: 20px;
+        }
+      }
+    }
+  }
+
+  .service-list {
+    position: relative;
+
+    .service-total {
+      position: absolute;
+      top: 5px;
+      right: 75px;
+      font-weight: 500;
+      font-size: 15px;
+      color: #da130e;
+    }
+
+    .service-item {
+      padding: 0 15px;
+    }
+  }
+
+  .name-service-container {
+    width: 65%;
+  }
+
+  .paid-list-container {
+    width: 65%;
+  }
+
+  .paid-item-container {
+    overflow: hidden;
+  }
+
+  .amount-container {
+    // width: 10%;
+    width: 35%;
+    position: relative;
+    text-align: right;
+
+    .original-1 {
+      position: absolute;
+      top: 0;
+      left: -130px;
+      // width: 100%;
+      height: 100%;
+      transition: opacity 0.3s-in-out;
+      display: inline-flex;
+    }
+
+    .original,
+    .replacement {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transition: opacity 0.3s-in-out;
+    }
+
+    .replacement {
+      opacity: 0;
+      color: #b22424;
+      cursor: pointer;
+
+      .del {
+        color: #b22424;
+      }
+
+      .edit {
+        color: #073288;
+      }
+    }
+
+    &:hover {
+      .original {
+        opacity: 0;
+      }
+
+      .replacement {
+        opacity: 1;
+      }
+    }
+  }
+
+  .amount-container-2 {
+    width: 10%;
+    position: relative;
+    text-align: right;
+    float: right;
+
+    .original,
+    .replacement {
+      top: 0;
+      right: 0;
+      // width: 100%;
+      height: 100%;
+      transition: opacity 0.3s-in-out;
+    }
+
+    .replacement {
+      // opacity: 0;
+      color: #b22424;
+    }
+
+    // &:hover {
+    //   .original {
+    //     opacity: 0;
+    //   }
+
+    //   .replacement {
+    //     opacity: 1;
+    //   }
+    // }
+  }
+
+  .color-primary {
+    color: #2754c4;
+  }
+
+  .total {
+    font-weight: 700;
+    font-size: 16px;
+  }
+}

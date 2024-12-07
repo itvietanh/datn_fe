@@ -28,9 +28,9 @@
     </nz-tabset>
     <div class="lst-controls d-flex justify-content-between">
       <app-filter></app-filter>
-      <button *ngIf="0 === 0" type="button" class="loc-nang-cao btn btn-default ml-1">
+      <!-- <button *ngIf="0 === 0" type="button" class="loc-nang-cao btn btn-default ml-1">
         <span nz-icon nzType="filter" nzTheme="outline"></span> Lọc nâng cao
-      </button>
+      </button> -->
     </div>
     <!-- <nz-tabset
       [(nzSelectedIndex)]="selectedIndex"
@@ -57,13 +57,14 @@
     </div> -->
 
     <div class="ux-pc">
-      <app-table [columns]="columns" [items]="items" [loading]="loading" [showIndex]="false">
-        <ng-template [appCellTemplate]="'contractType'" let-item>
-          <!-- {{ contractTypesDict[item.contractType] }} -->gggg
+      <app-table [columns]="columns" [items]="items" [loading]="loading" [showIndex]="true">
+        <ng-template [appCellTemplate]="'status'" let-item>
+          {{item.status | labelValue: listStatus}}
         </ng-template>
+
         <ng-template [appCellTemplate]="'action'" let-item>
           <div *ngIf="item.status === 1" class="list-icons list-icons-extended text-center">
-            <a class="list-icons-item action-edit">
+            <a class="list-icons-item action-edit" (click)="showContractDetailModal()">
               <i nz-tooltip nzTooltipTitle="Nhận phòng" nz-icon nzType="login" nzTheme="outline"></i>
             </a>
             <a class="list-icons-item action-delete">
@@ -72,67 +73,7 @@
           </div>
         </ng-template>
       </app-table>
-      <!-- <app-table [columns]="columns" [items]="items" [loading]="loading" [showIndex]="false" [pagination]="pagination">
-        <ng-template [appCellTemplate]="'contractType'" let-item>
-          {{ contractTypesDict[item.contractType] }}
-        </ng-template>
-        <ng-template [appCellTemplate]="'action'" let-item>
-          <div *ngIf="item.status === contractStatus.RESERVE" class="list-icons list-icons-extended text-center">
-            <a class="list-icons-item action-edit">
-              <i nz-tooltip nzTooltipTitle="Nhận phòng" nz-icon nzType="login" nzTheme="outline"></i>
-            </a>
-            <a class="list-icons-item action-delete">
-              <span nz-tooltip nzTooltipTitle="Hủy đặt phòng" class="isax-trash1"></span>
-            </a>
-          </div>
-        </ng-template>
-      </app-table> -->
-    </div>
-
-    <div class="ux-mobile card-container" [class.loading]="loading">
-      <div class="custom-card" *ngFor="let item of items">
-        <div class="card-body">
-          <ul>
-            <li>
-              <strong>Người đại diện:</strong> {{ item.representativeName }}
-            </li>
-            <li><strong>Đoàn:</strong> {{ item.groupName }}</li>
-            <li>
-              <!-- <strong>Khách:</strong> {{ contractTypesDict[item.contractType] }} -->
-              <strong>Khách:</strong> {{ 333 }}
-            </li>
-            <li>
-              <strong>Ngày đặt:</strong>
-              {{ item.reservationTime | datetimeFormat }}
-            </li>
-            <li>
-              <strong>Ngày nhận phòng:</strong>
-              {{ item.checkInTime | datetimeFormat }}
-            </li>
-            <li>
-              <strong>Ngày trả phòng:</strong>
-              {{ item.checkOutTime | datetimeFormat }}
-            </li>
-            <li><strong>Số lượng phòng:</strong> {{ item.numOfResidences }}</li>
-            <li><strong>Số lượng người:</strong> {{ item.numOfResidents }}</li>
-            <li>
-              <strong>Trạng thái:</strong>
-              1
-              <!-- {{ item.status | labelValue : listStatus }} -->
-            </li>
-          </ul>
-        </div>
-        <div class="list-icons list-icons-extended text-center round" *ngIf="item.status === 1">
-          <a class="list-icons-item action-edit rounded-btn">
-            <i nz-tooltip nzTooltipTitle="Nhận phòng" nz-icon nzType="login" nzTheme="outline"></i>
-          </a>
-          <a class="list-icons-item action-delete rounded-btn">
-            <span nz-tooltip nzTooltipTitle="Hủy đặt phòng" class="isax-trash1"></span>
-          </a>
-
-        </div>
-      </div>
-      <!-- <app-paging [data]="pagination" (onChange)="getData($event)" [temp]="2"></app-paging> -->
+      <!-- <app-paging [data]="paging" (onChange)="getData($event)" [temp]="2"></app-paging> -->
     </div>
   </div>
 </div>

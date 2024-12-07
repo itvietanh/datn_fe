@@ -1,0 +1,316 @@
+@import "variables";
+
+.list-control-footer {
+  @include mobile {
+    left: 0px !important;
+  }
+}
+
+nz-divider {
+  margin: 5px 0;
+}
+
+.active {
+  background: #eaf2f9;
+}
+
+.fw-500 {
+  font-weight: 500;
+}
+
+.text-primary {
+  color: #2754c4;
+}
+
+.text-danger {
+  color: #be0a0a;
+}
+
+.text-secondary {
+  color: #24869b;
+}
+
+.list-room {
+  width: 260px;
+  height: 100%;
+  border: solid 1px #f0f0f0;
+  border-top: none;
+  border-left: none;
+  border-bottom: none;
+  top: -16px;
+  left: 0px;
+  position: absolute;
+
+  @include mobile {
+    display: none;
+  }
+
+  .title {
+    font-weight: 500;
+    height: 36px;
+    line-height: 36px;
+    border-bottom: solid 1px #f0f0f0;
+    margin-bottom: 8px;
+  }
+
+  .room-item {
+    padding: 8px 8px;
+    border-radius: 4px;
+    margin-right: 6px;
+  }
+}
+
+.content-data {
+  padding-left: 270px;
+  padding-right: 400px;
+
+  @include mobile {
+    padding: 0px !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .check-in-out {
+    display: flex;
+    justify-content: space-between;
+    width: 480px;
+
+    @include mobile {
+      display: flex;
+      justify-content: space-between;
+      width: 480px;
+      flex-direction: column;
+    }
+
+    .isax-calendar-tick1 {
+      color: #08962b;
+    }
+
+    .isax-calendar-remove1 {
+      color: #ab0909;
+    }
+  }
+
+  .isax-money-recive1 {
+    color: #ab0909;
+  }
+
+  .isax-profile-2user1 {
+    color: #3283cf;
+  }
+
+  .resident-list {
+    padding-top: 20px;
+
+    .resident-item {
+      border: solid 1px #ccc;
+      border-radius: 3px;
+      padding: 12px 8px 8px 8px;
+      margin-bottom: 30px;
+      position: relative;
+
+      .item-name {
+        position: absolute;
+        top: -14px;
+        left: 4px;
+        background-color: #fff;
+        padding: 0px 5px;
+        font-size: 15px;
+        font-weight: 500;
+
+        .isax-man1 {
+          color: #0253a0;
+        }
+
+        .isax-woman1 {
+          color: #db3e3e;
+        }
+      }
+
+      .item-data {
+        display: flex;
+        justify-content: space-between;
+
+        .birth {
+          color: #144e9f;
+
+          i {
+            color: #144e9f;
+          }
+        }
+
+        .isax-card-tick-1 {
+          color: #db3e3e;
+        }
+      }
+
+      .check-in-out {
+        display: flex;
+        justify-content: space-between;
+        text-align: center;
+        width: 200px;
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+
+        .check-space {
+          width: 20px;
+        }
+
+        .day {
+          font-weight: 500;
+        }
+      }
+
+      .item-action {
+        position: absolute;
+        top: -15px;
+        right: -15px;
+        display: flex;
+
+        .btn {
+          width: 32px;
+          height: 32px;
+          padding: 0;
+          border-radius: 50%;
+          margin-left: 8px;
+        }
+      }
+    }
+  }
+}
+
+.room-money {
+  width: 380px;
+  position: absolute;
+  right: 0px;
+  top: -16px;
+  bottom: 0px;
+  background-color: #f6f6f6;
+  overflow: auto;
+  padding: 10px;
+
+  @include mobile {
+    padding-left: 0px;
+    width: 370px;
+    position: static !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .name-service-container {
+    width: 65%;
+  }
+
+  .amount-container {
+    width: 35%;
+    position: relative;
+    text-align: right;
+
+    .original,
+    .replacement {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transition: opacity 0.3s-in-out;
+    }
+
+    .replacement {
+      opacity: 0;
+      color: #b22424;
+      cursor: pointer;
+
+      .del {
+        color: #b22424;
+      }
+
+      .edit {
+        color: #073288;
+      }
+    }
+
+    &:hover {
+      .original {
+        opacity: 0;
+      }
+
+      .replacement {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.color-primary {
+  color: #2754c4;
+}
+
+.ant-menu-inline {
+  border-right: unset;
+}
+
+.add-resident {
+  height: 25px;
+  line-height: 12px;
+}
+
+.cancel {
+  font-size: 20px;
+  color: red !important;
+  margin-left: 10px;
+  position: relative;
+  top: 2px;
+}
+
+@include mobile {
+  .title-group {
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+
+    .title-control {
+      >.d-flex {}
+    }
+  }
+
+  .money-flex {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.ux-pc {
+  display: block;
+
+  @include mobile {
+    display: none;
+  }
+}
+
+.ux-mobile {
+  display: none;
+
+  @include mobile {
+    display: block;
+  }
+}
+
+@include mobile {
+  .title-control {
+    margin-bottom: 10px;
+  }
+
+  .title-label {
+    margin-bottom: 0px;
+  }
+
+  .check-out-btn {
+    margin-top: 5px;
+  }
+  .service-text{
+    padding: 5px 15px 5px 15px;
+  }
+}

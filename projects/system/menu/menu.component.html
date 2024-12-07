@@ -4,12 +4,7 @@
       <div class="breadcrumb-title">Danh sách menu</div>
       <div class="breadcrumb">
         <div class="list-control-main">
-          <button
-            nz-button
-            type="button"
-            class="btn btn-primary"
-            (click)="addDataDialog()"
-          >
+          <button nz-button type="button" class="btn btn-primary" (click)="addDataDialog()">
             <i class="isax-add-circle1 mr-2"></i>Thêm menu
           </button>
         </div>
@@ -22,24 +17,14 @@
   <div class="header-elements-inline">
     <div class="navbar-expand-md w-100">
       <div class="padding-left-15 text-right d-md-none w-100 row">
-        <button
-          class="navbar-toggler"
-          data-target="#search-list"
-          data-toggle="collapse"
-          type="button"
-        >
+        <button class="navbar-toggler" data-target="#search-list" data-toggle="collapse" type="button">
           <i nz-icon nzType="menu" nzTheme="outline"></i>
         </button>
       </div>
     </div>
   </div>
-  <nz-table
-    [nzData]="listOfData"
-    [nzBordered]="true"
-    [nzFrontPagination]="false"
-    nzSize="small"
-    [nzScroll]="{ x: 'scroll', y: 'calc(100vh - 100px)' }"
-  >
+  <nz-table [nzData]="listOfData" [nzBordered]="true" [nzFrontPagination]="false" nzSize="small"
+    [nzScroll]="{ x: 'scroll', y: 'calc(100vh - 100px)' }">
     <thead>
       <tr>
         <th class="text-center" nzWidth="50px">STT</th>
@@ -53,33 +38,23 @@
     </thead>
     <tbody>
       <ng-container *ngFor="let data of listOfData; let i = index">
-        <ng-container
-          *ngFor="
+        <ng-container *ngFor="
             let item of tableTreeConfig.mapOfExpandedData[
               data[tableTreeConfig.keyId]
             ];
             let j = index
-          "
-        >
-          <tr
-            *ngIf="(item.parent && item.parent.expand) || !item.parent"
-            [ngClass]="{
+          ">
+          <tr *ngIf="(item.parent && item.parent.expand) || !item.parent" [ngClass]="{
               isRoot: !item.parent
-            }"
-          >
+            }">
             <td class="text-center">{{ item.index }}</td>
             <td class="text-center">
               {{ item.code }}
             </td>
-            <td
-              class="text-left"
-              [ngStyle]="{
+            <td class="text-left" [ngStyle]="{
                 'padding-left':
                   5 + item.level! * 20 + (item.hasChild ? 0 : 5) + 'px'
-              }"
-              [nzShowExpand]="item.children.length > 0"
-              [(nzExpand)]="item.expand"
-              (nzExpandChange)="
+              }" [nzShowExpand]="item.children.length > 0" [(nzExpand)]="item.expand" (nzExpandChange)="
                 getChid(
                   tableTreeConfig.mapOfExpandedData[
                     data[tableTreeConfig.keyId]
@@ -87,50 +62,27 @@
                   item,
                   $event
                 )
-              "
-              nzLeft
-            >
+              " nzLeft>
               <i [class]="item.icon"></i>
               {{ item.name }}
             </td>
             <td class="text-left">{{ item.url }}</td>
             <td>{{ item.createdAt | datetimeFormat }}</td>
-            <td
-              class="text-center"
-              [ngClass]="{
+            <td class="text-center" [ngClass]="{
                 status0: item.isShow === true,
                 status1: item.isShow === false
-              }"
-              nzRight
-            >
+              }" nzRight>
               {{ item.isShow ? "Hiển thị" : "Ẩn" }}
             </td>
             <td class="text-center" nzRight>
               <div class="list-icons list-icons-extended text-center">
-                <a
-                  class="list-icons-item action-add"
-                  (click)="addDataDialog(item)"
-                >
-                  <span
-                    nz-tooltip
-                    nzTooltipTitle="Thêm menu con"
-                    class="isax-add1"
-                  ></span>
+                <a class="list-icons-item action-add" (click)="addDataDialog(item)">
+                  <span nz-tooltip nzTooltipTitle="Thêm menu con" class="isax-add1"></span>
                 </a>
-                <a
-                  class="list-icons-item action-edit"
-                  (click)="updateDataDialog(item)"
-                >
-                  <span
-                    nz-tooltip
-                    nzTooltipTitle="Cập nhật thông tin"
-                    class="isax-edit-21"
-                  ></span>
+                <a class="list-icons-item action-edit" (click)="updateDataDialog(item)">
+                  <span nz-tooltip nzTooltipTitle="Cập nhật thông tin" class="isax-edit-21"></span>
                 </a>
-                <a
-                  class="list-icons-item action-delete"
-                  (click)="handlerDelete(item)"
-                >
+                <a class="list-icons-item action-delete" (click)="handlerDelete(item)">
                   <span nz-tooltip nzTooltipTitle="Xóa">
                     <i class="isax-trash1"></i>
                   </span>

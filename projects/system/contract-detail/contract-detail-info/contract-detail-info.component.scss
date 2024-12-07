@@ -1,0 +1,152 @@
+@import "variables";
+
+.list-control-footer {
+  @include mobile {
+    left: 0px !important;
+  }
+}
+
+.contract-type {
+  @include mobile {
+    top: -30px !important;
+    width: 235px;
+  }
+}
+
+.space-between {
+  justify-content: space-between;
+  border: dotted 1px #ccc;
+  border-radius: 5px;
+  position: relative;
+  margin-top: 20px;
+  padding: 10px
+}
+
+.representative-data {
+  width: 100%;
+  padding-top: 15px;
+
+  .contract-type {
+    position: absolute;
+    text-align: center;
+    border-radius: 5px;
+    padding: 3px 10px;
+    border: solid 1px rgba(45, 120, 215, 0.568627451);
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff;
+  }
+
+  .name {
+    font-weight: 500;
+    margin-bottom: 5px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    border-bottom: solid 1px #f0f0f0;
+  }
+
+  .item-data {
+    display: flex;
+    margin-bottom: 8px;
+
+    .item-label {
+      width: 100px;
+      background-color: #eeeeee69;
+      padding: 0px 5px;
+      border-radius: 3px;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .item-value {
+      padding: 0px 5px;
+      background-color: #eeeeeedb;
+      min-width: 276px;
+      border-radius: 3px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}
+
+.check-in-out {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  padding-top: 102px;
+  padding-right: 25px;
+  padding-left: 25px;
+
+  .time {
+    position: absolute;
+    font-weight: 500;
+    top: 75px;
+    border-bottom: solid 1px #f0f0f0;
+    width: 195px;
+    text-align: center;
+  }
+
+  .check-space {
+    width: 20px;
+  }
+
+  .day {
+    font-weight: 500;
+  }
+}
+
+.action-control {
+  position: absolute;
+  bottom: 20px;
+  right: 0px;
+  width: 231px;
+  text-align: center;
+}
+
+.resident-list {
+  margin-top: 20px;
+
+  .resident-item {
+    border: solid 1px #ccc;
+    border-radius: 3px;
+    padding: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+
+    .name {
+      font-weight: 500;
+
+      .isax-man1 {
+        color: #363333;
+      }
+
+      .isax-woman1 {
+        color: #db3e3e;
+      }
+    }
+
+    .birth {
+      color: #144e9f;
+
+      i {
+        color: #144e9f;
+      }
+    }
+  }
+}
+
+.resident-list {
+  height: auto;
+  max-height: 600px;
+  overflow-y: auto;
+
+  @include mobile{
+    height: auto;
+    max-height: 400px;
+    overflow-y: auto;
+
+  }
+}
+

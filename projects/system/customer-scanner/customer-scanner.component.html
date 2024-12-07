@@ -1,0 +1,103 @@
+<button
+  aria-label="Close"
+  class="ant-modal-close ng-star-inserted"
+  (click)="closeDialog()"
+>
+  <span class="ant-modal-close-x">
+    <i
+      nz-icon
+      nzType="close"
+      nzTheme="outline"
+      class="anticon ant-modal-close-icon anticon-close"
+    ></i>
+  </span>
+</button>
+
+<div class="navigation-icons">
+  <span
+    nz-icon
+    nzType="left-circle"
+    nzTheme="outline"
+    aria-label="Previous"
+    class="nav-left"
+    (click)="goLeft()"
+  ></span>
+
+  <span
+    nz-icon
+    nzType="right-circle"
+    nzTheme="outline"
+    aria-label="Next"
+    class="nav-right"
+    (click)="goRight()"
+  ></span>
+</div>
+
+<nz-tabset
+  class="mx-4"
+  [nzSelectedIndex]="selectedIndex"
+  (nzSelectedIndexChange)="selectedIndexChange($event)"
+>
+  <ng-template #qrScanner>
+    <div class="tab-title">QR Scanner</div>
+  </ng-template>
+  <nz-tab [nzTitle]="qrScanner">
+    <ng-template nz-tab>
+      <nz-spin [nzSpinning]="!!loading" [nzTip]="loading">
+        <app-customer-scanner-qr
+          (scanSuccess)="scanSuccess($event)"
+        ></app-customer-scanner-qr>
+      </nz-spin>
+    </ng-template>
+  </nz-tab>
+  <ng-template #vneid>
+    <div class="tab-title">VNeID</div>
+  </ng-template>
+  <nz-tab [nzTitle]="vneid">
+    <ng-template nz-tab>
+      <app-customer-scanner-vneid
+        (qrChange)="scanVneidShared($event).subscribe()"
+      ></app-customer-scanner-vneid>
+    </ng-template>
+  </nz-tab>
+  <ng-template #idBox>
+    <div class="tab-title">ID Box</div>
+  </ng-template>
+  <nz-tab [nzTitle]="idBox">
+    <ng-template nz-tab>
+      <app-customer-scanner-id-box
+        (scanSuccess)="scanSuccess($event)"
+      ></app-customer-scanner-id-box>
+    </ng-template>
+  </nz-tab>
+  <ng-template #qrCamera>
+    <div class="tab-title">QR Camera</div>
+  </ng-template>
+  <nz-tab [nzTitle]="qrCamera">
+    <ng-template nz-tab>
+      <nz-spin [nzSpinning]="!!loading" [nzTip]="loading">
+        <p *ngIf="camerasNotFound" class="status">Không tìm thấy camera</p>
+        <p class="title">
+          Sử dụng Camera của máy tính để thực hiện quét mã CCCD hoặc mã định
+          danh điện tử trên ứng dụng VNeID của khách
+        </p>
+        <zxing-scanner
+          [formats]="allowedFormats"
+          (scanSuccess)="scanSuccess($event)"
+          (camerasNotFound)="camerasNotFound = true"
+        ></zxing-scanner>
+      </nz-spin>
+    </ng-template>
+  </nz-tab>
+</nz-tabset>
+<div class="multiScan" *ngIf="selectedIndex === 0">
+  <input-check-box [ngModel]="scanMulti" (ngModelChange)="setScanMulti($event)">Quét liên tục</input-check-box>
+</div>
+<button
+  nz-button
+  (click)="closeDialog()"
+  type="button"
+  class="btn btn-default qr-close"
+>
+  <i nz-icon nzType="close" nzTheme="outline"></i>Đóng
+</button>

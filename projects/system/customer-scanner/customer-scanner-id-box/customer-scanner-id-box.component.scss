@@ -1,0 +1,42 @@
+@import "variables";
+
+.circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #f6921e;
+  color: #fff;
+  text-align: center;
+  padding-top: 8px;
+}
+
+.title {
+  font-style: italic;
+}
+
+.status_w {
+  text-align: center;
+  color: #52c41a;
+}
+
+.status {
+  text-align: center;
+  color: #d71920;
+}
+
+.ux-pc {
+  display: block;
+
+  @include mobile {
+    display: none;
+  }
+}
+
+
+.ux-mobile {
+  display: none;
+
+  @include mobile {
+    display: block;
+  }
+}

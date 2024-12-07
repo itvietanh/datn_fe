@@ -9,48 +9,6 @@
         <div class="breadcrumb">
           <div class="list-control-main">
             <div class="contract-time">
-              <nz-spin [nzSpinning]="false">
-                <div class="ux-mobile">
-                  <div class="row">
-                    <div class="col-12">
-                      <app-form-control label="Từ ngày">
-                        <nz-input-group [nzAddOnAfter]="suffixHourse1">
-                          <input-date formControlName="checkInTime" [min]="toDay"
-                            (onChange)="onChangeStartDate()"></input-date>
-
-                          <ng-template #suffixHourse1>
-                            <input-select [allowClear]="false" placeholder="Giờ" formControlName="checkInTimeHour"
-                              [items]="listHour"></input-select>
-                          </ng-template>
-                        </nz-input-group>
-                      </app-form-control>
-                    </div>
-                    <div class="col-12">
-                      <app-form-control label="Đến ngày">
-                        <nz-input-group [nzAddOnAfter]="suffixHourse2">
-                          <input-date [allowClear]="false" formControlName="checkOutTime" [min]="toDay"></input-date>
-
-                          <ng-template #suffixHourse2>
-                            <input-select placeholder="Giờ" formControlName="checkOutTimeHour"
-                              [items]="listHour"></input-select>
-                          </ng-template>
-                        </nz-input-group>
-                      </app-form-control>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-12 text-center">
-                      <app-form-control>
-
-                        <button type="button" class="btn btn-primary w-100" (click)="onDateRangeChange()">
-                          Tìm kiếm
-                        </button>
-                      </app-form-control>
-                    </div>
-                  </div>
-                </div>
-              </nz-spin>
             </div>
 
             <div class="header-content">
@@ -73,64 +31,41 @@
   </div>
 
   <div class="content">
-    <div class="ux-pc">
+    <div class="row">
       <div class="row">
-        <div class="col-md-4">
-          <app-form-control label="Từ ngày">
-            <nz-input-group [nzAddOnAfter]="suffixHourse1">
-              <input-date formControlName="checkInTime" [min]="toDay" (onChange)="onChangeStartDate()"></input-date>
-
-              <ng-template #suffixHourse1>
-                <input-select [allowClear]="false" placeholder="Giờ" formControlName="checkInTimeHour"
-                  [items]="listHour"></input-select>
-              </ng-template>
-            </nz-input-group>
+        <div class="col-md-3">
+          <app-form-control label="Thời gian nhận phòng">
+            <input-date-time formControlName="checkInTime"></input-date-time>
+          </app-form-control>
+        </div>
+        <div class="col-md-3">
+          <app-form-control label="Thời gian trả phòng">
+            <input-date-time formControlName="checkOutTime" [min]="now"></input-date-time>
           </app-form-control>
         </div>
 
-        <div class="col-md-4">
-          <app-form-control label="Đến ngày">
-            <nz-input-group [nzAddOnAfter]="suffixHourse2">
-              <input-date [allowClear]="false" formControlName="checkOutTime" [min]="toDay"></input-date>
-
-              <ng-template #suffixHourse2>
-                <input-select placeholder="Giờ" formControlName="checkOutTimeHour" [items]="listHour"></input-select>
-              </ng-template>
-            </nz-input-group>
+        <div class="col-md-3">
+          <app-form-control label="Số khách ">
+            <nz-input-number formControlName="numOfResidents" (ngModelChange)="onQuantityChange()"
+              [nzMin]="0"></nz-input-number>
           </app-form-control>
         </div>
 
-        <div class="col-md-2">
-          <app-form-control label="Số khách: ">
-            <nz-input-number formControlName="numOfResidents" (ngModelChange)="onQuantityChange()" [nzMin]="0">
-            </nz-input-number>
-          </app-form-control>
-        </div>
-
-        <div class="col-md-2">
-          <app-form-control>
-            <button type="button" class="btn btn-primary" style="top: 21px; width: 46%; font-weight: 700"
-              (click)="onDateRangeChange()">
-              Tìm kiếm
-            </button>
-          </app-form-control>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-primary" style="top: 21px; width: 46%; font-weight: 700"
+            (click)="onDateRangeChange()">
+            Tìm kiếm
+          </button>
         </div>
       </div>
-    </div>
 
-    <div class="row">
       <div class="col-md-9">
         <div class="title-group">
           <div class="title-label">
             <i class="isax-house-21"></i><span> Thông tin đặt phòng</span>
           </div>
           <div class="title-control">
-            <span>Số lượng phòng: {{ numOfRooms }}</span>
-            <!-- <div class="count-member">
-              <span>Số khách: </span>
-              <nz-input-number formControlName="numOfResidents" (ngModelChange)="onQuantityChange()" [nzMin]="0"
-                [nzStep]="1"></nz-input-number>
-            </div> -->
+            <span>Số lượng đang chọn: {{ numOfRooms }}</span>
           </div>
         </div>
 
@@ -143,19 +78,18 @@
               <div class="row">
                 <div class="col-md-6">
                   <nz-input-number [ngModelOptions]="{ standalone: true }" [(ngModel)]="item.quantity"
-                    (ngModelChange)="onQuantityChange()" [nzMin]="0" [nzMax]="item.available"
+                    (ngModelChange)="handleCalPrice(item)" [nzMin]="0" [nzMax]="item.peopleMax"
                     [nzStep]="1"></nz-input-number>
                 </div>
-                <div class="col-md-6 m-auto" nz-tooltip nzTooltipTitle="Trống/Tổng">
-                  {{ item.phongtrong }}/{{ item.dango }}
+                <div class="col-md-6 m-auto" nz-tooltip nzTooltipTitle="Trống/Đang ở">
+                  {{ item.quantity ? item.phongtrong - item.quantity : item.phongtrong }}/{{ item.dango }}
                 </div>
               </div>
             </ng-template>
             <ng-template [appCellTemplate]="'priceId'" let-item>
               <div class="price-type">
                 <app-form-control>
-                  <input-select [allowClear]="false" [items]="pricesDict" formControlName="pricesDict"
-                    (onChange)="onInputSelectChange(item)"></input-select>
+                  <input-select [allowClear]="false" [items]="pricesDict" formControlName="pricesDict"></input-select>
                 </app-form-control>
                 <div class="price-type-info" nz-tooltip [nzTooltipTitle]="priceDetail">
                   <ng-template #priceDetail>
@@ -171,12 +105,12 @@
             </ng-template>
             <ng-template [appCellTemplate]="'total_price'" let-item>
               <nz-spin [nzSpinning]="item.loading">
-                <input-number [(ngModel)]="item.total_price" [ngModelOptions]="{ standalone: true }" [min]="0"
-                  [integerLimit]="10"></input-number>
+                <input-number [(ngModel)]="item.total_price" [ngModelOptions]="{ standalone: true }"
+                  [min]="0"></input-number>
               </nz-spin>
             </ng-template>
-            <ng-template [appCellTemplate]="'final_price'" let-item>
-              {{ item.final_price | moneyFormat }}
+            <ng-template [appCellTemplate]="'total_amount'" let-item>
+              {{ item.total_amount | moneyFormat }}
             </ng-template>
           </app-table>
         </div>
@@ -205,18 +139,14 @@
             <div class="col-md-7">Trả trước</div>
             <div class="col-md-5">
               <app-form-control>
-                <input-number [min]="0" [integerLimit]="10" formControlName="prepayment"></input-number>
-                <!-- <input-number [min]="0" [integerLimit]="10" formControlName="prepayment"
-                  (ngModelChange)="updateInvoice()"></input-number> -->
+                <input-number [min]="0" formControlName="prepayment" (ngModelChange)="updateInvoice()"></input-number>
               </app-form-control>
             </div>
 
-            <div class="col-md-7">Phụ trội</div>
+            <div class="col-md-7">Phụ phí</div>
             <div class="col-md-5">
               <app-form-control>
-                <input-number [min]="0" [integerLimit]="10" formControlName="prepayment"></input-number>
-                <!-- <input-number [min]="0" [integerLimit]="10" formControlName="prepayment"
-                  (ngModelChange)="updateInvoice()"></input-number> -->
+                <input-number [min]="0" formControlName="prepaid" (ngModelChange)="updateInvoice()"></input-number>
               </app-form-control>
             </div>
           </div>
@@ -278,24 +208,24 @@
               <i class="isax-house-21"></i> Thông tin khách
             </div>
             <div class="title-control">
-              <button (click)="resetForm()" nz-button type="button" class="btn btn-default mr-2"
-                *ngIf="residentIndex === -1">
+              <button nz-button type="button" class="btn btn-default mr-2" (click)="myForm.reset()">
                 <i class="isax-rotate-left1 mr-2"></i>Làm mới
               </button>
-              <button (click)="resetForm()" nz-button type="button" class="btn btn-default mr-2"
-                *ngIf="residentIndex === -1">
-                <i class="isax-rotate-left1 mr-2"></i>Thêm khách
-              </button>
-              <button (click)="cancelResident()" nz-button type="button" class="btn btn-default mr-2">
+              <!-- <button nz-button type="button" class="btn btn-default mr-2">
                 <i class="isax-rotate-left1 mr-2"></i>Hủy
-              </button>
-              <button (click)="updateResident()" nz-button type="button" class="btn btn-primary mr-2">
+              </button> -->
+              <!-- <button nz-button type="button" class="btn btn-primary mr-2">
                 <i class="isax-import-11 mr-2"></i>Cập nhật
+              </button> -->
+              <button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
+                <i class="isax-scan-barcode1 mr-2"></i>Quét CCCD
               </button>
-              <!-- <app-customer-scanner-button #btnScaner (success)="data = $event"
-                (successMulti)="scanMulti($event)"></app-customer-scanner-button> -->
+
+              <!-- <app-customer-scanner-button (success)="data = $event"></app-customer-scanner-button> -->
             </div>
           </div>
+
+          <!-- <app-customer-data [(form)]="resident" [data]="items"></app-customer-data> -->
           <div class="row mt-2" formGroupName="guests">
             <div class="col-md-4">
               <app-form-control label="Họ tên">
@@ -304,7 +234,7 @@
             </div>
             <div class="col-md-4">
               <app-form-control label="Giới tính">
-                <input-text formControlName="gender"></input-text>
+                <input-select [items]="listGender" formControlName="gender"></input-select>
               </app-form-control>
             </div>
             <div class="col-md-4">
@@ -317,69 +247,70 @@
                 <input-text formControlName="phoneNumber"></input-text>
               </app-form-control>
             </div>
-            <!-- <div class="col-md-4">
-              <app-form-control label="Loại giấy tờ">
-                <input-select formControlName="identityType"></input-select>
-              </app-form-control>
-            </div> -->
-            <!-- <div *ngIf="form.get('identityType')?.value === 'GTK'" class="col-md-4">
-              <app-form-control label="Tên giấy tờ">
-                <input-text formControlName="identityName"></input-text>
-              </app-form-control>
-            </div> -->
             <div class="col-md-4">
-              <app-form-control label="Số giấy tờ">
+              <app-form-control label="Quốc tịch">
+                <input-select-api [apiService]="diaBanService" [actionName]="'getComboboxQT'" formControlName="natId">
+                </input-select-api>
+              </app-form-control>
+            </div>
+            <div class="col-md-4" *ngIf="myForm.get('guests.natId')?.value === 196">
+              <app-form-control label="Số CCCD">
                 <input-text formControlName="identityNo"></input-text>
               </app-form-control>
             </div>
+            <div class="col-md-4">
+              <app-form-control label="Số hộ chiếu" *ngIf="myForm.get('guests.natId')?.value !== 196">
+                <input-text formControlName="passportNumber"></input-text>
+              </app-form-control>
+            </div>
+
+            <ng-container *ngIf="myForm.get('guests.natId')?.value === 196">
+              <div class="col-md-12">
+                <input-diaban [apiService]="diaBanService" [city]="myForm.get('guests.provinceId')"
+                  [district]="myForm.get('guests.districtId')" [village]="myForm.get('guests.wardId')"></input-diaban>
+              </div>
+            </ng-container>
+
             <ng-container>
               <div class="col-md-12">
-                <input-diaban [city]="myForm.get('provinceId')" [district]="myForm.get('districtId')"
-                  [village]="myForm.get('wardId')" [address]="myForm.get('addressDetail')"></input-diaban>
-              </div>
-              <div class="col-md-12">
-                <app-form-control label="Nơi làm việc">
-                  <input-textarea [maxlength]="225" formControlName="workplace"></input-textarea>
+                <app-form-control label="Địa chỉ chi tiết">
+                  <input-text formControlName="addressDetail"></input-text>
                 </app-form-control>
               </div>
             </ng-container>
           </div>
-          <!-- <app-customer-data [(form)]="resident" [data]="data"></app-customer-data> -->
         </div>
         <div class="customer-list">
-          <div class="title-group2">
+          <div class="title-group">
             <div class="title-label">
               <i class="isax-house-21"></i> Danh sách khách
             </div>
             <div class="title-control">
-              <button type="button" class="btn btn-default mr-2" (click)="addModel()">
-                <i class="isax-clipboard-import mr-2"></i>Thêm danh sách khách
-              </button>
-
-              <button type="button" class="btn btn-default" (click)="deleteResident()">
+              <button type="button" class="btn btn-default" (click)="handleRemoveGuest()">
                 <i class="isax-trash1 mr-2"></i>Xóa khách
               </button>
-              <!-- <button *ngIf="residentIndex === -1" type="button" class="btn btn-primary" (click)="addResident()">
+
+              <button type="button" class="btn btn-primary ml-2" (click)="handleAddGuest()">
                 <i class="isax-add-circle1 mr-2"></i>Thêm khách
-              </button> -->
+              </button>
             </div>
           </div>
 
           <div class="resident-list">
             <div class="resident-item selected" *ngFor="let item of listGuest">
-              <div class="name">
+              <div class="name" (click)="handleChooseGuest(item)">
                 <i class="mr-1" [ngClass]="{
                     'isax-man1': item.gender === 'Nam',
                     'isax-woman1': item.gender === 'Nữ'
                   }"></i>
-                {{item.fullName.toUpperCase() ?? "Đang nhập thông tin khách..."}}
+                {{ item.fullName.toUpperCase() ?? "Đang nhập thông tin khách..." }}
               </div>
               <div class="title-label" *ngIf="item.representative">
                 Người đại diện
               </div>
               <div class="birth">
                 <i class="isax-cake1 mr-1"></i>
-                {{item.birthDateText}}
+                {{ item.dateOfBirth }}
               </div>
             </div>
           </div>

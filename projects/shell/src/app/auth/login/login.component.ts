@@ -71,6 +71,8 @@ export class LoginComponent implements OnInit {
       LocalStorageUtil.setItem(ACCESS_TOKEN_KEY, res.access_token);
       LocalStorageUtil.setHotelId(res.employee.hotel_id);
       this.router.navigateByUrl(this.redirectLogin);
+    } else {
+      this.messageService.notiMessageError("Tài khoản hoặc mật khẩu không chính xác!");
     }
     this.dialogService.closeLoading();
   }

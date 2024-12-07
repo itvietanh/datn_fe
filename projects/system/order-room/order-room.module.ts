@@ -14,6 +14,7 @@ import { CreateBookingComponent } from './create-booking/create-booking.componen
 import { EditBookingComponent } from './edit-booking/edit-booking.component';
 import { ImportBookingComponent } from './create-booking/import-booking/import-booking.component';
 import { CommonModule } from '@angular/common';
+import { ContractDetailModule } from '../contract-detail/contract-detail.module';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import { CommonModule } from '@angular/common';
     NzInputModule,
     NzBadgeModule,
     NzUploadModule,
+    ContractDetailModule,
     RouterModule.forChild([
       { path: '', component: BookingListComponent },
       { path: 'dat-phong', component: CreateBookingComponent },

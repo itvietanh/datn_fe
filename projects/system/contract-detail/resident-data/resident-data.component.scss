@@ -1,0 +1,81 @@
+@import "variables";
+.resident-list {
+  width: 100%;
+
+  .resident-item {
+    border: solid 1px #ccc;
+    border-radius: 3px;
+    padding: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+
+    &.selected {
+      border-color: #d35e16;
+    }
+
+    .name {
+      font-weight: 500;
+
+      .isax-man1 {
+        color: #363333;
+      }
+
+      .isax-woman1 {
+        color: #db3e3e;
+      }
+    }
+
+    .birth {
+      color: #144e9f;
+
+      i {
+        color: #144e9f;
+      }
+    }
+  }
+}
+
+.list-add-resident{
+  display: flex;
+
+  @include mobile{
+    display: flex;
+    flex-direction: column;
+  }
+}
+.form-data-left{
+  width: 75%;
+  @include mobile{
+    width: 100%;
+  }
+}
+.resident-list{
+  height: auto;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 15px;
+}
+
+@include mobile{
+  .form-data-right{
+    padding: 0;
+  }
+
+  .title-group{
+    display: flex;
+    flex-direction: column;
+  }
+  .title-label{
+    margin-top: 10px;
+    margin-bottom: -20px;
+  }
+  .title-control{
+    margin-bottom: 10px;
+  }
+}
+
+.title-label2{
+  padding: 6px;
+}

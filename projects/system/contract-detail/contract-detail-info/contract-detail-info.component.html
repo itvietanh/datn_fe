@@ -1,0 +1,105 @@
+<div class="row">
+  <div class="col-md-8">
+    <form [formGroup]="myForm">
+      <div class="d-flex space-between">
+        <div class="representative-data">
+          <div class="contract-type">
+            <input-radio formControlName="contractType"></input-radio>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <app-form-control label="Thời gian nhận phòng dự kiến">
+                <input-date-time formControlName="checkInTime"></input-date-time>
+              </app-form-control>
+            </div>
+            <div class="col-md-6">
+              <app-form-control label="Thời gian trả phòng dự kiến">
+                <input-date-time formControlName="checkOutTime"></input-date-time>
+              </app-form-control>
+            </div>
+            <div class="col-md-6">
+              <app-form-control label="Tên đoàn">
+                <input-text placeholder="Nhập tên đoàn" formControlName="groupName"></input-text>
+              </app-form-control>
+            </div>
+            <div class="col-md-6">
+              <app-form-control label="Lý do lưu trú">
+                <input-select-api [apiService]="stayingReasonService" formControlName="reasonStayId"></input-select-api>
+              </app-form-control>
+            </div>
+            <div class="col-md-12">
+              <app-form-control label="Ghi chú">
+                <input-textarea [rows]="1" formControlName="note" placeholder="Nhập nội dung"></input-textarea>
+              </app-form-control>
+            </div>
+          </div>
+          <div class="name">Người đại diện</div>
+          <div class="row">
+            <div class="col-md-6">
+              <app-form-control label="Họ tên">
+                <input-text placeholder="Họ tên" formControlName="representativeName" [toUper]="true"></input-text>
+              </app-form-control>
+            </div>
+            <div class="col-md-6">
+              <app-form-control label="Số điện thoại">
+                <input-text placeholder="Số điện thoại" formControlName="phoneNumber"></input-text>
+              </app-form-control>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-md-4">
+    <div class="title-group">
+      <div class="title-label">
+        <i class="isax-house-21"></i> Danh sách khách đã đặt phòng
+      </div>
+      <div class="title-control"></div>
+    </div>
+    <div class="resident-list">
+      <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 5 }" [nzLoading]="loadingResidents"></nz-skeleton>
+      <!-- <div class="resident-item" *ngFor="let resident of residents">
+        <div class="name">
+          <i
+            class="mr-1"
+            [ngClass]="{ 'isax-man1': true, 'isax-woman1': false }"
+          ></i>
+          {{ resident?.fullName?.toUpperCase() }}
+        </div>
+        <div class="birth">
+          <i class="isax-cake1 mr-1"></i>
+          {{ resident.dateOfBirth | dateFormat }}
+        </div>
+      </div> -->
+
+      <div class="resident-item" *ngFor="let item of residents">
+        <div class="name">
+          <i class="mr-1" [ngClass]="{
+              'isax-man1': item.gender === 5,
+              'isax-woman1': item.gender === 6
+            }"></i>
+          {{ item?.fullName?.toUpperCase() }}
+          - {{ item?.identityNo }}
+        </div>
+        <div class="birth">
+          <i class="isax-cake1 mr-1"></i>
+          {{ item.dateOfBirth | dateFormat }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="list-control-footer">
+  <button (click)="close()" nz-button type="button" class="btn btn-default mr-2">
+    <i nz-icon nzType="close" nzTheme="outline"></i>Đóng
+  </button>
+  <button *ngIf="myForm.disabled" (click)="enableForm()" nz-button type="button" class="btn btn-primary">
+    <i nz-icon nzType="edit" nzTheme="outline"></i>Sửa
+  </button>
+  <button *ngIf="!myForm.disabled" nz-button (click)="submit()" type="submit" class="btn btn-primary">
+    <i nz-icon nzType="save" nzTheme="outline"></i>Lưu
+  </button>
+</div>

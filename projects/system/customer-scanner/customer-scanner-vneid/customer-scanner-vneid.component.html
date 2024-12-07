@@ -1,0 +1,33 @@
+<p class="title">
+  Sử dụng mã QR này của cơ sở lưu trú để khách thực hiện quét và chia sẻ thông
+  tin cá nhân trên ứng dụng VNeID
+</p>
+<div class="d-flex justify-content-center mb-3">
+  <div id="download">
+    <nz-qrcode
+      [nzSize]="200"
+      class="m-auto"
+      *ngIf="qr"
+      [nzValue]="qr"
+    ></nz-qrcode>
+    <a #download></a>
+    <div>
+      <button
+        class="w-100 mt-1 mb-2"
+        *ngIf="qr"
+        nz-button
+        nzType="primary"
+        (click)="downloadImg()"
+      >
+        <span nz-icon nzType="download" nzTheme="outline"></span>
+        Tải xuống
+      </button>
+    </div>
+    <input-select
+      [(ngModel)]="value"
+      (ngModelChange)="onChange($event)"
+      [items]="options"
+      [allowClear]="false"
+    ></input-select>
+  </div>
+</div>

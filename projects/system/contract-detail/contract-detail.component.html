@@ -1,0 +1,29 @@
+<nz-tabset style="overflow: unset;">
+  <nz-tab [nzTitle]="title1">
+    <ng-template #title1>
+      <i class="isax-flag1 mr-2"></i>
+      Thông tin chung
+    </ng-template>
+    <ng-template nz-tab>
+      <app-contract-detail-info></app-contract-detail-info>
+    </ng-template>
+  </nz-tab>
+  <nz-tab [nzTitle]="title2">
+    <ng-template #title2>
+      <i class="isax-group-1 mr-2"></i>
+      Phòng
+    </ng-template>
+    <ng-template nz-tab>
+      <app-contract-detail-tab1></app-contract-detail-tab1>
+    </ng-template>
+  </nz-tab>
+  <nz-tab [nzTitle]="title3">
+    <ng-template #title3>
+      <i class="isax-money-recive1 mr-2"></i>
+      Thanh toán
+    </ng-template>
+    <ng-template nz-tab>
+      <app-contract-detail-tab2></app-contract-detail-tab2>
+    </ng-template>
+  </nz-tab>
+</nz-tabset>

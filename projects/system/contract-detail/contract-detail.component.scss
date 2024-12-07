@@ -1,0 +1,40 @@
+app-contract-detail-info,
+app-contract-detail-tab1,
+app-contract-detail-tab2 {
+  min-height: calc(100vh - 208px);
+  display: block;
+  position: relative;
+}
+
+.info-modal {
+  .name {
+    font-weight: 500;
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 20px;
+  }
+
+  .check-in-out {
+    width: 320px;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    position: absolute;
+    top: 12px;
+    right: 83px;
+
+    .check-space {
+      width: 20px;
+    }
+
+    .isax-calendar-tick1 {
+      color: #08962b;
+    }
+
+    .isax-calendar-remove1 {
+      color: #ab0909;
+    }
+  }
+}

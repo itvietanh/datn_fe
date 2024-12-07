@@ -1,0 +1,75 @@
+<p class="status_w" *ngIf="n_status === 0">{{ status }}</p>
+<p class="status" *ngIf="n_status === 1">{{ status }}</p>
+<p class="title">
+  Sử dụng ID box để đọc thông tin cá nhân trên Hộ chiếu hoặc thẻ CCCD của khách
+</p>
+
+<p class="mb-3">Các bước thực hiện:</p>
+
+<div class="ux-pc">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="circle">1</div>
+        </div>
+        <div class="col-md-10 pt-2">Cắm thiết bị ID box vào máy tính</div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-2">
+          <div class="circle">2</div>
+        </div>
+        <div class="col-md-10 pt-2">
+          Cài đặt và khởi động
+          <a href="{{ baseFile + 'SETUP ASM SCANER.msi' }}" target="_blank"
+            >ứng dụng ASM Scanner</a
+          >
+        </div>
+      </div>
+      <div class="row mt-3 mb-3">
+        <div class="col-md-2">
+          <div class="circle">3</div>
+        </div>
+        <div class="col-md-10 pt-2">
+          Đặt Hộ chiếu hoặc thẻ CCCD vào để đọc thông tin
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="image">
+        <img src="assets/images/id-box.png" alt="id box" />
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="ux-mobile">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="row">
+        <div class="col-md-10 pt-2">1: Cắm thiết bị ID box vào máy tính</div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-10 pt-2">
+          2: Cài đặt và khởi động
+          <a href="{{ baseFile + 'SETUP ASM SCANER.msi' }}" target="_blank"
+            >ứng dụng ASM Scanner</a
+          >
+        </div>
+      </div>
+      <div class="row mt-3 mb-3">
+
+        <div class="col-md-10 pt-2">
+          3: Đặt Hộ chiếu hoặc thẻ CCCD vào để đọc thông tin
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="image">
+        <img src="assets/images/id-box.png" alt="id box" />
+      </div>
+    </div>
+  </div>
+
+</div>

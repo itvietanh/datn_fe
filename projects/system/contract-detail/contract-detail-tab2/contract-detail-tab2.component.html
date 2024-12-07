@@ -1,0 +1,185 @@
+<div class="row">
+  <div class="col-md-8">
+    <div class="title-group">
+      <div class="title-label">
+        <i class="isax-house-21"></i> Danh sách tiền phòng
+      </div>
+      <div class="title-control"></div>
+    </div>
+    <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 3 }" [nzLoading]="servicesLoading"></nz-skeleton>
+    <nz-collapse class="list-room">
+      <nz-collapse-panel *ngFor="let item of services" class="room-item" [nzHeader]="headerTpl" [nzActive]="true">
+        <ng-template #headerTpl>
+          <div>
+            {{ item.serviceName + " - " + (item.residenceName ?? "Trống") }}
+          </div>
+          <div class="check-in-out">
+            <div class="check-in">
+              <i class="isax-calendar-tick1 mr-1"></i>{{ item.checkInTime | datetimeFormat }}
+            </div>
+            <div class="check-space">
+              <i class="isax-arrow-right1"></i>
+            </div>
+            <div class="check-out">
+              <i class="isax-calendar-remove1 mr-1"></i>{{ item.checkOutTime | datetimeFormat }}
+            </div>
+          </div>
+          <div class="total-money">{{ item.total | moneyFormat }}</div>
+        </ng-template>
+
+        <div class="room-data">
+          <div class="d-flex justify-content-between">
+            <div>Tiền phòng</div>
+            <div>{{ item.totalAmount | moneyFormat }}</div>
+          </div>
+          <div *ngFor="let item1 of item.items" class="d-flex justify-content-between">
+            <div *ngIf="item1.note" class="name-service-container">
+              {{ item1.note }}
+            </div>
+            <div *ngIf="!item1.note" class="name-service-container">
+              {{ item1.serviceName }} ({{ item1.quantity }})
+            </div>
+            <div class="amount-container">
+              {{ item1.totalAmount | moneyFormat }}
+            </div>
+          </div>
+        </div>
+      </nz-collapse-panel>
+    </nz-collapse>
+
+    <div class="service-list">
+      <nz-spin [nzSpinning]="servicesArisingLoading">
+        <div class="title-group">
+          <div class="title-label">
+            <i class="isax-card-tick-11"></i> Phát sinh ngoài
+          </div>
+          <div class="title-control">
+            <span (click)="
+                showAddContractServiceModal()
+              " class="mt-1 float-right cursor-pointer color-primary" nz-icon nzType="plus-circle" nzTheme="fill"
+              *ngIf="!contractPaid"></span>
+          </div>
+        </div>
+        <div *ngFor="let item of servicesArising" class="service-item d-flex justify-content-between my-2">
+          <div class="name-service-container">
+            {{ item.note }}
+          </div>
+          <div class="amount-container">
+            <div class="original">
+              {{ item.totalAmount | moneyFormat }}
+            </div>
+            <div class="replacement" *ngIf="!contractPaid">
+              <i class="isax-edit-21 mr-2 cursor-pointer edit"></i>
+              <i (click)="remove(item)" class="isax-trash cursor-pointer del"></i>
+            </div>
+          </div>
+        </div>
+      </nz-spin>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="service-list">
+      <div class="title-group">
+        <div class="title-label">
+          <i class="isax-card-tick1"></i> Danh sách đã thanh toán trước
+        </div>
+        <div class="title-control">
+          <span (click)="
+              showAddContractServiceModal()
+            " class="mt-1 float-right cursor-pointer color-primary" nz-icon nzType="plus-circle" nzTheme="fill"
+            *ngIf="!contractPaid"></span>
+        </div>
+      </div>
+      <div *ngFor="let item of prepaymentServices" class="service-item d-flex justify-content-between my-2">
+        <div class="paid-list-container">
+          <div class="paid-item-container">
+            {{ item.note }}
+          </div>
+          <div>{{ item.createdAt | datetimeFormat }}</div>
+        </div>
+        <div class="amount-container">
+          <div class="original">
+            {{ item.totalAmount | moneyFormat }}
+          </div>
+          <div class="replacement" *ngIf="!contractPaid">
+            <i class="isax-edit-21 mr-2 cursor-pointer edit"></i>
+            <i (click)="remove(item)" class="isax-trash cursor-pointer del"></i>
+          </div>
+        </div>
+      </div>
+      <div class="title-group mt-2">
+        <div class="title-label">
+          <i class="isax-card-slash1"></i> Giảm giá
+        </div>
+        <div class="title-control">
+          <span (click)="
+              showAddContractServiceModal()
+            " class="mt-1 float-right cursor-pointer color-primary" nz-icon nzType="plus-circle" nzTheme="fill"
+            *ngIf="!contractPaid"></span>
+        </div>
+      </div>
+      <div *ngFor="let item of servicesDiscount" class="service-item d-flex justify-content-between my-2">
+        <div class="name-service-container">
+          {{ item.note }}
+        </div>
+        <div class="amount-container">
+          <div class="original">
+            {{ item.totalAmount | moneyFormat }}
+          </div>
+          <div class="replacement" *ngIf="!contractPaid">
+            <i class="isax-edit-21 mr-2 cursor-pointer edit"></i>
+            <i (click)="remove(item)" class="isax-trash cursor-pointer del"></i>
+          </div>
+        </div>
+      </div>
+      <div class="title-group mt-2">
+        <div class="title-label"><i class="isax-card-tick-11"></i> Tổng</div>
+        <div class="title-control"></div>
+      </div>
+      <div>
+        <div class="service-item d-flex justify-content-between my-2">
+          <div>Tổng tiền phòng</div>
+          <div>{{ servicesTotal | moneyFormat }}</div>
+        </div>
+        <div class="service-item d-flex justify-content-between my-2">
+          <div>Phát sinh ngoài</div>
+          <div>{{ servicesArisingTotal | moneyFormat }}</div>
+        </div>
+        <div class="service-item d-flex justify-content-between my-2">
+          <div>Thuế</div>
+          <div>{{ vat | moneyFormat }}</div>
+        </div>
+        <div class="service-item d-flex justify-content-between my-2">
+          <div>Giảm giá</div>
+          <div>{{ servicesDiscountTotal | moneyFormat }}</div>
+        </div>
+        <div class="service-item d-flex justify-content-between my-2">
+          <div>Đã thanh toán trước</div>
+          <div>{{ prepaymentServicesTotal | moneyFormat }}</div>
+        </div>
+        <div class="service-item d-flex justify-content-between mt-3 total">
+          <div *ngIf="total < 0; else payText">Cần trả lại</div>
+          <div *ngIf="total < 0; else payNum">
+            {{ total * -1 | moneyFormat }}
+          </div>
+          <ng-template #payText>Cần thanh toán</ng-template>
+          <ng-template #payNum>
+            <div>{{ total | moneyFormat }}</div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="list-control-footer">
+  <button (click)="close()" nz-button type="button" class="btn btn-default">
+    <i nz-icon nzType="close" nzTheme="outline"></i>Đóng
+  </button>
+  <button (click)="showPrinter()" nz-button type="button" class="btn btn-default ml-2" *ngIf="contractPaid">
+    <span nz-icon nzType="printer" nzTheme="outline"></span>In hóa đơn
+  </button>
+  <button (click)="pay()" nz-button [nzLoading]="loading" type="button" class="btn btn-primary ml-2">
+    <i class="isax-card-pos1 mr-2"></i>Thanh toán
+  </button>
+</div>

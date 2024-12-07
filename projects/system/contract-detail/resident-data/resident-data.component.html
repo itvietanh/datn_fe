@@ -1,0 +1,107 @@
+<form (ngSubmit)="submit()" class="pt-3">
+  <div class="list-add-resident">
+    <div class="form-data-left">
+      <div class="title-group">
+        <div class="title-label">
+          <i class="isax-house-21"></i> Thông tin khách
+        </div>
+        <div class="title-control">
+          <app-customer-scanner-button
+            #btnScaner
+            (success)="data = $event"
+            (successMulti)="scanMulti($event)"
+          ></app-customer-scanner-button>
+        </div>
+      </div>
+      <app-customer-data
+        [(form)]="resident"
+        (formChange)="myForm = $event"
+        [data]="data"
+        [requiredReasonStayId]="true"
+      ></app-customer-data>
+    </div>
+
+    <div class="col-md-4 form-data-right">
+      <div class="title-group">
+        <div class="title-label2">
+          <i class="isax-house-21"></i> Danh sách khách đã đặt trước
+        </div>
+      </div>
+      <div class="col-md-12 mt-2" style="padding: 0">
+        <form [formGroup]="formSearch" (input)="search()">
+          <app-form-control label="Tìm kiếm theo số giấy tờ hoặc ghi chú">
+            <input-text formControlName="search"></input-text>
+          </app-form-control>
+        </form>
+      </div>
+      <div class="resident-list">
+        <!-- <div class="resident-item selected" *ngIf="residentIndex === -1">
+      <div class="name">
+        <i
+          class="mr-1"
+          [ngClass]="{
+            'isax-man1': resident.get('gender')?.value === 5,
+            'isax-woman1': resident.get('gender')?.value === 6
+          }"
+        ></i>
+        {{
+          resident.get("fullName")?.value?.toUpperCase() ??
+            "Đang nhập thông tin khách..."
+        }}
+        {{ resident.get("note")?.value ?? "" }}
+      </div>
+      <div class="birth">
+        <i class="isax-cake1 mr-1"></i>
+        {{ resident.get("dateOfBirth")?.value | dateFormat }}
+      </div>
+    </div> -->
+        <div
+          class="resident-item"
+          *ngFor="let item of residents; let i = index"
+          [ngClass]="{ selected: i === residentIndex }"
+          (click)="editResident(i)"
+        >
+          <div class="name">
+            <i
+              class="mr-1"
+              [ngClass]="{
+                'isax-man1': item.gender === 5,
+                'isax-woman1': item.gender === 6
+              }"
+            ></i>
+            {{ item.fullName }}
+            - {{ item.identityNo }} - {{ item.note }}
+          </div>
+          <div class="birth">
+            <i class="isax-cake1 mr-1"></i>
+            {{ item.dateOfBirth | dateFormat }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="list-control-search">
+    <button nz-button (click)="close()" type="button" class="btn btn-default">
+      <i nz-icon nzType="close" nzTheme="outline"></i>Hủy
+    </button>
+    <button
+      nz-button
+      type="submit"
+      [nzLoading]="loading"
+      class="btn btn-primary"
+    >
+      <i nz-icon nzType="save" nzTheme="outline"></i>Lưu & Đóng
+    </button>
+    <button
+      *ngIf="!nzModalData.id"
+      (click)="submit(false)"
+      nz-button
+      type="button"
+      [nzLoading]="loading"
+      class="btn btn-primary"
+    >
+      <i class="icon-plus-circle2 mr-2"></i>Lưu & Thêm mới
+    </button>
+  </div>
+</form>

@@ -1,14 +1,19 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ColumnConfig, FilterConfig, Pagination } from 'common/base/models';
 import { MessageService } from 'common/base/service/message.service';
+import { BookingService } from 'common/share/src/service/application/hotel/booking.service';
 import { endOfToday, startOfToday } from 'date-fns';
+import { ContractDetailComponent } from 'projects/system/contract-detail/contract-detail.component';
 import { filter, finalize } from 'rxjs';
 import {
   ContractService,
   ContractStatus,
   DialogService,
+  DialogSize,
   ModalService,
+  PagingModel,
 } from 'share';
 
 @Component({
@@ -19,10 +24,33 @@ import {
 export class BookingListComponent implements OnInit {
   items: any[] = [];
   loading = false;
-  // pagination: Pagination = { page: 1, size: 10, total: 0 };
+
+  listStatus: any[] = [
+    {
+      value: 1,
+      label: 'Chưa nhận phòng'
+    },
+    {
+      value: 2,
+      label: 'Đang ở'
+    },
+    {
+      value: 3,
+      label: 'Quá giờ nhận'
+    },
+    {
+      value: 4,
+      label: 'Quá giờ trả phòng'
+    },
+    {
+      value: 5,
+      label: 'Đã trả phòng'
+    },
+  ];
+
   columns: ColumnConfig[] = [
     {
-      key: 'representativeName',
+      key: 'guestName',
       header: 'Người đại diện',
     },
     {
@@ -35,133 +63,77 @@ export class BookingListComponent implements OnInit {
       pipe: 'template',
     },
     {
-      key: 'reservationTime',
+      key: 'orderDate',
       header: 'Ngày đặt',
       pipe: 'datetime',
     },
     {
-      key: 'checkInTime',
+      key: 'checkIn',
       header: 'Ngày nhận phòng',
       pipe: 'datetime',
     },
     {
-      key: 'checkOutTime',
+      key: 'checkOut',
       header: 'Ngày trả phòng',
       pipe: 'datetime',
     },
     {
-      key: 'numOfResidences',
+      key: 'roomquantity',
       header: 'Số lượng phòng',
     },
     {
-      key: 'numOfResidents',
+      key: 'guestcount',
       header: 'Số lượng người',
     },
     {
       key: 'status',
       header: 'Trạng thái',
-      // filter: { options: CONTRACT_STATUS_OPTIONS },
-      pipe: 'optionLabel',
+      pipe: 'template',
     },
     {
       key: 'action',
-      header: '',
+      header: 'Thao tác',
       tdClass: 'text-center',
       pipe: 'template',
       nzWidth: '70px',
+      alignRight: true
     },
   ];
-  // filters: FilterConfig[] = [
-  //   {
-  //     label: 'Tìm kiếm theo người đại diện, đoàn',
-  //     type: 'input',
-  //     placeholder: 'Nhập người đại diện, đoàn để tìm kiếm',
-  //     key: 'q',
-  //     class: 'col-md-12',
-  //   },
-  //   {
-  //     label: 'Trạng thái',
-  //     type: 'select',
-  //     options: CONTRACT_STATUS_OPTIONS.filter((o) =>
-  //       [ContractStatus.RESERVE, ContractStatus.CANCELED].includes(o.value)
-  //     ),
-  //     default: ContractStatus.RESERVE,
-  //     allowClear: false,
-  //     key: 'status',
-  //     class: 'col-md-12',
-  //   },
-  //   {
-  //     label: 'Khách',
-  //     type: 'select',
-  //     options: CUSTOMER_TYPES,
-  //     key: 'contractType',
-  //     class: 'col-md-12',
-  //   },
-  //   {
-  //     label: 'Ngày đặt',
-  //     type: 'dateTimeRangePicker',
-  //     key: 'reservationTime',
-  //     class: 'col-md-12',
-  //   },
-  //   {
-  //     label: 'Ngày đến',
-  //     type: 'dateTimeRangePicker',
-  //     key: 'checkInTime',
-  //     class: 'col-md-12',
-  //   },
-  //   {
-  //     label: 'Ngày đi',
-  //     type: 'dateTimeRangePicker',
-  //     key: 'checkOutTime',
-  //     class: 'col-md-12',
-  //   },
-  // ];
-  // qFilters = [this.filters[0]];
-  // params: any = { status: ContractStatus.RESERVE, ...this.pagination };
-  // selectedIndex = 0;
-  // tabs = [{ key: null }, { key: 'ngay-den' }, { key: 'qua-gio-nhan' }];
-  // contractTypesDict = CUSTOMER_TYPES_DICT;
-  // contractStatus = ContractStatus;
-  // listStatus = CONTRACT_STATUS_OPTIONS;
+
+  public formSearch: FormGroup;
+  public paging?: PagingModel;
 
   constructor(
-    private contractService: ContractService,
-    // private drawerService: DrawerService,
-    private modalService: ModalService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
+    private bookingService: BookingService,
+    private dialogService: DialogService,
     private messageService: MessageService,
-
-  ) { }
-
-  ngOnInit() {
-    // const index = this.tabs.findIndex(
-    //   (t) => t.key === this.activatedRoute.snapshot.queryParamMap.get('tab')
-    // );
-    // if (index > 0) this.selectedIndex = index;
-    // this.onTabChange(this.selectedIndex);
+    private fb: FormBuilder,
+  ) {
+    this.formSearch = this.fb.group({
+      name: [null],
+      address: [null],
+      checkInFrom: [null],
+      checkInTo: [null],
+      checkOutFrom: [null],
+      checkOutTo: [null]
+    });
   }
 
-  // getData(params: any = {}) {
-  //   if (!params.page) params.page = 1;
-  //   this.params = { ...this.params, ...params };
-  //   params = { ...this.params };
-  //   ['checkInTime', 'checkOutTime', 'reservationTime'].forEach((key) => {
-  //     if (params[key]) {
-  //       params[key + 'From'] = params[key][0];
-  //       params[key + 'To'] = params[key][1];
-  //       delete params[key];
-  //     }
-  //   });
-  //   this.loading = true;
-  //   this.contractService
-  //     .getPaging(params)
-  //     .pipe(finalize(() => (this.loading = false)))
-  //     .subscribe((res) => {
-  //       this.items = res.data!.items;
-  //       this.pagination = res.data!.meta;
-  //     });
-  // }
+  ngOnInit() {
+    this.getData();
+  }
+
+  async getData(paging: PagingModel = { page: 1, size: 20 }) {
+    const params = {
+      ...paging,
+      ...this.formSearch.value
+    }
+    this.dialogService.openLoading();
+    const rs = await this.bookingService.getPaging(params).firstValueFrom();
+    this.dialogService.closeLoading();
+    this.items = rs.data!.items;
+    this.paging = rs.data?.meta;
+  }
 
   // openFilter() {
   //   this.drawerService
@@ -196,21 +168,26 @@ export class BookingListComponent implements OnInit {
   //   });
   // }
 
-  // showContractDetailModal(item: any) {
-  //   this.modalService
-  //     .create({
-  //       nzTitle: undefined,
-  //       nzContent: ContractDetailComponent,
-  //       nzClassName: 'dialog-tab',
-  //       nzData: {
-  //         contractId: item.id,
-  //         contractStatus: item.status,
-  //         tab: 'tab1',
-  //       },
-  //       nzClosable: true,
-  //     })
-  //     .afterClose.subscribe(() => this.getData());
-  // }
+  showContractDetailModal(item: any = null) {
+    const dialog = this.dialogService.openDialog(
+      async (option) => {
+        option.title = 'Thông tin đặt phòng';
+        option.size = DialogSize.tab;
+        option.component = ContractDetailComponent;
+        option.inputs = {
+          uuid: item?.uuid,
+        };
+      },
+      (eventName, eventValue) => {
+        if (eventName === 'onClose') {
+          this.dialogService.closeDialogById(dialog.id);
+          if (eventValue) {
+            this.getData({ ...this.paging });
+          }
+        }
+      }
+    );
+  }
 
 
 

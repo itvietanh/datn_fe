@@ -110,7 +110,6 @@ export class BuildingComponent implements OnInit {
   ngOnInit() {
     this.dialogService.openLoading();
     this.getData();
-    this.initializeHotel();
     this.dialogService.closeLoading();
   }
 
@@ -136,7 +135,7 @@ export class BuildingComponent implements OnInit {
       async (option) => {
         option.title = mode === 'add-floor' ? 'Thêm tầng mới' : 'Thêm phòng mới';
         option.size = DialogSize.large;
-        option.component = TabContractComponent;// open component;
+        option.component = BuildingDetailsComponent;
         option.inputs = {
           id: item?.id,
           mode: mode
@@ -152,24 +151,7 @@ export class BuildingComponent implements OnInit {
       }
     );
   }
-  handlerOpenTab(item: any = null) {
-    const dialog = this.dialogService.openDialog(
-      async (option) => {
-        option.title = 'Thông tin phòng';
-        option.size = DialogSize.tab;
-        option.component = BuildingDetailsComponent;
-        option.inputs = {
-          item: item
-        };
-      },
-      (eventName, eventValue) => {
-        if (eventName === 'onClose') {
-          this.dialogService.closeDialogById(dialog.id);
-          this.getData({ ...this.paging });
-        }
-      }
-    );
-  }
+
   handleFilter(selectedValue: number | null) {
     if (this.selectedStatus === selectedValue) {
       this.selectedStatus = null;
@@ -178,64 +160,6 @@ export class BuildingComponent implements OnInit {
     }
 
     this.getData(this.paging);
-  }
-  initializeHotel() {
-    // Mock data for demonstration
-    for (let i = 1; i <= 5; i++) {
-      const floor: Floor = {
-        number: i,
-        rooms: []
-      };
-      for (let j = 1; j <= 10; j++) {
-        const room: Room = {
-          number: `${i}0${j}`,
-          type: j % 3 === 0 ? 'Phòng đơn' : 'Phòng đôi',
-          maxGuests: j % 3 === 0 ? 4 : 2,
-          status: this.getRandomStatus(),
-          amenities: ['Wi-Fi', 'TV', 'Air Conditioning']
-        };
-        floor.rooms.push(room);
-      }
-      this.floors.push(floor);
-    }
-  }
-
-  getRandomStatus(): 'available' | 'occupied' | 'cleaning' {
-    const statuses: ('available' | 'occupied' | 'cleaning')[] = ['available', 'occupied', 'cleaning'];
-    return statuses[Math.floor(Math.random() * statuses.length)];
-  }
-
-  filterRooms() {
-    // Implement room filtering logic here
-    console.log('Filtering rooms:', this.selectedFilter);
-  }
-
-  selectRoom(room: Room) {
-    this.selectedRoom = room;
-  }
-
-  closeRoomDetails() {
-    this.selectedRoom = null;
-  }
-
-  openBookingPopup(room: Room) {
-    this.selectedRoom = room;
-    this.showBookingPopup = true;
-  }
-
-  closeBookingPopup() {
-    this.showBookingPopup = false;
-    this.bookingDetails = {
-      guestName: '',
-      checkInDate: '',
-      checkOutDate: ''
-    };
-  }
-
-  bookRoom() {
-    // Implement room booking logic here
-    console.log('Booking room:', this.selectedRoom?.number, 'for', this.bookingDetails);
-    this.closeBookingPopup();
   }
 
 }
