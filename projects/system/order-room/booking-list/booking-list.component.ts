@@ -15,6 +15,7 @@ import {
   ModalService,
   PagingModel,
 } from 'share';
+import { CreateBookingComponent } from '../create-booking/create-booking.component';
 
 @Component({
   selector: 'app-booking-list',
@@ -131,7 +132,7 @@ export class BookingListComponent implements OnInit {
     this.dialogService.openLoading();
     const rs = await this.bookingService.getPaging(params).firstValueFrom();
     this.dialogService.closeLoading();
-    this.items = rs.data!.items;  
+    this.items = rs.data!.items;
     this.paging = rs.data?.meta;
   }
 
@@ -175,7 +176,28 @@ export class BookingListComponent implements OnInit {
         option.size = DialogSize.tab;
         option.component = ContractDetailComponent;
         option.inputs = {
-          uuid: item?.uuid,
+          id: item?.id,
+        };
+      },
+      (eventName, eventValue) => {
+        if (eventName === 'onClose') {
+          this.dialogService.closeDialogById(dialog.id);
+          if (eventValue) {
+            this.getData({ ...this.paging });
+          }
+        }
+      }
+    );
+  }
+
+  hanldeOpenBooking() {
+    const dialog = this.dialogService.openDialog(
+      async (option) => {
+        option.title = 'Thông tin đặt phòng';
+        option.size = DialogSize.tab;
+        option.component = CreateBookingComponent;
+        option.inputs = {
+
         };
       },
       (eventName, eventValue) => {

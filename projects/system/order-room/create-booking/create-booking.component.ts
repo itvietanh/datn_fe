@@ -145,7 +145,7 @@ export class CreateBookingComponent implements OnInit {
     this.myForm = this.fb.group({
       checkInTime: [this.now.toNumberYYYYMMDDHHmmss(), ValidatorExtension.required()],
       checkOutTime: [null, ValidatorExtension.required()],
-      groupName: [null],
+      groupName: [null, ValidatorExtension.required()],
       note: [null],
       numOfResidents: [
         0,
@@ -374,18 +374,31 @@ export class CreateBookingComponent implements OnInit {
   handleContractType(event: any) {
     if (event === 1) {
       this.checkType = 1;
+      this.myForm.get('groupName')?.clearValidators();
     } else if (event === 2) {
       this.checkType = 2;
+      this.myForm.get('groupName')?.addValidators([ValidatorExtension.required()]);
     }
   }
 
   handleCalPrice(values: any) {
-    if (values.id && this.listRoomTypeId.indexOf(values.id) === -1) {
-      this.listRoomTypeId.push(values.id);
+    const existingItemIndex = this.listRoomTypeId.findIndex(
+      (item: any) => item.room_type_id === values.id
+    );
+
+    if (existingItemIndex !== -1) {
+      this.listRoomTypeId[existingItemIndex].quantity = values.quantity;
+    } else {
+      this.listRoomTypeId.push({
+        room_type_id: values.id,
+        quantity: values.quantity,
+      });
     }
-    this.numOfRooms = sumBy(this.items, (x: any) => x.quantity || 0);
+
+    this.numOfRooms = sumBy(this.listRoomTypeId, (x: any) => x.quantity || 0);
     this.updateInvoice();
   }
+
 
   updateInvoice() {
     this.totalAmountSum = sumBy(
@@ -399,7 +412,9 @@ export class CreateBookingComponent implements OnInit {
     this.totalAmount = this.totalAmountSum + this.taxAmount;
 
     const prepayment = this.myForm.get('prepayment')?.value;
+
     const prepaid = this.myForm.get('prepaid')?.value;
+
     if (!prepaid) {
       this.remainingAmount = this.totalAmount - prepayment;
     } else {
@@ -489,16 +504,6 @@ export class CreateBookingComponent implements OnInit {
     const parseDate = new Date(+year, +month - 1, +day);
     item[3] = this.datePipe.transform(parseDate, 'dd/MM/yyyy');
 
-    const guest = [
-      {
-        identityNo: item[0],
-        dateOfBirth: item[3],
-        fullName: item[2],
-        gender: item[4],
-        addressDetail: item[5]
-      }
-    ];
-
     this.myForm.get('guests.fullName')?.setValue(item[2]);
     this.myForm.get('guests.identityNo')?.setValue(item[0]);
     this.myForm.get('guests.dateOfBirth')?.setValue(item[3]);
@@ -541,7 +546,7 @@ export class CreateBookingComponent implements OnInit {
 
     const formData = {
 
-      listRoomTypeId: this.listRoomTypeId,
+      bookingDetail: this.listRoomTypeId,
 
       bookings: {
         room_type_id: null,
@@ -553,7 +558,9 @@ export class CreateBookingComponent implements OnInit {
         room_using_id: null,
         order_date: this.myForm.get('checkInTime')?.value,
         room_quantity: this.numOfRooms,
-        group_name: this.myForm.get('groupName')?.value
+        group_name: this.myForm.get('groupName')?.value,
+        total_amount: this.remainingAmount,
+        contract_type: this.checkType
       },
 
       transition: {

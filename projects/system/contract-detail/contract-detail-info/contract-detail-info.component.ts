@@ -4,14 +4,18 @@ import { MessageService } from 'common/base/service/message.service';
 import { FormUtil } from 'common/base/utils';
 import { ValidatorExtension } from 'common/validator-extension';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
+import { EditBookingComponent } from 'projects/system/order-room/edit-booking/edit-booking.component';
 import { filter, finalize } from 'rxjs';
 import {
   ContractResidentService,
   ContractService,
   ContractStatus,
+  DialogService,
   ModalService,
   StayingReasonService,
 } from 'share';
+import { ContractDetailComponent } from '../contract-detail.component';
+import { BookingService } from 'common/share/src/service/application/hotel/booking.service';
 
 @Component({
   selector: 'app-contract-detail-info',
@@ -28,77 +32,62 @@ export class ContractDetailInfoComponent implements OnInit {
   loadingResidents = false;
   isCustomerGroup = false;
   contractStatus = ContractStatus;
+  types = [
+    { value: 1, label: 'Khách Lẻ' },
+    { value: 2, label: 'Khách Đoàn' },
+  ]
 
   constructor(
     private modalService: ModalService,
-    private contractService: ContractService,
-    private contractResidentService: ContractResidentService,
     private fb: FormBuilder,
     private messageService: MessageService,
-    public stayingReasonService: StayingReasonService,
-
-  ) {}
-
-  ngOnInit() {
+    private bookingService: BookingService,
+    private shareData: ContractDetailComponent,
+    private dialogService: DialogService
+  ) {
     this.myForm = this.fb.group({
-      checkInTime: [null, ValidatorExtension.required()],
-      checkOutTime: [null],
+      checkIn: [null, ValidatorExtension.required()],
+      checkOut: [null],
       contractType: [null],
       groupName: [null],
       note: [null],
-      numOfResidents: [0, ValidatorExtension.required()],
-      reasonStayId: [null, ValidatorExtension.required()],
-      representativeName: [null, ValidatorExtension.required()],
-      phoneNumber: [null, [ValidatorExtension.phoneNumber()]],
+      name: [null, ValidatorExtension.required()],
+      phoneNumber: [null, [ValidatorExtension.required(), ValidatorExtension.phoneNumber()]],
     });
+  }
+
+  ngOnInit() {
     this.myForm.disableNoEvent();
     this.getContract();
-    this.getResidents();
   }
 
   close() {
     this.#modal.destroy();
   }
 
-  onTypeChange() {
-   
+  onTypeChange(values: any) {
+
   }
 
-  getContract() {
-    this.loading = true;
-    this.contractService
-      .findOne(this.nzModalData.contractId)
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe((res) => {
-        this.contract = res.data;
-        this.myForm.patchValueNoEvent(this.contract);
-      });
+  async getContract() {
+    this.dialogService.openLoading();
+    const res = await this.bookingService.findOne(this.shareData.id).firstValueFrom();
+    res.data.checkIn = new Date(res.data.checkIn);
+    res.data.checkOut = new Date(res.data.checkOut);
+    if (res.data) {
+      this.myForm.patchValue(res.data);
+    }
+    this.dialogService.closeLoading();
   }
-
-  // getResidents() {
-  //   this.loadingResidents = true;
-  //   this.importBookingService.getListBooking({ contractId: this.nzModalData.contractId })
-  //     .pipe(finalize(() => (this.loadingResidents = false)))
-  //     .subscribe((res) => {
-  //       this.residents = res.data!.items;
-  //     });
-  // }
 
   getResidents() {
     this.loadingResidents = true;
-    
+
   }
 
   submit() {
     FormUtil.validate(this.myForm);
-    this.loading = true;
-    this.contractService
-      .edit(this.nzModalData.contractId, this.myForm.getRawValue())
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe(() => {
-        this.myForm.disableNoEvent();
-        this.messageService.notiMessageSuccess('Cập nhật thông tin thành công');
-      });
+
   }
 
   enableForm() {
@@ -118,7 +107,7 @@ export class ContractDetailInfoComponent implements OnInit {
     this.modalService
       .create({
         nzTitle: '...',
-        // nzContent: EditBookingComponent,
+        nzContent: EditBookingComponent,
         nzClassName: 'dialog-tab',
         nzData: {
           action: 'EDIT',

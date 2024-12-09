@@ -5,7 +5,7 @@
     </div>
     <div class="breadcrumb">
       <div class="list-control-main">
-        <button nz-button type="button" class="btn btn-primary" [routerLink]="['dat-phong']">
+        <button nz-button type="button" class="btn btn-primary" (click)="hanldeOpenBooking()">
           <i class="isax-add-circle1 mr-2"></i>Đặt phòng
         </button>
       </div>
@@ -64,7 +64,7 @@
 
         <ng-template [appCellTemplate]="'action'" let-item>
           <div *ngIf="item.status === 1" class="list-icons list-icons-extended text-center">
-            <a class="list-icons-item action-edit" (click)="showContractDetailModal()">
+            <a class="list-icons-item action-edit" (click)="showContractDetailModal(item)">
               <i nz-tooltip nzTooltipTitle="Nhận phòng" nz-icon nzType="login" nzTheme="outline"></i>
             </a>
             <a class="list-icons-item action-delete">

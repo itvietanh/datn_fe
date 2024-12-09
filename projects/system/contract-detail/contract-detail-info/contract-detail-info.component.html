@@ -4,18 +4,19 @@
       <div class="d-flex space-between">
         <div class="representative-data">
           <div class="contract-type">
-            <input-radio formControlName="contractType"></input-radio>
+            <input-radio formControlName="contractType" [items]="types"
+              (ngModelChange)="onTypeChange($event)"></input-radio>
           </div>
 
           <div class="row">
             <div class="col-md-6">
               <app-form-control label="Thời gian nhận phòng dự kiến">
-                <input-date-time formControlName="checkInTime"></input-date-time>
+                <input-date-time formControlName="checkIn"></input-date-time>
               </app-form-control>
             </div>
             <div class="col-md-6">
               <app-form-control label="Thời gian trả phòng dự kiến">
-                <input-date-time formControlName="checkOutTime"></input-date-time>
+                <input-date-time formControlName="checkOut"></input-date-time>
               </app-form-control>
             </div>
             <div class="col-md-6">
@@ -23,11 +24,11 @@
                 <input-text placeholder="Nhập tên đoàn" formControlName="groupName"></input-text>
               </app-form-control>
             </div>
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <app-form-control label="Lý do lưu trú">
                 <input-select-api [apiService]="stayingReasonService" formControlName="reasonStayId"></input-select-api>
               </app-form-control>
-            </div>
+            </div> -->
             <div class="col-md-12">
               <app-form-control label="Ghi chú">
                 <input-textarea [rows]="1" formControlName="note" placeholder="Nhập nội dung"></input-textarea>
@@ -38,7 +39,7 @@
           <div class="row">
             <div class="col-md-6">
               <app-form-control label="Họ tên">
-                <input-text placeholder="Họ tên" formControlName="representativeName" [toUper]="true"></input-text>
+                <input-text placeholder="Họ tên" formControlName="name" [toUper]="true"></input-text>
               </app-form-control>
             </div>
             <div class="col-md-6">

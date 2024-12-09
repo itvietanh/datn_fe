@@ -3,7 +3,7 @@
     <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
       <div class="d-flex">
         <div class="breadcrumb-title">
-          <a class="isax-arrow-circle-left1 acction-back"></a>
+          <a class="isax-arrow-circle-left1 acction-back" (click)="close()"></a>
           Đặt phòng
         </div>
         <div class="breadcrumb">
@@ -324,7 +324,7 @@
     </div>
   </div>
   <div class="list-control-footer text-center">
-    <button [routerLink]="['..']" nz-button type="button" class="btn btn-default">
+    <button nz-button type="button" class="btn btn-default" (click)="close()">
       <i nz-icon nzType="close" nzTheme="outline"></i>
       Đóng
     </button>
