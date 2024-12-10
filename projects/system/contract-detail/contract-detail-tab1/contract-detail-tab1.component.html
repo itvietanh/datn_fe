@@ -3,14 +3,13 @@
     <div class="title">Danh sách phòng</div>
     <ul nz-menu nzMode="inline" style="height: 400px; overflow: auto">
       <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 5 }" [nzLoading]="loadingService"></nz-skeleton>
-      <li nz-menu-item *ngFor="let item of services" [nzSelected]="item === service"
-        (click)="onServiceSelectedChange(item)">
-        {{ item.serviceName }} - {{ item.residenceName ?? "Trống" }}
-        <span class="m-2 text-danger">đã trả</span>
+      <li nz-menu-item *ngFor="let item of listRoomType" [nzSelected]="item === service"
+        (click)="onRoomTypeSelected(item)">
+        {{ item.roomTypeName }} - {{ item.roomNumber ?? "Trống" }}
+        <span class="m-2 text-danger">{{ item.status === 3 ? 'Đã trả phòng' : ''}}</span>
       </li>
     </ul>
-    <button nz-button type="button" class="btn btn-default"
-      style="margin-top: 10px;">
+    <button nz-button type="button" class="btn btn-default" style="margin-top: 10px;">
       Tự Động Chia Phòng
     </button>
   </div>
@@ -23,8 +22,11 @@
       </div>
       <div class="title-control">
         <div *ngIf="!service?.residenceName" class="d-flex">
-          <input-select-api [apiService]="roomTypeService" style="width: 150px; margin-right: 8px" placeholder="Chọn loại phòng" (onChange)="roomType($event)"></input-select-api>
-          <input-select-api [apiService]="roomService" [apiParams]="roomTypes" style="width: 130px" placeholder="Chọn phòng" (onChange)="onRoomChange($event)"></input-select-api>
+          <input-select-api [apiService]="roomTypeService" [apiParams]="roomTypeSelected"
+            style="width: 150px; margin-right: 8px" placeholder="Chọn loại phòng"
+            (onChange)="roomType($event)"></input-select-api>
+          <input-select-api [apiService]="roomService" [apiParams]="roomTypes" style="width: 130px"
+            placeholder="Chọn phòng" (onChange)="onRoomChange($event)"></input-select-api>
           <a class="cancel" (click)="cancel()">
             <span nz-tooltip nzTooltipTitle="Hủy phòng" class="isax-trash1"></span>
           </a>

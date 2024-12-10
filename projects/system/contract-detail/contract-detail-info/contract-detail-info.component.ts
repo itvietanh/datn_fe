@@ -25,7 +25,7 @@ import { BookingService } from 'common/share/src/service/application/hotel/booki
 export class ContractDetailInfoComponent implements OnInit {
   readonly #modal = inject(NzModalRef);
   contract: any;
-  residents: any[] = [];
+  listGuest: any[] = [];
   readonly nzModalData: any = inject(NZ_MODAL_DATA);
   myForm!: FormGroup;
   loading = false;
@@ -59,6 +59,7 @@ export class ContractDetailInfoComponent implements OnInit {
   ngOnInit() {
     this.myForm.disableNoEvent();
     this.getContract();
+    this.getListGuest();
   }
 
   close() {
@@ -77,12 +78,17 @@ export class ContractDetailInfoComponent implements OnInit {
     if (res.data) {
       this.myForm.patchValue(res.data);
     }
+    this.contract = res.data;
     this.dialogService.closeLoading();
   }
 
-  getResidents() {
-    this.loadingResidents = true;
-
+  async getListGuest() {
+    this.dialogService.openLoading();
+    const res = await this.bookingService.getListGuest({ id: this.shareData.id }).firstValueFrom();
+    if (res.data?.items) {
+      this.listGuest = res.data.items;
+    }
+    this.dialogService.closeLoading();
   }
 
   submit() {
@@ -93,11 +99,11 @@ export class ContractDetailInfoComponent implements OnInit {
   enableForm() {
     if (
       // this.contract.status !== this.contractStatus.RESERVE ||
-      this.contract.checkInTime < new Date().toNumberYYYYMMDDHHmmss()!
+      this.contract.checkIn < new Date().toNumberYYYYMMDDHHmmss()!
     ) {
       this.myForm.enable();
-      this.myForm.get('checkInTime')?.disable();
-      this.myForm.get('checkOutTime')?.disable();
+      this.myForm.get('checkIn')?.disable();
+      this.myForm.get('checkOut')?.disable();
     } else {
       this.editBooking();
     }

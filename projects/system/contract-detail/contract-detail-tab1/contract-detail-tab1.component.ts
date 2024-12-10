@@ -9,6 +9,7 @@ import {
   ContractService,
   ContractServiceService,
   ContractStatus,
+  DialogService,
   DialogSize,
   ModalService,
   ServiceService,
@@ -16,6 +17,7 @@ import {
 import { ResidentDataComponent } from '../resident-data/resident-data.component';
 import { RoomTypeService } from 'common/share/src/service/application/hotel/room-type.service';
 import { RoomService } from 'common/share/src/service/application/hotel/room.service';
+import { BookingService } from 'common/share/src/service/application/hotel/booking.service';
 
 @Component({
   selector: 'app-contract-detail-tab1',
@@ -69,19 +71,22 @@ export class ContractDetailTab1Component implements OnInit {
   servicesArising: any[] = [];
   servicesArisingTotal = 0;
   contractStatus = ContractStatus;
+
+
+  //
+  listRoomType: any;
+  roomTypeSelected: any;
+
   constructor(
-    private modalService: ModalService,
-    private contractServiceService: ContractServiceService,
-    private contractService: ContractService,
-    private contractResidentService: ContractResidentService,
-    private serviceservice: ServiceService,
     private messageService: MessageService,
     public roomTypeService: RoomTypeService,
     public roomService: RoomService,
+    private bookingService: BookingService,
+    private dialogService: DialogService
   ) { }
 
   ngOnInit() {
-    this.getContractServices();
+    this.getListRoomType();
 
   }
 
@@ -125,26 +130,29 @@ export class ContractDetailTab1Component implements OnInit {
   }
 
   showResidentDataModal(item?: any) {
-    this.modalService
-      .create({
-        nzTitle: item?.fullName
-          ? 'Cập nhật thông tin ' + item.fullName
-          : 'Thêm thông tin khách',
-        nzContent: ResidentDataComponent,
-        nzClassName: DialogSize.full,
-        nzData: {
-          contractServiceId: this.service.id,
-          id: item?.residenceInfoId,
-          contractId: this.nzModalData.contractId
-        },
-        nzClosable: true,
-      })
-      .afterClose.subscribe((v) => this.getResidents(Boolean(v)));
+    // this.modalService
+    //   .create({
+    //     nzTitle: item?.fullName
+    //       ? 'Cập nhật thông tin ' + item.fullName
+    //       : 'Thêm thông tin khách',
+    //     nzContent: ResidentDataComponent,
+    //     nzClassName: DialogSize.full,
+    //     nzData: {
+    //       contractServiceId: this.service.id,
+    //       id: item?.residenceInfoId,
+    //       contractId: this.nzModalData.contractId
+    //     },
+    //     nzClosable: true,
+    //   })
+    //   .afterClose.subscribe((v) => this.getResidents(Boolean(v)));
   }
 
 
-  getContractServices() {
-
+  async getListRoomType() {
+    this.dialogService.openLoading();
+    const res = await this.bookingService.getListRoomType().firstValueFrom();
+    this.listRoomType = res.data?.items;
+    this.dialogService.closeLoading();
   }
 
   getExtraServices() {
@@ -157,28 +165,30 @@ export class ContractDetailTab1Component implements OnInit {
 
   getResidents(loading = true) {
     this.loadingResidents = loading;
-    this.contractResidentService
-      .getPaging({ contractResidenceId: this.service.contractResidenceId })
-      .pipe(finalize(() => (this.loadingResidents = false)))
-      .subscribe((res) => {
-        this.residents = res.data!.items;
-      });
+    // this.contractResidentService
+    //   .getPaging({ contractResidenceId: this.service.contractResidenceId })
+    //   .pipe(finalize(() => (this.loadingResidents = false)))
+    //   .subscribe((res) => {
+    //     this.residents = res.data!.items;
+    //   });
   }
 
-  onServiceSelectedChange(item: any) {
+  onRoomTypeSelected(item: any) {
     if (item === this.service) return;
-    this.service = item;
-    if (!this.service.residenceName) {
-      this.residents = [];
-      this.extraServices = [];
-      this.servicesArising = [];
-      this.roomTypes = [];
-      this.getAvailable(item.serviceId);
-      return;
-    }
-    this.getResidents();
-    this.getExtraServices();
-    this.getServicesArising();
+    this.roomTypeSelected = {
+      id: item.rtId
+    };
+    // if (!this.service.residenceName) {
+    //   this.residents = [];
+    //   this.extraServices = [];
+    //   this.servicesArising = [];
+    //   this.roomTypes = [];
+    //   this.getAvailable(item.serviceId);
+    //   return;
+    // }
+    // this.getResidents();
+    // this.getExtraServices();
+    // this.getServicesArising();
   }
 
   async checkOut() {
@@ -195,21 +205,21 @@ export class ContractDetailTab1Component implements OnInit {
     );
     if (!ok) return;
     this.loadingService = true;
-    this.contractServiceService
-      .delete(this.service.id)
-      .pipe(
-        finalize(() => {
-          this.loadingService = false;
-        })
-      )
-      .subscribe(() => {
-        this.messageService.notiMessageSuccess('Hủy phòng thành công');
-        if (this.services.length === 1) {
-          this.close();
-          return;
-        }
-        this.getContractServices();
-      });
+    // this.contractServiceService
+    //   .delete(this.service.id)
+    //   .pipe(
+    //     finalize(() => {
+    //       this.loadingService = false;
+    //     })
+    //   )
+    //   .subscribe(() => {
+    //     this.messageService.notiMessageSuccess('Hủy phòng thành công');
+    //     if (this.services.length === 1) {
+    //       this.close();
+    //       return;
+    //     }
+    //     // this.getContractServices();
+    //   });
   }
 
   async remove(item: any) {

@@ -75,18 +75,18 @@
         </div>
       </div> -->
 
-      <div class="resident-item" *ngFor="let item of residents">
+      <div class="resident-item" *ngFor="let item of listGuest">
         <div class="name">
           <i class="mr-1" [ngClass]="{
-              'isax-man1': item.gender === 5,
-              'isax-woman1': item.gender === 6
+              'isax-man1': item.gender === 'Nam',
+              'isax-woman1': item.gender === 'Nữ'
             }"></i>
-          {{ item?.fullName?.toUpperCase() }}
-          - {{ item?.identityNo }}
+          {{ item?.name?.toUpperCase() }}
+          - {{ item?.id_number ?? item?.passport_number}}
         </div>
         <div class="birth">
           <i class="isax-cake1 mr-1"></i>
-          {{ item.dateOfBirth | dateFormat }}
+          {{ item.birth_date | dateFormat }}
         </div>
       </div>
     </div>
