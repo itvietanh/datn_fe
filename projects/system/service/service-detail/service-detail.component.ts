@@ -22,7 +22,7 @@ export class ServiceDetailComponent implements OnInit {
   myForm: FormGroup;
   loading = true;
   public paging: any;
-  public hotelName: string = ''; 
+  public hotelName: string = '';
 
   constructor(
     private messageService: MessageService,
@@ -62,7 +62,7 @@ export class ServiceDetailComponent implements OnInit {
         hotel_id: rs.data.hotel_id,
         service_name: rs.data.service_name,
         service_price: rs.data.service_price,
-        hotel_name: rs.data.hotel.name  
+        hotel_name: rs.data.hotel.name
       });
       const hotelInfo = rs.data.hotel;
       if (hotelInfo) {
@@ -71,7 +71,7 @@ export class ServiceDetailComponent implements OnInit {
       }
     }
     this.dialogService.closeLoading();
-  }  
+  }
 
   async handlerSubmitData() {
     this.myForm.markAllAsDirty();
