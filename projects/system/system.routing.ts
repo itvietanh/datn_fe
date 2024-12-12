@@ -118,6 +118,13 @@ const routes: Routes = [
             (x) => x.OrderHistoryModule
           ),
       },
+      {
+        path: 'nhom-quyen',
+        loadChildren: () =>
+          import('./role/role.module').then(
+            (x) => x.RoleModule
+          ),
+      },
     ],
   },
 ];

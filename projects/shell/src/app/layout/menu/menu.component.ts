@@ -160,7 +160,8 @@ export class MenuComponent implements OnInit {
         isOpen: false,
         exact: false,
         level: 1,
-        child: [],
+        child: [
+        ],
       },
 
       {
@@ -308,6 +309,15 @@ export class MenuComponent implements OnInit {
         isOpen: false,
         exact: false,
         level: 1,
+        child: [],
+      },
+      {
+        icon: 'isax-pen-tool-2-1',
+        name: 'QUẢN LÝ NHÓM QUYỀN',
+        url: '/he-thong/nhom-quyen',
+        isOpen: false,
+        exact: false,
+        level: 2,
         child: [],
       },
     ];
