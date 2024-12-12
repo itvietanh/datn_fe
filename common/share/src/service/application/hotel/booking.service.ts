@@ -30,4 +30,8 @@ export class BookingService extends BaseService {
   public override add<T = any>(body: any = null) {
     return this.http.post<ResponseModel<T>>(`${this.baseUrl}`, body);
   }
+
+  public order<T = any>(body: any = null) {
+    return this.http.post<ResponseModel<T>>(`${this.baseUrl}/order`, body);
+  }
 }

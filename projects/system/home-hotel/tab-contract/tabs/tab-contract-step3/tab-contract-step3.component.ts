@@ -13,6 +13,7 @@ import { DatePipe } from "@angular/common";
 import { MessageService } from "common/base/service/message.service";
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { PaymentMomoService } from 'common/share/src/service/application/hotel/payment-momo.service';
 
 @Component({
   selector: 'app-tab-contract-step3',
@@ -46,7 +47,8 @@ export class TabContactStep3Component implements OnInit {
     private roomService: RoomService,
     private homeHotelService: HomeHotelService,
     private datePipe: DatePipe,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private momoService: PaymentMomoService
 
   ) {
     this.myForm = this.fb.group({
@@ -109,7 +111,7 @@ export class TabContactStep3Component implements OnInit {
     this.dialogService.closeLoading();
   }
 
-  handleChangeMethod(value: any) {
+  async handleChangeMethod(value: any) {
     this.selectedPayment = value;
     this.myForm.get('paymentMethod')?.setValue(value);
     if (value === 2) {
@@ -120,6 +122,29 @@ export class TabContactStep3Component implements OnInit {
       });
     } else {
       this.qrCode = null;
+    }
+
+    if (value === 3) {
+      const body = {
+        amount: 700000,
+        orderId: "123456789",
+        orderInfo: "Thanh toán #123456789",
+        returnUrl: "http://<your-domain>/payment-momo/payment/callback",
+        notifyUrl: "http://<your-domain>/payment-momo/payment/ipn"
+      }
+
+      try {
+        const res = await this.momoService.createPaymentMomo(body).firstValueFrom();
+
+        if (res && res.data.payUrl) {
+          window.open(res.data.payUrl, 'MoMoPayment');
+        } else {
+          console.error("Không nhận được URL thanh toán từ API.");
+        }
+      } catch (error) {
+        console.error("Lỗi khi tạo thanh toán:", error);
+      }
+      debugger;
     }
   }
 

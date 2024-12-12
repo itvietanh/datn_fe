@@ -5,7 +5,7 @@
       <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 5 }" [nzLoading]="loadingService"></nz-skeleton>
       <li nz-menu-item *ngFor="let item of listRoomType" [nzSelected]="item === service"
         (click)="onRoomTypeSelected(item)">
-        {{ item.roomTypeName }} - {{ item.roomNumber ?? "Trống" }}
+        {{ item.typename }} - {{ item.roomnumber ?? "Trống" }}
         <span class="m-2 text-danger">{{ item.status === 3 ? 'Đã trả phòng' : ''}}</span>
       </li>
     </ul>
@@ -17,16 +17,16 @@
   <div class="room-data">
     <div class="title-group">
       <div class="title-label">
-        <i class="isax-house-21"></i> Thông tin phòng
-        {{ service?.residenceName }}
+        <i class="isax-house-21"></i>
+        {{ roomInfo?.roomnumber ? 'Thông tin ' + roomInfo?.roomnumber : 'Thông tin phòng' }}
       </div>
       <div class="title-control">
         <div *ngIf="!service?.residenceName" class="d-flex">
-          <input-select-api [apiService]="roomTypeService" [apiParams]="roomTypeSelected"
+          <!-- <input-select-api [apiService]="roomTypeService" [apiParams]="roomTypeSelected"
             style="width: 150px; margin-right: 8px" placeholder="Chọn loại phòng"
             (onChange)="roomType($event)"></input-select-api>
           <input-select-api [apiService]="roomService" [apiParams]="roomTypes" style="width: 130px"
-            placeholder="Chọn phòng" (onChange)="onRoomChange($event)"></input-select-api>
+            placeholder="Chọn phòng" (onChange)="onRoomChange($event)"></input-select-api> -->
           <a class="cancel" (click)="cancel()">
             <span nz-tooltip nzTooltipTitle="Hủy phòng" class="isax-trash1"></span>
           </a>
@@ -36,32 +36,32 @@
         </button> -->
       </div>
     </div>
-    <div class="check-in-out my-2">
+    <div class="check-in-out my-2 w-100">
       <div class="check-in">
         <i class="isax-calendar-tick1 mr-1"></i>
-        Nhận phòng: {{ service?.checkInTime | datetimeFormat }}
+        Nhận phòng (dự kiến): {{ shareData.checkIn| datetimeFormat }}
       </div>
       <ng-container>
         <div class="check-space">
           <i class="isax-arrow-right1"></i>
         </div>
         <div class="check-out">
-          <i class="isax-calendar-remove1 mr-1"></i>Trả phòng:
-          {{ service?.checkOutTime | datetimeFormat }}
+          <i class="isax-calendar-remove1 mr-1"></i>Trả phòng (dự kiến):
+          {{ shareData.checkOut | datetimeFormat }}
         </div>
       </ng-container>
     </div>
     <nz-divider></nz-divider>
-    <div class="money-flex my-2 d-flex justify-content-between">
+    <div class="money-flex my-2 d-flex justify-content-between" *ngIf="price">
       <div>
         <i class="isax-money-recive1 mr-1"></i>
-        <span>Tiền phòng: {{ service?.totalAmount | moneyFormat }}</span>
+        <span>Tiền phòng dự tính: {{ price?.total_price | moneyFormat }} VNĐ</span>
       </div>
-      <div *ngIf="service?.totalAmountBooking">
+      <!-- <div>
         <i class="isax-money-recive1 mr-1"></i>
         <span>Tiền phòng dự tính:
-          {{ service?.totalAmountBooking | moneyFormat }}</span>
-      </div>
+          {{ price?.totalAmount | moneyFormat }}</span>
+      </div> -->
     </div>
     <nz-divider></nz-divider>
     <div class="my-2">

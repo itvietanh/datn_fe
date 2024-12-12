@@ -2,6 +2,8 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { filter } from 'rxjs/operators';
+import { MenuService } from 'common/share/src/service/application/hotel/menu.service';
+import { MessageService } from 'common/base/service/message.service';
 
 declare let $: any;
 @Component({
@@ -15,7 +17,7 @@ export class MenuComponent implements OnInit {
   public isShowFullMenuMobile = false;
   public isLoading = true;
 
-  constructor(private rt: Router, private location: Location) { }
+  constructor(private rt: Router, private location: Location, private menuService: MenuService, private messageService: MessageService) { }
 
   async ngOnInit(): Promise<void> {
     const url = this.location.path();
@@ -33,41 +35,44 @@ export class MenuComponent implements OnInit {
     this.resizeDocument();
   }
 
-  // async getData(): Promise<void> {
-  //   this.isLoading = true;
-  //   const rs = await this.menuApi.getAllByUser(new IdentityMenuGetAllByUserQuery()).toPromise();
-  //   if (rs.success) {
-  //     let dataRaw = rs.result.map(x => {
-  //       return {
-  //         id: x.id,
-  //         icon: x.icon,
-  //         name: x.name,
-  //         url: x.link,
-  //         parentId: x.parentId,
-  //         params: x.queryParams ? JSON.parse(x.queryParams) : null,
-  //         isOpen: false,
-  //         exact: true,
-  //         child: [],
-  //       };
-  //     });
+  async getData(): Promise<void> {
+    this.isLoading = true;
+    const rs = await this.menuService.getPaging().firstValueFrom();
+    if (rs.data?.items) {
+      let dataRaw = rs.data.items.map(x => {
+        return {
+          id: x.id,
+          icon: x.icon,
+          name: x.name,
+          url: x.url,
+          parentId: x.parentUid,
+          // params: x.queryParams ? JSON.parse(x.queryParams) : null,
+          isOpen: false,
+          exact: true,
+          child: [],
+        };
+      });
 
-  //     // convert data to tree
-  //     dataRaw.forEach(item => {
-  //       item.child = dataRaw.filter(x => x.parentId === item.id);
-  //     });
+      // convert data to tree
+      // debugger;
+      dataRaw.forEach((item: any) => {
+        item.child = dataRaw.filter(x => x.parentId === item.id);
+      });
 
-  //     const convertData = dataRaw.filter(x => x.parentId === null);
-  //     this.menuData = convertData;
-  //   } else {
-  //     this.messageService.notiMessageError(rs.error);
-  //   }
-  //   this.isLoading = false;
-  // }
+      const convertData = dataRaw.filter(x => x.parentId === null);
+      this.menuData = convertData;
+      // debugger;
+    } else {
+      this.messageService.notiMessageError(rs.errors);
+    }
+    this.isLoading = false;
+  }
 
   async getDataMenu(url: string): Promise<void> {
     // if (environment.sso) {
     // await this.getMenuByApi();
     // } else {
+    // this.getData();
     this.getMenuDefault();
     // }
     this.isLoading = false;

@@ -1,4 +1,4 @@
-<form (ngSubmit)="submit()" class="pt-3">
+<form (ngSubmit)="handlerSubmit()" class="pt-3">
   <div class="list-add-resident">
     <div class="form-data-left">
       <div class="title-group">
@@ -6,19 +6,11 @@
           <i class="isax-house-21"></i> Thông tin khách
         </div>
         <div class="title-control">
-          <app-customer-scanner-button
-            #btnScaner
-            (success)="data = $event"
-            (successMulti)="scanMulti($event)"
-          ></app-customer-scanner-button>
+          <app-customer-scanner-button #btnScaner (success)="data = $event"
+            (successMulti)="scanMulti($event)"></app-customer-scanner-button>
         </div>
       </div>
-      <app-customer-data
-        [(form)]="resident"
-        (formChange)="myForm = $event"
-        [data]="data"
-        [requiredReasonStayId]="true"
-      ></app-customer-data>
+      <app-customer-data [(form)]="resident" (formChange)="myForm = $event" [data]="data"></app-customer-data>
     </div>
 
     <div class="col-md-4 form-data-right">
@@ -36,45 +28,35 @@
       </div>
       <div class="resident-list">
         <!-- <div class="resident-item selected" *ngIf="residentIndex === -1">
-      <div class="name">
-        <i
-          class="mr-1"
-          [ngClass]="{
-            'isax-man1': resident.get('gender')?.value === 5,
-            'isax-woman1': resident.get('gender')?.value === 6
-          }"
-        ></i>
-        {{
-          resident.get("fullName")?.value?.toUpperCase() ??
-            "Đang nhập thông tin khách..."
-        }}
-        {{ resident.get("note")?.value ?? "" }}
-      </div>
-      <div class="birth">
-        <i class="isax-cake1 mr-1"></i>
-        {{ resident.get("dateOfBirth")?.value | dateFormat }}
-      </div>
-    </div> -->
-        <div
-          class="resident-item"
-          *ngFor="let item of residents; let i = index"
-          [ngClass]="{ selected: i === residentIndex }"
-          (click)="editResident(i)"
-        >
           <div class="name">
-            <i
-              class="mr-1"
-              [ngClass]="{
-                'isax-man1': item.gender === 5,
-                'isax-woman1': item.gender === 6
-              }"
-            ></i>
-            {{ item.fullName }}
-            - {{ item.identityNo }} - {{ item.note }}
+            <i class="mr-1" [ngClass]="{
+            'isax-man1': resident.get('gender')?.value === 'Nam',
+            'isax-woman1': resident.get('gender')?.value === 'Nữ'
+          }"></i>
+            {{
+            resident.get("fullName")?.value?.toUpperCase() ??
+            "Đang nhập thông tin khách..."
+            }}
+            {{ resident.get("note")?.value ?? "" }}
           </div>
           <div class="birth">
             <i class="isax-cake1 mr-1"></i>
-            {{ item.dateOfBirth | dateFormat }}
+            {{ resident.get("dateOfBirth")?.value | dateFormat }}
+          </div>
+        </div> -->
+        <div class="resident-item" *ngFor="let item of listGuest; let i = index"
+          [ngClass]="{ selected: i === residentIndex }" (click)="editResident(i)">
+          <div class="name">
+            <i class="mr-1" [ngClass]="{
+                'isax-man1': item.gender === 'Nam',
+                'isax-woman1': item.gender === 'Nữ'
+              }"></i>
+            {{ item.name }}
+            - {{ item?.id_number ?? item?.passport_number}}
+          </div>
+          <div class="birth">
+            <i class="isax-cake1 mr-1"></i>
+            {{ item.birth_date | dateFormat }}
           </div>
         </div>
       </div>
@@ -85,22 +67,10 @@
     <button nz-button (click)="close()" type="button" class="btn btn-default">
       <i nz-icon nzType="close" nzTheme="outline"></i>Hủy
     </button>
-    <button
-      nz-button
-      type="submit"
-      [nzLoading]="loading"
-      class="btn btn-primary"
-    >
+    <button nz-button type="submit" [nzLoading]="loading" class="btn btn-primary">
       <i nz-icon nzType="save" nzTheme="outline"></i>Lưu & Đóng
     </button>
-    <button
-      *ngIf="!nzModalData.id"
-      (click)="submit(false)"
-      nz-button
-      type="button"
-      [nzLoading]="loading"
-      class="btn btn-primary"
-    >
+    <button (click)="handlerSubmit(false)" nz-button type="button" [nzLoading]="loading" class="btn btn-primary">
       <i class="icon-plus-circle2 mr-2"></i>Lưu & Thêm mới
     </button>
   </div>

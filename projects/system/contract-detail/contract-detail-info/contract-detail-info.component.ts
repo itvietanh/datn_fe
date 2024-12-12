@@ -73,6 +73,8 @@ export class ContractDetailInfoComponent implements OnInit {
   async getContract() {
     this.dialogService.openLoading();
     const res = await this.bookingService.findOne(this.shareData.id).firstValueFrom();
+    this.shareData.checkIn = res.data.checkIn;
+    this.shareData.checkOut = res.data.checkOut;
     res.data.checkIn = new Date(res.data.checkIn);
     res.data.checkOut = new Date(res.data.checkOut);
     if (res.data) {

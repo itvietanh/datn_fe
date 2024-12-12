@@ -12,6 +12,10 @@ export class OrderRoomService extends BaseService {
     return this.http.post<ResponseModel<T>>(`${this.baseUrl}/calculator`, body);
   }
 
+  public calculatorByType<T = any>(body: any = null) {
+    return this.http.post<ResponseModel<T>>(`${this.baseUrl}/calculator-by-type`, body);
+  }
+
   public override getPaging<T = PagedListModel>(params: any = null) {
     return this.http.get<ResponseModel<T>>(`${this.baseUrl}/get-list`, {
       params: this.stringifyParams(params),

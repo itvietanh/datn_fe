@@ -8,9 +8,12 @@ import { NZ_MODAL_DATA } from 'ng-zorro-antd/modal';
 })
 export class ContractDetailComponent implements OnInit {
   @Input() id: any;
+
+  checkIn: any;
+  checkOut: any;
   tab: any = { info: 0, tab1: 1, tab2: 2 };
 
   ngOnInit(): void {
-    
+
   }
 }

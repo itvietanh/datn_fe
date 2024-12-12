@@ -316,3 +316,46 @@ nz-divider {
   }
 }
 
+.title-group2 {
+  display: flex;
+  border-radius: 4px;
+  background-color: #327bc71a;
+  color: #2d78d7;
+  font-weight: 600;
+  font-size: 14px;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 30px
+}
+
+.title-group2 .title-label {
+  padding: 0 10px
+}
+
+.title-group2 .title-control {
+  padding: 5px 20px
+}
+
+.title-group2 .title-control button {
+  height: 25px;
+  line-height: 12px
+}
+
+.title-group2 .title-label2 {
+  padding: 0 10px
+}
+
+.title-group2 .title-control2 {
+  padding: 5px 10px
+}
+
+@media (max-width: 767px) {
+  .title-group2 .title-control2 {
+    padding: 5px 20px
+  }
+}
+
+.title-group2 .title-control2 button {
+  height: 25px;
+  line-height: 12px
+}

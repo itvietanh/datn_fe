@@ -1,115 +1,51 @@
-<div class="row mt-2" [formGroup]="form">
+<div class="row" [formGroup]="form">
   <div class="col-md-4">
     <app-form-control label="Họ tên">
-      <input-text formControlName="fullName" [toUper]="true"></input-text>
+      <input-text formControlName="name" [toUper]="true"></input-text>
     </app-form-control>
   </div>
   <div class="col-md-4">
     <app-form-control label="Giới tính">
-      <input-select [items]="genders" formControlName="gender"></input-select>
+      <input-select [items]="listGender" formControlName="gender"></input-select>
     </app-form-control>
   </div>
   <div class="col-md-4">
     <app-form-control label="Ngày sinh">
-      <input-date formControlName="dateOfBirth" [max]="maxDate"></input-date>
+      <input-date formControlName="birth_date"></input-date>
     </app-form-control>
   </div>
   <div class="col-md-4">
     <app-form-control label="Số điện thoại">
-      <input-text formControlName="phoneNumber"></input-text>
-    </app-form-control>
-  </div>
-  <div class="col-md-4">
-    <app-form-control label="Loại giấy tờ">
-      <input-select
-        
-        [allowClear]="false"
-        formControlName="identityType"
-        (onChange)="onIdentityTypeChange()"
-      ></input-select>
-    </app-form-control>
-  </div>
-  <div *ngIf="form.get('identityType')?.value === 'GTK'" class="col-md-4">
-    <app-form-control label="Tên giấy tờ">
-      <input-text formControlName="identityName"></input-text>
-    </app-form-control>
-  </div>
-  <div class="col-md-4">
-    <app-form-control label="Số giấy tờ">
-      <input-text formControlName="identityNo"></input-text>
+      <input-text formControlName="phone_number"></input-text>
     </app-form-control>
   </div>
   <div class="col-md-4">
     <app-form-control label="Quốc tịch">
-      <input-select-api
-        [apiService]="nationalityService"
-        formControlName="nationalityId"
-        (onChange)="onNationalityIdChange()"
-      ></input-select-api>
+      <input-select-api [apiService]="diaBanService" [actionName]="'getComboboxQT'" formControlName="nat_id">
+      </input-select-api>
+    </app-form-control>
+  </div>
+  <div class="col-md-4" *ngIf="form.get('nat_id')?.value === 196">
+    <app-form-control label="Số CCCD">
+      <input-text formControlName="id_number"></input-text>
     </app-form-control>
   </div>
   <div class="col-md-4">
-    <app-form-control label="Ghi chú">
-      <input-text formControlName="note"></input-text>
+    <app-form-control label="Số hộ chiếu" *ngIf="form.get('nat_id')?.value !== 196">
+      <input-text formControlName="passport_number"></input-text>
     </app-form-control>
   </div>
-  <ng-container>
+
+  <ng-container *ngIf="form.get('nat_id')?.value === 196">
     <div class="col-md-12">
-      <app-form-control label="Nơi cư trú">
-        <input-radio
-          formControlName="addressType"
-        ></input-radio>
-      </app-form-control>
-    </div>
-    <div class="col-md-12">
-      <input-diaban
-        [apiService]="diaBanService"
-        [city]="form.get('provinceId')"
-        [district]="form.get('districtId')"
-        [village]="form.get('wardId')"
-        [address]="form.get('addressDetail')"
-      ></input-diaban>
+      <input-diaban [apiService]="diaBanService" [city]="form.get('province_id')" [district]="form.get('district_id')"
+        [village]="form.get('ward_id')"></input-diaban>
     </div>
   </ng-container>
-  <ng-container >
-    <div class="col-md-4">
-      <app-form-control label="Quốc gia">
-        <input-select-api
-          [apiService]="countryService"
-          formControlName="countryId"
-          (onChange)="onCountryIdChange()"
-        ></input-select-api>
-      </app-form-control>
-    </div>
-    <div class="col-md-12">
-      <app-form-control label="Địa chỉ chi tiết">
-        <input-text
-          [maxlength]="500"
-          formControlName="addressDetail"
-        ></input-text>
-      </app-form-control>
-    </div>
-  </ng-container>
-  <div class="col-md-4">
-    <app-form-control label="Nghề nghiệp">
-      <input-select-api
-        [apiService]="occupationService"
-        formControlName="occupationId"
-      ></input-select-api>
-    </app-form-control>
-  </div>
-  <div class="col-md-4">
-    <app-form-control label="Nơi làm việc">
-      <input-text [maxlength]="225" formControlName="workplace"></input-text>
-    </app-form-control>
-  </div>
-  <div *ngIf="requiredReasonStayId" class="col-md-4">
-    <app-form-control label="Lý do lưu trú">
-      <input-select-api
-        [apiService]="stayingReasonService"
-        formControlName="reasonStayId"
-        (onChange)="saveReasonStay()"
-      ></input-select-api>
+
+  <div class="col-md-12">
+    <app-form-control label="Địa chỉ chi tiết">
+      <input-text formControlName="address_detail"></input-text>
     </app-form-control>
   </div>
 </div>

@@ -47,6 +47,25 @@
             <i class="isax-house-21"></i>
             Tầng {{ floor.floorNumber }}
           </div>
+
+          <div>
+            <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
+              <span nz-icon nzType="more" nzTheme="outline"></span>
+            </a>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <ul nz-menu>
+                <li nz-menu-item>
+                  <i class="isax-additem1 text-primary mr-2"></i>Thêm phòng
+                </li>
+                <li nz-menu-item>
+                  <i class="isax-edit1 text-primary mr-2"></i>Sửa
+                </li>
+                <li nz-menu-item>
+                  <i class="isax-trash1 text-danger mr-2"></i>Xóa
+                </li>
+              </ul>
+            </nz-dropdown-menu>
+          </div>
         </div>
         <div class="rooms-grid shadow-lg p-4">
           <div *ngFor="let room of floor.rooms" class="room" [ngClass]="{

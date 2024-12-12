@@ -21,6 +21,17 @@ export class EmployeeDetailComponent implements OnInit {
   loading = true;
   public paging: any;
 
+  listRole: any[] = [
+    {
+      value: 1,
+      label: "ADMIN"
+    },
+    {
+      value: 2,
+      label: "Nhân Viên"
+    }
+  ]
+
   constructor(
     private messageService: MessageService,
     private fb: FormBuilder,
@@ -37,6 +48,7 @@ export class EmployeeDetailComponent implements OnInit {
       phone: [null, ValidatorExtension.required()],
       address: [null, ValidatorExtension.required()],
       hotel_id: [null, ValidatorExtension.required()],
+      role: [null]
     })
   }
 
