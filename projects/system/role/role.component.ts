@@ -15,6 +15,8 @@ import { HotelService } from 'common/share/src/service/application/hotel/hotel.s
 
 import { RoomUsingSerService } from 'common/share/src/service/application/hotel/roomusingservice.service';
 import { Service } from 'common/share/src/service/application/hotel/service.service';
+import { RoleService } from 'common/share/src/service/application/hotel/role.service';
+import { RoleDetailsComponent } from './role_details/role_details.component';
 
 @Component({
   selector: 'app-roomusingservice',
@@ -33,6 +35,10 @@ export class RoleComponent implements OnInit {
     {
       key: 'role_name',
       header: 'Tên nhóm quyền',
+    },
+    {
+      key: 'description',
+      header: 'Mô tả',
     },
 
     {
@@ -54,30 +60,13 @@ export class RoleComponent implements OnInit {
     public hotelService: HotelService,
     private roomUsingSerService: RoomUsingSerService,
     private service: Service,
+    private roleService: RoleService,
     private datePipe: DatePipe
   ) {
     this.formSearch = this.fb.group({
-      role_name: [null],
-
+      role_name: [null,ValidatorExtension.required()],
+      description: [null, ValidatorExtension.required()],
     });
-    // this.formSearch
-    //   .get('outEndDate')
-    //   ?.addValidators(
-    //     ValidatorExtension.gteDateValidator(
-    //       this.formSearch,
-    //       'signEndDate',
-    //       'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
-    //     )
-    //   );
-    // this.formSearch
-    //   .get('outEndDate')
-    //   ?.addValidators(
-    //     ValidatorExtension.gteDateValidator(
-    //       this.formSearch,
-    //       'outStartDate',
-    //       'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
-    //     )
-    //   );
   }
 
   ngOnInit() {
@@ -89,22 +78,17 @@ export class RoleComponent implements OnInit {
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
     const params = {
       ...paging,
-      ...this.formSearch.value
-    }
+      ...this.formSearch.value,
+    };
     this.dialogService.openLoading();
-    const rs = await this.roomUsingSerService.getPaging(params).firstValueFrom();
-    const resService = await this.service.getCombobox({...paging}).firstValueFrom();
-
+    const rs = await this.roleService.getPaging(params).firstValueFrom();
     const dataRaw = rs.data!.items;
-    console.log(`dataRaw: `, dataRaw);
-
-    const dataService = resService.data?.items;
     for (const item of dataRaw) {
-      if (item.service_id) {
-        const dataExist = dataService?.find(x => x.value === item.service_id);
-        console.log(`dataExist: `, dataExist);
-
-        item.serviceTxt = dataExist.label;
+      if (item.created_at) {
+        item.created_at = this.datePipe.transform(
+          item.created_at,
+          'dd-MM-yyyy'
+        );
       }
     }
     this.items = rs.data!.items;
@@ -118,7 +102,7 @@ export class RoleComponent implements OnInit {
         option.title = mode === 'view' ? 'Xem Chi Tiết Nhóm Quyền' : 'Thêm Mới Nhóm Quyền';
         if (mode === 'edit') option.title = 'Cập Nhật Nhóm Quyền';
         option.size = DialogSize.xlarge;
-        option.component = RoleComponent;// open component;
+        option.component = RoleDetailsComponent;// open component;
         option.inputs = {
           uuid: item?.uuid,
           mode: mode,
@@ -138,7 +122,7 @@ export class RoleComponent implements OnInit {
   async handlerDelete(item: any) {
     const confirm = await this.messageService.confirm('Bạn có muốn xóa dữ liệu này không?');
     if (confirm) {
-      const rs = await this.hotelService.delete(item?.uuid).firstValueFrom();
+      const rs = await this.roleService.delete(item?.uuid).firstValueFrom();
       if (rs.data) {
         this.messageService.notiMessageSuccess('Xóa dữ liệu thành công');
         return this.getData({ ...this.paging });

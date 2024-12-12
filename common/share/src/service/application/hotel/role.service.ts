@@ -7,7 +7,7 @@ import { PagedListModel, ResponseModel } from 'share';
   providedIn: 'root'
 })
 export class RoleService extends BaseService {
-  protected override prefix = 'employee_role';
+  protected override prefix = 'role';
 
   public override getPaging<T = PagedListModel>(params: any = null) {
     return this.http.get<ResponseModel<T>>(`${this.baseUrl}/get-list`, {
