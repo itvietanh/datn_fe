@@ -105,7 +105,7 @@ export class HomeHotelDetailsComponent implements OnInit {
       reasonStayId: [null],
       roomTypeId: [null, ValidatorExtension.required()],
       roomId: [null, ValidatorExtension.required()],
-      priceId: [null],
+      priceId: [null, ValidatorExtension.required()],
       totalPrice: [{ value: 0, disabled: true }],
       finalPrice: [{ value: 0, disabled: true }],
       vat: [{ value: 0, disabled: true }],
@@ -361,4 +361,4 @@ export class HomeHotelDetailsComponent implements OnInit {
     this.onClose.emit(data);
   }
 
-} 
+}

@@ -1,9 +1,7 @@
 <div class="page-header page-header-light">
   <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
     <div class="d-flex">
-      <div class="breadcrumb-title">
-        LỊCH SỬ ĐẶT PHÒNG
-      </div>
+      <div class="breadcrumb-title">LỊCH SỬ ĐẶT PHÒNG</div>
       <div class="breadcrumb">
         <div class="list-control-main">
           <!-- <button nz-button type="button" class="btn btn-primary">
@@ -19,13 +17,23 @@
   <div class="header-elements-inline">
     <div class="navbar-expand-md w-100">
       <div class="padding-left-15 text-right d-md-none w-100 row">
-        <button class="navbar-toggler" data-target="#search-list" data-toggle="collapse" type="button">
+        <button
+          class="navbar-toggler"
+          data-target="#search-list"
+          data-toggle="collapse"
+          type="button"
+        >
           <i nz-icon nzType="menu" nzTheme="outline"></i>
         </button>
       </div>
       <!-- search -->
       <div class="navbar-collapse collapse" id="search-list">
-        <form *ngIf="formSearch" [formGroup]="formSearch" class="w-100" (ngSubmit)="getData()">
+        <form
+          *ngIf="formSearch"
+          [formGroup]="formSearch"
+          class="w-100"
+          (ngSubmit)="getData()"
+        >
           <ng-template #controlErrorTpl let-control>
             <app-render-errors [control]="control"></app-render-errors>
           </ng-template>
@@ -34,7 +42,10 @@
               <nz-form-item>
                 <nz-form-label>Tên khách hàng</nz-form-label>
                 <nz-form-control [nzErrorTip]="controlErrorTpl">
-                  <input-text placeholder="Tên cơ sở..." formControlName="name"></input-text>
+                  <input-text
+                    placeholder="Tên khách hàng..."
+                    formControlName="name"
+                  ></input-text>
                 </nz-form-control>
               </nz-form-item>
             </div>
@@ -43,7 +54,10 @@
               <nz-form-item>
                 <nz-form-label>Phòng</nz-form-label>
                 <nz-form-control [nzErrorTip]="controlErrorTpl">
-                  <input-text placeholder="Nhập số phòng..." formControlName="address"></input-text>
+                  <input-text
+                    placeholder="Nhập số phòng..."
+                    formControlName="address"
+                  ></input-text>
                 </nz-form-control>
               </nz-form-item>
             </div>
@@ -52,7 +66,10 @@
               <nz-form-item>
                 <nz-form-label>Trạng thái</nz-form-label>
                 <nz-form-control [nzErrorTip]="controlErrorTpl">
-                  <input-select [items]="listPaymentStatus" formControlName="address"></input-select>
+                  <input-select
+                    [items]="listPaymentStatus"
+                    formControlName="address"
+                  ></input-select>
                 </nz-form-control>
               </nz-form-item>
             </div>
@@ -71,8 +88,7 @@
               <nz-form-item>
                 <nz-form-label>Ngày trả phòng</nz-form-label>
                 <nz-form-control [nzErrorTip]="controlErrorTpl">
-                  <input-date formControlName="dateFrom">
-                  </input-date>
+                  <input-date formControlName="dateFrom"> </input-date>
                 </nz-form-control>
               </nz-form-item>
             </div>
@@ -81,8 +97,7 @@
               <nz-form-item>
                 <nz-form-label>Ngày nhận phòng</nz-form-label>
                 <nz-form-control [nzErrorTip]="controlErrorTpl">
-                  <input-date formControlName="dateTo">
-                  </input-date>
+                  <input-date formControlName="dateTo"> </input-date>
                 </nz-form-control>
               </nz-form-item>
             </div>
@@ -106,33 +121,31 @@
     </nz-tabset>
     <div class="lst-controls">
       <div class="breadcrumb">
-        <div class="list-control-main">
-        </div>
+        <div class="list-control-main"></div>
       </div>
     </div>
   </div>
 
   <ng-template #tab1>
     <app-table [columns]="columns" [items]="items">
-
       <ng-template [appCellTemplate]="'payment_status'" let-item>
-        <span [ngClass]="
-          {
+        <span
+          [ngClass]="{
             'status-badge': item.payment_status,
-            'cancelled': item.payment_status === 1,
-            'confirmed': item.payment_status === 2
-          }
-        ">
-          {{item.payment_status | labelValue: listPaymentStatus}}
+            cancelled: item.payment_status === 1,
+            confirmed: item.payment_status === 2
+          }"
+        >
+          {{ item.payment_status | labelValue : listPaymentStatus }}
         </span>
       </ng-template>
 
       <ng-template [appCellTemplate]="'check_out'" let-item>
-        {{item.check_out ? item.check_out : "Chưa trả phòng"}}
+        {{ item.check_out ? item.check_out : "Chưa trả phòng" }}
       </ng-template>
 
       <ng-template [appCellTemplate]="'total_amount'" let-item>
-        {{item.total_amount | moneyFormat}} VNĐ
+        {{ item.total_amount | moneyFormat }} VNĐ
       </ng-template>
 
       <!-- <ng-template [appCellTemplate]="'action'" let-item>
@@ -149,6 +162,10 @@
         </div>
       </ng-template> -->
     </app-table>
-    <app-paging [data]="paging" [changeListPage]="0" (onChange)="getData($event)"></app-paging>
+    <app-paging
+      [data]="paging"
+      [changeListPage]="0"
+      (onChange)="getData($event)"
+    ></app-paging>
   </ng-template>
 </div>
