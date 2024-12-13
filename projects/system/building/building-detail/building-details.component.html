@@ -21,6 +21,13 @@
       </app-form-control>
     </div>
   </div>
+  <div class="row" *ngIf="mode === 'edit-floor'">
+    <div class="col-md-12">
+      <app-form-control label="Tầng">
+        <input-number formControlName="floorNumber"> </input-number>
+      </app-form-control>
+    </div>
+  </div>
 
   <div class="row" *ngIf="mode === 'add-room'">
     <div class="col-md-6">

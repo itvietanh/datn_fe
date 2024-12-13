@@ -57,69 +57,65 @@ export class BuildingDetailsComponent implements OnInit {
 
   async ngOnInit() {
     this.loading = true;
-    this.getData();
-    if (this.id) this.getData();
+    if (this.id || this.mode === 'edit-floor') {
+      this.getData();
+    }
     if (this.mode === DialogMode.view) {
       this.myForm.disable();
-    };
+    }
     this.loading = false;
   }
 
   async getData() {
-    this.dialogService.openLoading;
-    const rs = await this.hotelService.findOne(this.uuid).firstValueFrom();
-    if (rs) {
-      this.myForm.patchValue(rs.data);
+    if (this.uuid) {
+      const res = await this.floorService.findOne(this.uuid).firstValueFrom();
+      console.log(res);
+      if (res) {
+        this.myForm.patchValue({
+          facility: res.data.hotel_id,
+          floorNumber: res.data.floor_number,
+        });
+      }
     }
-    this.dialogService.closeLoading();
   }
-
   async handlerSubmitData() {
     await this.clearValidator();
     this.myForm.markAllAsDirty();
     if (this.myForm.invalid) return;
     const formData = this.myForm.getRawValue();
-
-    let dataReq = {};
-
-    if (this.mode === 'add-floor') {
-      dataReq = {
-        hotel_id: formData.facility,
-        floor_number: formData.floorNumber,
-      };
-    } else {
-      dataReq = {
-        uuid: this.ex.newGuid(),
-        hotel_id: formData.facility,
-        floor_id: formData.floor,
-        room_type_id: formData.roomType,
-        room_number: formData.roomNumber,
-        status: formData.status,
-      };
-    }
-
+    const dataReq = this.mode === 'add-floor'
+      ? {
+          hotel_id: formData.facility,
+          floor_number: formData.floorNumber,
+        }
+      : {
+          hotel_id: formData.facility,
+          floor_number: formData.floorNumber,
+          id: this.id,
+        };
+  
     this.dialogService.openLoading();
-    if (this.uuid) {
-      await this.roomService.edit(this.uuid, dataReq).firstValueFrom();
-    } else {
+    try {
       if (this.mode === 'add-floor') {
         await this.floorService.add(dataReq).firstValueFrom();
-      } else {
-        await this.roomService.add(dataReq).firstValueFrom();
+      } else if (this.mode === 'edit-floor') {
+        await this.floorService.edit(this.id, dataReq).firstValueFrom();
       }
+      this.messageService.notiMessageSuccess('Lưu dữ liệu thành công!');
+      this.close(true);
+    } catch (error) {
+      this.messageService.notiMessageError('Có lỗi xảy ra khi lưu dữ liệu!');
+    } finally {
+      this.dialogService.closeLoading();
     }
-    this.dialogService.closeLoading();
-    this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
-    this.close(true);
-  }
+  }  
 
   clearValidator() {
     if (this.mode === 'add-room') {
       this.myForm.get('floorNumber')?.clearValidators();
     }
-
-    if (this.mode === 'add-floor') {
-      debugger
+  
+    if (this.mode === 'add-floor' || this.mode === 'edit-floor') {
       this.myForm.get('roomType')?.clearValidators();
       this.myForm.get('roomNumber')?.clearValidators();
       this.myForm.get('status')?.clearValidators();
