@@ -34,4 +34,15 @@ export class BookingService extends BaseService {
   public order<T = any>(body: any = null) {
     return this.http.post<ResponseModel<T>>(`${this.baseUrl}/order`, body);
   }
+
+
+  public override getCombobox<T = PagedListModel>(params: any = null) {
+    return this.http.get<ResponseModel<T>>(`${this.baseUrl}/options`, {
+      params: this.stringifyParams(params),
+    });
+  }
+
+  public updateRoomInRoomType<T = any>(params: any = null) {
+    return this.http.put<ResponseModel<T>>(`${this.baseUrl}/update-room-in-rt`, params);
+  }
 }

@@ -20,6 +20,9 @@ import { RoomService } from 'common/share/src/service/application/hotel/room.ser
 import { BookingService } from 'common/share/src/service/application/hotel/booking.service';
 import { ContractDetailComponent } from '../contract-detail.component';
 import { OrderRoomService } from 'common/share/src/service/application/hotel/order-room.service';
+import { HomeHotelService } from 'common/share/src/service/application/hotel/home-hotel.service';
+import { DatePipe } from '@angular/common';
+import { GuestDetailComponent } from 'projects/system/home-hotel/tab-contract/tabs/tab-contract-step2/guest-detail/guest-detail.component';
 
 @Component({
   selector: 'app-contract-detail-tab1',
@@ -30,90 +33,133 @@ export class ContractDetailTab1Component implements OnInit {
   readonly #modal = inject(NzModalRef);
   readonly nzModalData: any = inject(NZ_MODAL_DATA);
   residents: any[] = [];
+  listRoomUsingGuest: any[] = [];
+
   columns: ColumnConfig[] = [
     {
-      key: 'fullName',
-      header: 'Khách',
-      nzWidth: '250px',
+      key: 'name',
+      header: 'Họ và tên',
+      nzWidth: '120px'
     },
     {
-      key: 'identity',
-      header: 'Giấy tờ',
-      pipe: 'template',
-      nzWidth: '200px',
+      key: 'phoneNumber',
+      header: 'Số điện thoại',
+      nzWidth: '120px'
     },
     {
-      key: 'dateOfBirth',
-      header: 'Ngày sinh',
-      pipe: 'date',
-      nzWidth: '150px',
+      key: 'idNumber',
+      header: 'Số CCCD',
+      nzWidth: '140px'
     },
     {
       key: 'action',
-      header: '',
+      header: 'Thao tác',
+      tdClass: 'text-center',
       pipe: 'template',
-      nzWidth: '100px',
+      alignRight: true,
+      nzWidth: '100px'
     },
   ];
-  services: any[] = [];
-  service: any;
+
   rooms: any[] = [];
   roomTypes: any;
+  roomTypeId: any;
   selectedRoom: any;
-  selectedRoomTypes: any;
-  selectedType: any;
   loading = false;
-  loadingService = false;
-  loadingResidents = false;
-  loadingExtraServices = false;
-  loadingServicesArising = false;
-  allowAuto = false;
-  extraServices: any[] = [];
-  extraServicesTotal = 0;
-  servicesArising: any[] = [];
-  servicesArisingTotal = 0;
-  contractStatus = ContractStatus;
-
-
   //
+  selectedRoomTypes: any;
   listRoomType: any;
+  listRoomTypeOption: any;
   roomTypeSelected: any;
+  selectFirstRoomType: any;
   price: any;
   roomInfo: any;
   listGuest: any;
+  roomExist: boolean = false;
 
   constructor(
     private messageService: MessageService,
     public roomTypeService: RoomTypeService,
     public roomService: RoomService,
-    private bookingService: BookingService,
+    public bookingService: BookingService,
     private dialogService: DialogService,
     private modalService: ModalService,
     public shareData: ContractDetailComponent,
-    private orderRoomService: OrderRoomService
+    private orderRoomService: OrderRoomService,
+    private homeHotelService: HomeHotelService,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit() {
     this.getListRoomType();
-
+    this.getRoomUsingGuest();
   }
 
   close() {
     this.#modal.destroy();
   }
 
-  getAvailable(serviceId: any) {
+  async getRoomUsingGuest() {
+    this.dialogService.openLoading();
+    // Danh sách khách
+    const dataRugRes = await this.homeHotelService.getPaging({ uuid: this.roomInfo.ruUuid }).firstValueFrom();
+    const dataGuest = dataRugRes.data!.items;
+    dataGuest.forEach(item => {
+      if (item.birthDate) {
+        item.birthDate = this.datePipe.transform(item.birthDate, 'dd/MM/yyyy');
+      }
+    });
+    this.listRoomUsingGuest = dataGuest;
+    this.dialogService.closeLoading();
+  }
 
+  hanldeOpenDialog(item: any = null, mode: any = 'add') {
+    const dialog = this.dialogService.openDialog(
+      async (option) => {
+        option.title = mode === 'view' ? 'Xem Chi Tiết Khách Hàng' : 'Thêm Mới Khách Hàng';
+        if (mode === 'edit') option.title = 'Cập Nhật Khách Hàng';
+        option.size = DialogSize.xxl_large;
+        option.component = GuestDetailComponent;
+        option.inputs = {
+          mode: mode,
+          uuid: item?.guestUuid,
+          // item: this.shareData?.item
+        };
+      },
+      (eventName, eventValue) => {
+        if (eventName === 'onClose') {
+          this.dialogService.closeDialogById(dialog.id);
+          if (eventValue) {
+            // this.shareData.getDataTab1();
+          }
+        }
+      }
+    );
   }
 
   async roomType(item: any) {
-    this.roomTypes = {
+    this.roomTypeId = {
       room_type_id: item.value
     };
-    // debugger;
   }
 
   async onRoomChange(option: any) {
+    const confirm = await this.messageService.confirm(`Bạn có muốn gán cho ${option.label} không?`);
+    if (confirm) {
+      this.dialogService.openLoading();
+
+      const params = {
+        ruId: this.roomTypes.ruId,
+        roomId: option.value
+      };
+
+      const res = await this.bookingService.updateRoomInRoomType(params).firstValueFrom();
+      if (res.data) {
+        this.messageService.notiMessageSuccess(`${option.label} đã được gán thành công.`);
+        this.getListRoomType();
+      }
+      this.dialogService.closeLoading();
+    }
   }
 
   auto() {
@@ -135,6 +181,7 @@ export class ContractDetailTab1Component implements OnInit {
         nzClassName: DialogSize.full,
         nzData: {
           roomId: this.roomInfo.room_id,
+          ruId: this.roomInfo.ruId,
           id: this.shareData.id,
           checkIn: this.shareData.checkIn,
           checkOut: this.shareData.checkOut,
@@ -147,6 +194,7 @@ export class ContractDetailTab1Component implements OnInit {
 
 
   async getListRoomType() {
+    this.loading = true;
     this.dialogService.openLoading();
     const params = {
       startDate: this.shareData.checkIn,
@@ -155,7 +203,25 @@ export class ContractDetailTab1Component implements OnInit {
     };
     const res = await this.bookingService.getListRoomType(params).firstValueFrom();
     this.listRoomType = res.data?.items;
+
+    this.loading = false;
+
+    this.selectFirstRoomType = res.data?.items?.[0] ?? null;
+
+    this.onRoomTypeSelected(this.selectFirstRoomType);
+
+    const ids = res.data?.items?.map(item => item.id) ?? [];
+
+    const uniqueIds = Array.from(new Set(ids));
+
+    this.selectedRoomTypes = {
+      idStr: uniqueIds.join(',')
+    };
+
+    const rtOption = await this.bookingService.getCombobox(this.selectedRoomTypes).firstValueFrom();
+    this.listRoomTypeOption = rtOption.data?.items;
     this.dialogService.closeLoading();
+
   }
 
   async calculator(roomTypeId: any = null) {
@@ -171,16 +237,25 @@ export class ContractDetailTab1Component implements OnInit {
   }
 
   getResidents(loading = true) {
-    this.loadingResidents = loading;
+    // this.loadingResidents = loading;
   }
 
   onRoomTypeSelected(item: any) {
-    if (item === this.service) return;
+    debugger;
+    // if (item === this.selectFirstRoomType) return;
     this.roomInfo = item;
     this.roomTypeSelected = {
-      id: item.room_type_id
+      id: item.id
     };
-    this.calculator(item.room_type_id);
+    // debugger
+    if (item.roomnumber !== "Trống") {
+      this.roomExist = true;
+    } else {
+      this.roomExist = false;
+    }
+    this.roomTypes = item;
+    this.calculator(item.id);
+    this.getRoomUsingGuest();
   }
 
   async checkOut() {
@@ -196,7 +271,7 @@ export class ContractDetailTab1Component implements OnInit {
       'Bạn có muốn hủy phòng này không?'
     );
     if (!ok) return;
-    this.loadingService = true;
+    // this.loadingService = true;
     // this.contractServiceService
     //   .delete(this.service.id)
     //   .pipe(

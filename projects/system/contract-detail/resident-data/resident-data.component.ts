@@ -130,36 +130,28 @@ export class ResidentDataComponent implements OnInit {
 
     const guests = this.myForm.getRawValue();
     guests.contact_details = JSON.stringify({ addressDetail: guests.address_detail });
-
+    debugger;
     const formData = {
-      guests: guests,
-
-      transition: {
-        uuid: this.ex.newGuid(),
-        guest_id: null,
-        transition_date: this.nzModalData.checkIn,
-        payment_status: 1,
-      },
-      roomUsing: {
-        uuid: this.ex.newGuid(),
-        trans_id: null,
-        room_id: this.nzModalData.roomId,
-        check_in: this.nzModalData.checkIn,
-        total_amount: this.nzModalData.totalAmount
-      },
       roomUsingGuest: {
         check_in: this.nzModalData.checkIn,
         check_out: this.nzModalData.checkOut,
+        room_using_id: this.nzModalData.ruId,
+        guestUuid: guests.uuid
       }
     };
 
     this.dialogService.openLoading();
     const res = await this.booking.order(formData).firstValueFrom();
     this.dialogService.closeLoading();
-    if (res.data) {
-      this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
-    } else {
+
+    if (res.data.original?.errors) {
       this.messageService.notiMessageError("Lỗi hệ thống, vui lòng thực hiện lại");
+      return;
+    }
+
+    if (res.data.roomUsingGuest) {
+      this.getListGuest();
+      this.messageService.notiMessageSuccess("Lưu dữ liệu thành công!");
     }
     if (isClose) {
       this.#modal.destroy(true);
