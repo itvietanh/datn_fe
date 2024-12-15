@@ -133,12 +133,16 @@ export class BuildingComponent implements OnInit {
   handlerOpenDialog(mode: any = '', item: any = null) {
     const dialog = this.dialogService.openDialog(
       async (option) => {
-        option.title = mode === 'add-floor' ? 'Thêm tầng mới' : 'Thêm phòng mới';
+        option.title = mode === 'add-floor' ? 'Thêm tầng mới' :
+                       mode === 'edit-floor' ? 'Sửa tầng' : 'Thêm phòng mới';
         option.size = DialogSize.large;
         option.component = BuildingDetailsComponent;
         option.inputs = {
-          id: item?.id,
-          mode: mode
+          id: item?.id,              
+          mode: mode,               
+          uuid: item?.uuid,         
+          floorNumber: item?.floorNumber, 
+          facilityId: item?.facility?.id 
         };
       },
       (eventName, eventValue) => {
@@ -150,6 +154,27 @@ export class BuildingComponent implements OnInit {
         }
       }
     );
+  }
+  async deleteFloor(floor: any) {
+    const confirm = await this.messageService.confirm(
+      'Bạn có muốn xóa tầng này không?'
+    );
+    if (confirm) {
+      try {
+        this.dialogService.openLoading();
+        await this.floorService.delete(floor.uuid).firstValueFrom();
+        this.messageService.notiMessageSuccess('Xóa tầng thành công!');
+        this.getData(this.paging);
+      } catch (error: any) {
+        if (error?.status === 400 && error?.error?.message) {
+          this.messageService.notiMessageError(error.error.message);
+        } else {
+          this.messageService.notiMessageError('Có lỗi xảy ra khi xóa tầng.');
+        }
+      } finally {
+        this.dialogService.closeLoading();
+      }
+    }
   }
 
   handleFilter(selectedValue: number | null) {

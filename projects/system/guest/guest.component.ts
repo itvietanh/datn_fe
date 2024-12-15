@@ -38,11 +38,11 @@ export class GuestComponent implements OnInit {
       header: 'Ngày tạo',
     },
     {
-      key: 'province_name', 
+      key: 'province_name',
       header: 'Tỉnh',
     },
     {
-      key: 'district_name', 
+      key: 'district_name',
       header: 'Quận',
     },
     {
@@ -62,7 +62,7 @@ export class GuestComponent implements OnInit {
     private dialogService: DialogService,
     private messageService: MessageService,
     public hotelService: HotelService,
-    private guestService : GuestService,
+    private guestService: GuestService,
     private datePipe: DatePipe
   ) {
     this.formSearch = this.fb.group({
@@ -105,11 +105,14 @@ export class GuestComponent implements OnInit {
     const dataRaw = rs.data!.items;
     for (const item of dataRaw) {
       if (item.created_at) {
-        item.created_at = this.datePipe.transform(item.created_at, 'dd-MM-yyyy');
+        item.created_at = this.datePipe.transform(
+          item.created_at,
+          'dd-MM-yyyy'
+        );
       }
-      item.province_name = item.province?.name || ''; 
-      item.district_name = item.district?.name || '';  
-      item.ward_name = item.ward?.name || '';      
+      item.province_name = item.province?.name || '';
+      item.district_name = item.district?.name || '';
+      item.ward_name = item.ward?.name || '';
     }
     this.items = dataRaw;
     this.paging = rs.data?.meta;
@@ -121,7 +124,7 @@ export class GuestComponent implements OnInit {
       async (option) => {
         option.title =
           mode === 'view' ? 'Xem Chi Tiết Tài Khoản' : 'Thêm Mới Tài Khoản';
-        if (mode === 'edit') option.title = 'Cập Nhật Tài Khoản';
+        if (mode === 'edit') option.title = 'Cập Nhật Khách Hàng';
         option.size = DialogSize.xlarge;
         option.component = GuestDetailsComponent; // open component;
         option.inputs = {
@@ -153,6 +156,4 @@ export class GuestComponent implements OnInit {
       }
     }
   }
-
-
 }
