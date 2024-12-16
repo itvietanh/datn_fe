@@ -87,31 +87,11 @@ export class EmployeeComponent implements OnInit {
 
   ) {
     this.formSearch = this.fb.group({
-      name: [null, ValidatorExtension.required()],
-      email: [null, ValidatorExtension.required()],
-      password: ['', ValidatorExtension.required()],
-      phone: [null, ValidatorExtension.required()],
-      address: [null, ValidatorExtension.required()],
-      hotel_id: [null, ValidatorExtension.required()]
+      fullName: [null],
+      phoneNumber: [null],
+      address: [null],
+      status: [null]
     });
-    this.formSearch
-      .get('outEndDate')
-      ?.addValidators(
-        ValidatorExtension.gteDateValidator(
-          this.formSearch,
-          'signEndDate',
-          'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
-        )
-      );
-    this.formSearch
-      .get('outEndDate')
-      ?.addValidators(
-        ValidatorExtension.gteDateValidator(
-          this.formSearch,
-          'outStartDate',
-          'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
-        )
-      );
   }
 
   ngOnInit() {

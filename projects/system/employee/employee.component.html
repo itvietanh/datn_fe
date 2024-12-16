@@ -29,21 +29,50 @@
           <ng-template #controlErrorTpl let-control>
             <app-render-errors [control]="control"></app-render-errors>
           </ng-template>
-          <!-- <div class="text-center mt-3">
-            <button nz-button type="submit" class="btn btn-primary ml-2">
-              <span nz-icon nzType="search" nzTheme="outline"></span>Tìm kiếm
-            </button>
-          </div> -->
           <div class="row">
-            <div class="col-md-2">
-          
+            <div class="col-md-3">
+              <nz-form-item>
+                <nz-form-label>Tên Nhân Viên</nz-form-label>
+                <nz-form-control [nzErrorTip]="controlErrorTpl">
+                  <input-text placeholder="Tên nhân viên..." formControlName="fullName"></input-text>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div class="col-md-3">
+              <nz-form-item>
+                <nz-form-label>Địa chỉ</nz-form-label>
+                <nz-form-control [nzErrorTip]="controlErrorTpl">
+                  <input-text placeholder="Địa chỉ..." formControlName="address"></input-text>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div class="col-md-3">
+              <nz-form-item>
+                <nz-form-label>Số điện thoại</nz-form-label>
+                <nz-form-control [nzErrorTip]="controlErrorTpl">
+                  <input-text placeholder="Số điện thoại..." formControlName="phoneNumber"></input-text>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div class="col-md-3">
+              <nz-form-item>
+                <nz-form-label>Tình trạng làm việc</nz-form-label>
+                <nz-form-control [nzErrorTip]="controlErrorTpl">
+                  <input-select [items]="listStatus" formControlName="status">
+                  </input-select>
+                </nz-form-control>
+              </nz-form-item>
             </div>
           </div>
-          <!-- <div class="text-center mt-0">
+
+          <div class="text-center mt-3">
             <button nz-button type="submit" class="btn btn-primary ml-2">
               <span nz-icon nzType="search" nzTheme="outline"></span>Tìm kiếm
             </button>
-          </div> -->
+          </div>
         </form>
       </div>
     </div>
