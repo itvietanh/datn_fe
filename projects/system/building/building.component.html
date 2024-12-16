@@ -4,15 +4,27 @@
       <div class="d-flex">
         <div class="breadcrumb-title">Quản Lý Tầng & Phòng</div>
       </div>
-      <form>
+      <form [formGroup]="formSearch">
         <div class="d-flex hd-room">
           <div class="breadcrumb-title">
-
+            <div class="chon-tang">
+              <input-select-api
+                [apiService]="floorService"
+                formControlName="floor_id"
+                (onChange)="handleFilter(null)"
+                [placeholder]="'Tầng...'"
+              ></input-select-api>
+            </div>
 
             <ng-container>
               <div class="mo-ta">
-                <div *ngFor="let item of statusOptions" (click)="handleFilter(item.value)" class="status"
-                  [attr.class]="item.class" [ngClass]="{ selected: item.value === selectedStatus }">
+                <div
+                  *ngFor="let item of statusOptions"
+                  (click)="handleFilter(item.value)"
+                  class="status"
+                  [attr.class]="item.class"
+                  [ngClass]="{ selected: item.value === selectedStatus }"
+                >
                   {{ item.label }}
                   {{ item.count ? "(" + item.count + ")" : "" }}
                 </div>
@@ -21,6 +33,7 @@
           </div>
         </div>
       </form>
+
       <div class="d-flex align-items-center">
         <div class="breadcrumb">
           <button nz-button type="button" class="btn btn-primary" (click)="handlerOpenDialog('add-floor')">
@@ -64,7 +77,7 @@
                   <i class="isax-trash1 text-danger mr-2"></i>Xóa
                 </li>
               </ul>
-            </nz-dropdown-menu>            
+            </nz-dropdown-menu>
           </div>
         </div>
         <div class="rooms-grid shadow-lg p-4">
@@ -90,7 +103,7 @@
                 {{ room.totalGuests }}/{{ room.numberOfPeople }}
               </p>
             </div>
-            
+
 
             <div class="room-right text-center">
               <p class="mt-2" *ngIf="room.status === 1">
@@ -111,7 +124,7 @@
                 </a>
                 <nz-dropdown-menu #menu="nzDropdownMenu">
                   <ul nz-menu>
-                    
+
                     <li nz-menu-item (click)="handlerOpenDialog('edit-room', floor)">
                       <i class="isax-edit1 text-primary mr-2"></i>Sửa
                     </li>
@@ -119,8 +132,8 @@
                       <i class="isax-trash1 text-danger mr-2"></i>Xóa
                     </li>
                   </ul>
-                </nz-dropdown-menu>            
-              </div>  
+                </nz-dropdown-menu>
+              </div>
 
               <div class="d-flex mt-4" *ngIf="room.status === 2 || room.status === 3">
                 <div class="col">
@@ -136,9 +149,9 @@
                     {{ room.checkOut | datetimeFormat : "HH:mm" }}
                   </p>
                 </div>
-                
+
               </div>
-              
+
               <!-- <button
                 *ngIf="room.status === 1"
                 class="book-room-btn"
@@ -146,11 +159,11 @@
               >
                 Đặt phòng
               </button> -->
-              
+
             </div>
-            
+
           </div>
-          
+
         </div>
       </div>
     </div>
