@@ -90,6 +90,7 @@
                 {{ room.totalGuests }}/{{ room.numberOfPeople }}
               </p>
             </div>
+            
 
             <div class="room-right text-center">
               <p class="mt-2" *ngIf="room.status === 1">
@@ -104,6 +105,22 @@
                   </p>
                 </ng-container>
               </div>
+              <div>
+                <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
+                  <span nz-icon nzType="more" nzTheme="outline"></span>
+                </a>
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                  <ul nz-menu>
+                    
+                    <li nz-menu-item (click)="handlerOpenDialog('edit-room', floor)">
+                      <i class="isax-edit1 text-primary mr-2"></i>Sửa
+                    </li>
+                    <li nz-menu-item (click)="deleteRoom(room)">
+                      <i class="isax-trash1 text-danger mr-2"></i>Xóa
+                    </li>
+                  </ul>
+                </nz-dropdown-menu>            
+              </div>  
 
               <div class="d-flex mt-4" *ngIf="room.status === 2 || room.status === 3">
                 <div class="col">
@@ -119,7 +136,9 @@
                     {{ room.checkOut | datetimeFormat : "HH:mm" }}
                   </p>
                 </div>
+                
               </div>
+              
               <!-- <button
                 *ngIf="room.status === 1"
                 class="book-room-btn"
@@ -127,8 +146,11 @@
               >
                 Đặt phòng
               </button> -->
+              
             </div>
+            
           </div>
+          
         </div>
       </div>
     </div>

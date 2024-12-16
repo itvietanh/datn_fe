@@ -69,15 +69,19 @@ export class BuildingDetailsComponent implements OnInit {
   async getData() {
     if (this.uuid) {
       const res = await this.floorService.findOne(this.uuid).firstValueFrom();
+      const ress = await this.roomService.findOne(this.uuid).firstValueFrom();
       console.log(res);
-      if (res) {
+      console.log(ress);
+      if (res && ress ) {
         this.myForm.patchValue({
           facility: res.data.hotel_id,
           floorNumber: res.data.floor_number,
+          
         });
       }
     }
   }
+
   async handlerSubmitData() {
     await this.clearValidator();
     this.myForm.markAllAsDirty();
