@@ -317,7 +317,7 @@ export class MenuComponent implements OnInit {
         url: '/he-thong/quyen',
         isOpen: false,
         exact: false,
-        level: 2,
+        level: 1,
         child: [],
       },
     ];

@@ -15,11 +15,15 @@
       </app-form-control>
     </div>
     <div class="col-md-12">
-      <input-diaban [apiService]="diaBanService" 
-        [city]="myForm.get('province_code')"
-        [district]="myForm.get('district_code')" [village]="myForm.get('ward_code')"
-        [address]="myForm.get('address')">
+      <input-diaban [apiService]="diaBanService" [city]="myForm.get('province_code')"
+        [district]="myForm.get('district_code')" [village]="myForm.get('ward_code')" [address]="myForm.get('address')">
       </input-diaban>
+    </div>
+
+    <div class="col-md-12">
+      <app-form-control label="Trạng thái hoạt động">
+        <input-select [items]="listStatus" formControlName="status"></input-select>
+      </app-form-control>
     </div>
   </div>
 

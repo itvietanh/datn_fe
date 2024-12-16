@@ -4,6 +4,7 @@ import { ExtentionService } from "common/base/service/extention.service";
 import { MessageService } from "common/base/service/message.service";
 import { EmployeeService } from "common/share/src/service/application/hotel/employee.service";
 import { HotelService } from "common/share/src/service/application/hotel/hotel.service";
+import { RoleService } from "common/share/src/service/application/hotel/role.service";
 import { ValidatorExtension } from "common/validator-extension";
 import { DialogService, DialogMode, PagingModel, DialogSize } from "share";
 
@@ -21,16 +22,16 @@ export class EmployeeDetailComponent implements OnInit {
   loading = true;
   public paging: any;
 
-  listRole: any[] = [
+  listStatus: any[] = [
     {
       value: 1,
-      label: "ADMIN"
+      label: "Đang làm việc"
     },
     {
       value: 2,
-      label: "Nhân Viên"
+      label: "Đã nghỉ việc"
     }
-  ]
+  ];
 
   constructor(
     private messageService: MessageService,
@@ -39,16 +40,18 @@ export class EmployeeDetailComponent implements OnInit {
     public hotelService: HotelService,
     private employeeService: EmployeeService,
     private ex: ExtentionService,
+    public roleService: RoleService
   ) {
     this.myForm = this.fb.group({
       uuid: [ex.newGuid()],
       name: [null, ValidatorExtension.required()],
       email: [null, [ValidatorExtension.required(), ValidatorExtension.email()]],
       password: [null, ValidatorExtension.required()],
-      phone: [null, [ValidatorExtension.required(),ValidatorExtension.phoneNumberVN()]],
+      phone: [null, [ValidatorExtension.required(), ValidatorExtension.phoneNumberVN()]],
       address: [null, ValidatorExtension.required()],
       hotel_id: [null, ValidatorExtension.required()],
-      role: [null]
+      status: [null, ValidatorExtension.required()],
+      role_id: [null, ValidatorExtension.required()]
     })
   }
 

@@ -37,6 +37,10 @@ export class FacilityComponent implements OnInit {
       header: 'Địa chỉ',
     },
     {
+      key: 'statusTxt',
+      header: 'Trạng thái hoạt động',
+    },
+    {
       key: 'created_at',
       header: 'Ngày tạo',
     },
@@ -46,6 +50,21 @@ export class FacilityComponent implements OnInit {
       tdClass: 'text-center',
       pipe: 'template',
     },
+  ];
+
+  listStatus: any[] = [
+    {
+      value: 1,
+      label: "Đang hoạt động"
+    },
+    {
+      value: 2,
+      label: "Dừng hoạt động"
+    },
+    {
+      value: 3,
+      label: "Tạm dừng hoạt động"
+    }
   ];
 
   constructor(
@@ -96,6 +115,14 @@ export class FacilityComponent implements OnInit {
     for (const item of dataRaw) {
       if (item.created_at) {
         item.created_at = this.datePipe.transform(item.created_at, 'dd-MM-yyyy');
+      }
+
+      if (item.status) {
+        this.listStatus.map(x => {
+          if (x.value === item.status) {
+            item.statusTxt = x.label;
+          }
+        })
       }
     }
     this.items = rs.data!.items;
