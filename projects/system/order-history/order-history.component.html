@@ -56,7 +56,7 @@
                 <nz-form-control [nzErrorTip]="controlErrorTpl">
                   <input-text
                     placeholder="Nhập số phòng..."
-                    formControlName="address"
+                    formControlName="room_number"
                   ></input-text>
                 </nz-form-control>
               </nz-form-item>
@@ -68,7 +68,7 @@
                 <nz-form-control [nzErrorTip]="controlErrorTpl">
                   <input-select
                     [items]="listPaymentStatus"
-                    formControlName="address"
+                    formControlName="payment_status"
                   ></input-select>
                 </nz-form-control>
               </nz-form-item>
@@ -83,21 +83,19 @@
                 </nz-form-control>
               </nz-form-item>
             </div> -->
-
-            <div class="col-md-6">
-              <nz-form-item>
-                <nz-form-label>Ngày trả phòng</nz-form-label>
-                <nz-form-control [nzErrorTip]="controlErrorTpl">
-                  <input-date formControlName="dateFrom"> </input-date>
-                </nz-form-control>
-              </nz-form-item>
-            </div>
-
             <div class="col-md-6">
               <nz-form-item>
                 <nz-form-label>Ngày nhận phòng</nz-form-label>
                 <nz-form-control [nzErrorTip]="controlErrorTpl">
-                  <input-date formControlName="dateTo"> </input-date>
+                  <input-date formControlName="check_in"> </input-date>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div class="col-md-6">
+              <nz-form-item>
+                <nz-form-label>Ngày trả phòng</nz-form-label>
+                <nz-form-control [nzErrorTip]="controlErrorTpl">
+                  <input-date formControlName="check_out"> </input-date>
                 </nz-form-control>
               </nz-form-item>
             </div>

@@ -6,6 +6,7 @@ import { HomeHotelDetailsComponent } from '../home-hotel/tab-home-hotel/home-hot
 import { DatePipe } from '@angular/common';
 import { MessageService } from 'common/base/service/message.service';
 import { FloorService } from 'common/share/src/service/application/hotel/floor.service';
+import { RoomService } from 'common/share/src/service/application/hotel/room.service';
 import { BuildingDetailsComponent } from './building-detail/building-details.component';
 import { TabContractComponent } from '../home-hotel/tab-contract/tab-contract.component';
 
@@ -28,7 +29,8 @@ interface Floor {
   styleUrls: ['./building.component.scss']
 })
 export class BuildingComponent implements OnInit {
-  public myForm: FormGroup;
+  // public myForm: FormGroup;
+  public formSearch: FormGroup;
   public paging: any;
   public listFloor: any;
   selectedStatus: number | null = null;
@@ -90,11 +92,32 @@ export class BuildingComponent implements OnInit {
     private messageService: MessageService,
     private shrContractService: ShrContractService,
     private datePipe: DatePipe,
-    private floorService: FloorService,
-  ) {
-    this.myForm = this.fb.group({
+    public floorService: FloorService,
+    // public orderRoomService: OrderRoomService,
 
+  ) {
+    this.formSearch = this.fb.group({
+      floor_id: [null],
+      // status: [null]
     });
+    this.formSearch
+      .get('outEndDate')
+      ?.addValidators(
+        ValidatorExtension.gteDateValidator(
+          this.formSearch,
+          'signEndDate',
+          'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
+        )
+      );
+    this.formSearch
+      .get('outEndDate')
+      ?.addValidators(
+        ValidatorExtension.gteDateValidator(
+          this.formSearch,
+          'outStartDate',
+          'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
+        )
+      );
   }
 
   floors: Floor[] = [];
@@ -107,6 +130,7 @@ export class BuildingComponent implements OnInit {
     checkOutDate: ''
   };
 
+
   ngOnInit() {
     this.dialogService.openLoading();
     this.getData();
@@ -114,19 +138,39 @@ export class BuildingComponent implements OnInit {
   }
 
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
-    const searchParams: any = {
-      ...paging,
-    };
-
-    // Thêm điều kiện lọc trạng thái
-    if (this.selectedStatus !== null) {
-      searchParams.status = this.selectedStatus;
+    const params = this.formSearch.getRawValue();
+    if (this.selectedStatus) {
+      params.status = this.selectedStatus
     }
-
+    const searchParams = {
+      ...paging,
+      ...params
+    };
     this.dialogService.openLoading();
     const res = await this.floorService.getPaging(searchParams).firstValueFrom();
+    await this.handleRoomOverTime(res.data!.items)
     this.listFloor = res.data?.items;
     this.dialogService.closeLoading();
+  }
+
+  async handleRoomOverTime(data: any) {
+    const datePipe = new DatePipe('en-US');
+    const dateNow = datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');
+    for (const item of data) {
+      for (const room of item.rooms) {
+        const roomCheckOut = datePipe.transform(room.checkOut, 'yyyy-MM-dd HH:mm:ss');
+        if (room.status !== 3) {
+          if ((roomCheckOut && dateNow) && roomCheckOut < dateNow) {
+            this.dialogService.openLoading();
+            // const res = await this.orderRoomService.hanldeRoomOverTime(room.roomUuid).firstValueFrom();
+            // if (res.data) {
+            //   this.getData(this.paging);
+            // }
+            this.dialogService.closeLoading();
+          }
+        }
+      }
+    }
   }
 
 
@@ -138,9 +182,11 @@ export class BuildingComponent implements OnInit {
         option.size = DialogSize.large;
         option.component = BuildingDetailsComponent;
         option.inputs = {
-          id: item?.id,              
-          mode: mode,               
-          uuid: item?.uuid,         
+          id: item?.id,
+          mode: mode,
+          uuid: item?.uuid,
+          floorNumber: item?.floorNumber,
+          facilityId: item?.facility?.id
         };
       },
       (eventName, eventValue) => {
@@ -168,6 +214,27 @@ export class BuildingComponent implements OnInit {
           this.messageService.notiMessageError(error.error.message);
         } else {
           this.messageService.notiMessageError('Có lỗi xảy ra khi xóa tầng.');
+        }
+      } finally {
+        this.dialogService.closeLoading();
+      }
+    }
+  }
+  async deleteRoom(room: any) {
+    const confirm = await this.messageService.confirm(
+      'Bạn có muốn xóa phòng này không?'
+    );
+    if (confirm) {
+      try {
+        this.dialogService.openLoading();
+        await this.floorService.delete(room.uuid).firstValueFrom();
+        this.messageService.notiMessageSuccess('Xóa phòng thành công!');
+        this.getData(this.paging);
+      } catch (error: any) {
+        if (error?.status === 400 && error?.error?.message) {
+          this.messageService.notiMessageError(error.error.message);
+        } else {
+          this.messageService.notiMessageError('Có lỗi xảy ra khi xóa phòng.');
         }
       } finally {
         this.dialogService.closeLoading();

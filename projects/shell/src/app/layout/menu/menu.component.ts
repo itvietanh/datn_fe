@@ -173,6 +173,16 @@ export class MenuComponent implements OnInit {
         ],
         roles: ['ADMIN'],
       },
+      {
+        icon: 'isax-pen-tool-2-1',
+        name: 'QUẢN LÝ CA LÀM',
+        url: '/he-thong/ca-lam',
+        isOpen: false,
+        exact: false,
+        level: 1,
+        child: [
+        ],
+      },
 
       {
         icon: 'isax-home-hashtag1',
