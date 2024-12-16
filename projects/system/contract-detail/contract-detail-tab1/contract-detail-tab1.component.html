@@ -24,15 +24,18 @@
         <div class="d-flex">
           <input-select [items]="listRoomTypeOption" style="width: 150px; margin-right: 8px" [autoSelectFirst]="true"
             *ngIf="!roomExist" placeholder="Chọn loại phòng" (onChange)="roomType($event)"></input-select>
+
           <input-select-api [apiService]="roomService" [apiParams]="roomTypeId" style="width: 130px" *ngIf="!roomExist"
             placeholder="Chọn phòng" (onChange)="onRoomChange($event)"></input-select-api>
-          <a class="cancel" (click)="cancel()">
+
+          <a class="cancel" (click)="cancel()" *ngIf="!listRoomUsingGuest.length">
             <span nz-tooltip nzTooltipTitle="Hủy phòng" class="isax-trash1"></span>
           </a>
         </div>
-        <!-- <button type="button" class="btn btn-primary check-out-btn " (click)="checkOut()">
+        <button type="button" class="btn btn-primary check-out-btn " (click)="checkOut()"
+          *ngIf="listRoomUsingGuest.length">
           <span nz-icon nzType="logout" nzTheme="outline" class="mr-2"></span>Trả phòng
-        </button> -->
+        </button>
       </div>
     </div>
     <div class="check-in-out my-2 w-100">

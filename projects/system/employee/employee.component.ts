@@ -16,7 +16,6 @@ import { EmployeeDetailComponent } from './employee-detail/employee-detail.compo
 import { EmployeeService } from 'common/share/src/service/application/hotel/employee.service';
 import { filter } from 'rxjs';
 
-
 @Component({
   selector: 'app-employee',
   templateUrl: './employee.component.html',
@@ -37,22 +36,43 @@ export class EmployeeComponent implements OnInit {
       header: 'Tên nhân viên',
     },
     {
-      key: 'created_at',
-      header: 'Ngày tạo',
+      key: 'role_name',
+      header: 'Vai trò',
+    },
+    //
+    {
+      key: 'address',
+      header: 'Địa chỉ',
     },
     {
-      key:"phone",
-      header:"Số điện thoại",
+      key: 'phone',
+      header: 'Số điện thoại',
     },
     {
-      key:"email",
-      header:"Email",
+      key: 'email',
+      header: 'Email',
+    },
+    {
+      key: 'statusTxt',
+      header: 'Tình trạng làm việc',
     },
     {
       key: 'action',
       header: 'Thao tác',
       tdClass: 'text-center',
       pipe: 'template',
+      alignRight: true,
+    },
+  ];
+
+  listStatus: any[] = [
+    {
+      value: 1,
+      label: 'Đang làm việc',
+    },
+    {
+      value: 2,
+      label: 'Đã nghỉ việc',
     },
   ];
 
@@ -61,38 +81,15 @@ export class EmployeeComponent implements OnInit {
     private dialogService: DialogService,
     private messageService: MessageService,
     public hotelService: HotelService,
-    private employeeService:EmployeeService,
-    // private guestService : GuestService,
-
+    private employeeService: EmployeeService,
     private datePipe: DatePipe
-
   ) {
     this.formSearch = this.fb.group({
-      name:[null, ValidatorExtension.required()],
-      email: [null, ValidatorExtension.required()],
-      password:['',ValidatorExtension.required()],
-      phone:[null,ValidatorExtension.required()],
-      address:[null,ValidatorExtension.required()],
-      hotel_id:[null,ValidatorExtension.required()]
+      name: [null],
+      phone: [null],
+      address: [null],
+      status: [null],
     });
-    this.formSearch
-      .get('outEndDate')
-      ?.addValidators(
-        ValidatorExtension.gteDateValidator(
-          this.formSearch,
-          'signEndDate',
-          'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
-        )
-      );
-    this.formSearch
-      .get('outEndDate')
-      ?.addValidators(
-        ValidatorExtension.gteDateValidator(
-          this.formSearch,
-          'outStartDate',
-          'Ngày hết hạn hợp đồng không được nhỏ hơn ngày ký hợp đồng'
-        )
-      );
   }
 
   ngOnInit() {
@@ -101,14 +98,40 @@ export class EmployeeComponent implements OnInit {
     this.isLoading = false;
   }
 
+  // async getData(paging: PagingModel = { page: 1, size: 20 }) {
+  //   const params = {
+  //     ...paging,
+  //     ...this.formSearch.value,
+  //   };
+  //   this.dialogService.openLoading();
+  //   const rs = await this.employeeService.getPaging(params).firstValueFrom();
+  //   const dataRaw = rs.data!.items;
+  //   for (const item of dataRaw) {
+  //     if (item.created_at) {
+  //       item.created_at = this.datePipe.transform(
+  //         item.created_at,
+  //         'dd-MM-yyyy'
+  //       );
+  //     }
+
+  //     if (item.status) {
+  //       this.listStatus.map((x) => {
+  //         if (x.value === item.status) {
+  //           item.statusTxt = x.label;
+  //         }
+  //       });
+  //     }
+  //   }
+  //   this.items = rs.data!.items;
+  //   this.paging = rs.data?.meta;
+  //   this.dialogService.closeLoading();
+  // }
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
-    const params = {
-      ...paging,
-      ...this.formSearch.value,
-    };
+    const params = { ...paging, ...this.formSearch.value };
     this.dialogService.openLoading();
     const rs = await this.employeeService.getPaging(params).firstValueFrom();
     const dataRaw = rs.data!.items;
+
     for (const item of dataRaw) {
       if (item.created_at) {
         item.created_at = this.datePipe.transform(
@@ -116,13 +139,19 @@ export class EmployeeComponent implements OnInit {
           'dd-MM-yyyy'
         );
       }
+
+      if (item.status) {
+        this.listStatus.map((x) => {
+          if (x.value === item.status) {
+            item.statusTxt = x.label;
+          }
+        });
+      }
     }
     this.items = rs.data!.items;
     this.paging = rs.data?.meta;
     this.dialogService.closeLoading();
   }
-
-
 
   async handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
     const dialog = this.dialogService.openDialog(
@@ -153,7 +182,9 @@ export class EmployeeComponent implements OnInit {
       'Bạn có muốn xóa dữ liệu này không?'
     );
     if (confirm) {
+      this.dialogService.openLoading();
       const rs = await this.employeeService.delete(item?.uuid).firstValueFrom();
+      this.dialogService.closeLoading();
       if (rs.data) {
         this.messageService.notiMessageSuccess('Xóa dữ liệu thành công');
         return this.getData({ ...this.paging });

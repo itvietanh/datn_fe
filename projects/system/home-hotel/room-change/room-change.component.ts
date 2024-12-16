@@ -54,8 +54,8 @@ export class RoomChangeComponent implements OnInit {
       checkOut: [null, ValidatorExtension.required()],
       roomTypeId: [null, ValidatorExtension.required()],
       roomId: [null, ValidatorExtension.required()],
-      totalAmount: [null, ValidatorExtension.required()],
-      transferFee: [null], // Có thể có phí phát sinh hoặc không có
+      totalAmount: [{ value: null, disabled: true }, ValidatorExtension.required()], // Make totalAmount read-only
+      transferFee: [null, ValidatorExtension.min(0)], // Ensure transferFee is non-negative
     });
   }
 

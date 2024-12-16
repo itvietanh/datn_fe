@@ -56,22 +56,22 @@ export class ImportBookingComponent implements OnInit {
       this.listGuest = rows
         .slice(1)
         .filter((row: any) => row.length > 1)
-        .map((row: any) => {
-          console.log('row', row);
+        .map((column: any) => {
+          console.log('column', column);
           index++;
           return {
             stt: index,
-            fullName: row[1],
-            birthDateText: row[2],
-            gender: row[3],
-            idNumber: row[4],
-            phoneNumber: row[5],
-            provinceCode: row[7],
-            districtCode: row[8],
-            wardCode: row[9],
-            addressDetail: row[6],
-            checkInText: row[13],
-            checkOutText: row[14],
+            fullName: column[1],
+            birthDateText: column[2],
+            gender: column[3],
+            idNumber: column[4],
+            phoneNumber: column[5],
+            provinceCode: column[7],
+            districtCode: column[8],
+            wardCode: column[9],
+            addressDetail: column[6],
+            checkInText: column[13],
+            checkOutText: column[14],
           };
         });
       this.uploading = false;

@@ -465,14 +465,27 @@ export class CreateBookingComponent implements OnInit {
 
   handleChooseGuest(item: any) {
     this.listGuest.filter(x => {
+      x.representative = null;
+
       if (x.representative === true) {
         x.representative = false;
       }
 
-      if (x.identityNo === item.identityNo) {
+      if (x.idNumber === item.idNumber) {
         x.representative = true;
       }
+
+      x.dateOfBirth = x.birthDateText;
+
+      x.identityNo = x.idNumber;
+
+      x.provinceId = x.provinceCode;
+
+      x.districtId = x.districtCode;
+
+      x.wardId = x.wardCode;
     });
+    this.myForm.get('guests')?.patchValue(item);
   }
 
   handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
@@ -513,12 +526,16 @@ export class CreateBookingComponent implements OnInit {
   }
 
   async handlerSubmit() {
-    if (!this.listGuest.length) {
-      this.handleAddGuest();
-    }
 
     if (this.listGuest.length) {
       this.clearValidator();
+    }
+
+    this.myForm.markAllAsDirty();
+    if (this.myForm.invalid) return;
+
+    if (!this.listGuest.length) {
+      this.handleAddGuest();
     }
 
     const body = this.myForm.getRawValue();
@@ -579,10 +596,11 @@ export class CreateBookingComponent implements OnInit {
         check_in: this.myForm.get('checkInTime')?.value,
         total_amount: this.remainingAmount
       },
-      roomUsingGuest: {
-        check_in: this.myForm.get('checkInTime')?.value,
-        check_out: this.myForm.get('checkOutTime')?.value,
-      }
+
+      // roomUsingGuest: {
+      //   check_in: this.myForm.get('checkInTime')?.value,
+      //   check_out: this.myForm.get('checkOutTime')?.value,
+      // }
     };
 
     this.dialogService.openLoading();

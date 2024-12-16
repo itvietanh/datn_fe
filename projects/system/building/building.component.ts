@@ -6,6 +6,7 @@ import { HomeHotelDetailsComponent } from '../home-hotel/tab-home-hotel/home-hot
 import { DatePipe } from '@angular/common';
 import { MessageService } from 'common/base/service/message.service';
 import { FloorService } from 'common/share/src/service/application/hotel/floor.service';
+import { RoomService } from 'common/share/src/service/application/hotel/room.service';
 import { BuildingDetailsComponent } from './building-detail/building-details.component';
 import { TabContractComponent } from '../home-hotel/tab-contract/tab-contract.component';
 
@@ -91,6 +92,7 @@ export class BuildingComponent implements OnInit {
     private shrContractService: ShrContractService,
     private datePipe: DatePipe,
     private floorService: FloorService,
+    private roomService: RoomService,
   ) {
     this.myForm = this.fb.group({
 
@@ -170,6 +172,27 @@ export class BuildingComponent implements OnInit {
           this.messageService.notiMessageError(error.error.message);
         } else {
           this.messageService.notiMessageError('Có lỗi xảy ra khi xóa tầng.');
+        }
+      } finally {
+        this.dialogService.closeLoading();
+      }
+    }
+  }
+  async deleteRoom(room: any) {
+    const confirm = await this.messageService.confirm(
+      'Bạn có muốn xóa phòng này không?'
+    );
+    if (confirm) {
+      try {
+        this.dialogService.openLoading();
+        await this.roomService.delete(room.uuid).firstValueFrom();
+        this.messageService.notiMessageSuccess('Xóa phòng thành công!');
+        this.getData(this.paging);
+      } catch (error: any) {
+        if (error?.status === 400 && error?.error?.message) {
+          this.messageService.notiMessageError(error.error.message);
+        } else {
+          this.messageService.notiMessageError('Có lỗi xảy ra khi xóa phòng.');
         }
       } finally {
         this.dialogService.closeLoading();

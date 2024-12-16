@@ -117,6 +117,7 @@ export class HomeHotelDetailsComponent implements OnInit {
         fullName: [
           null,
           [
+            ValidatorExtension.required(),
             ValidatorExtension.validNameVN(
               "Họ và tên chỉ được sử dụng chữ cái, dấu khoảng trắng và dấu '"
             ),
@@ -127,7 +128,7 @@ export class HomeHotelDetailsComponent implements OnInit {
           ],
         ],
         gender: [null, ValidatorExtension.required()],
-        phoneNumber: [null, [ValidatorExtension.phoneNumber()]],
+        phoneNumber: [null, [ValidatorExtension.required(), ValidatorExtension.phoneNumber()]],
         dateOfBirth: [null, ValidatorExtension.required()],
         addressDetail: [null, ValidatorExtension.required()],
         provinceId: [null, ValidatorExtension.required()],
@@ -280,13 +281,14 @@ export class HomeHotelDetailsComponent implements OnInit {
   }
 
   async handlerSubmit() {
-    if (!this.listGuest.length) {
-      this.handleAddGuest();
-    }
-
     if (this.listGuest.length) {
       this.clearValidator();
+    } else {
+      this.myForm.markAllAsDirty();
+      if (this.myForm.invalid) return;
     }
+
+    this.handleAddGuest();
 
     const body = this.myForm.getRawValue();
     if (body.guests.natId !== 196) {
@@ -319,6 +321,7 @@ export class HomeHotelDetailsComponent implements OnInit {
         guest_id: null,
         transition_date: this.myForm.get('checkInTime')?.value,
         payment_status: 1,
+        note: this.myForm.get('note')?.value
       },
       roomUsing: {
         uuid: this.ex.newGuid(),

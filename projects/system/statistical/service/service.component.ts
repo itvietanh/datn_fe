@@ -235,7 +235,7 @@ export class ServiceComponent implements OnInit, OnChanges {
                   parseInt(data.service_usage_count) || 0,
                 ],
                 borderColor: "rgb(75, 192, 192)",
-                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                backgroundColor: "rgba(75, 192, 192, 0.1)",
                 fill: true,
               },
             ],
