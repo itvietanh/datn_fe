@@ -1,4 +1,5 @@
 @import "variables";
+
 .resident-list {
   width: 100%;
 
@@ -37,45 +38,50 @@
   }
 }
 
-.list-add-resident{
+.list-add-resident {
   display: flex;
 
-  @include mobile{
+  @include mobile {
     display: flex;
     flex-direction: column;
   }
 }
-.form-data-left{
+
+.form-data-left {
   width: 75%;
-  @include mobile{
+
+  @include mobile {
     width: 100%;
   }
 }
-.resident-list{
+
+.resident-list {
   height: auto;
   max-height: 400px;
   overflow-y: auto;
   margin-top: 15px;
 }
 
-@include mobile{
-  .form-data-right{
+@include mobile {
+  .form-data-right {
     padding: 0;
   }
 
-  .title-group{
+  .title-group {
     display: flex;
     flex-direction: column;
   }
-  .title-label{
+
+  .title-label {
     margin-top: 10px;
     margin-bottom: -20px;
   }
-  .title-control{
+
+  .title-control {
     margin-bottom: 10px;
   }
 }
 
-.title-label2{
+.title-label2 {
   padding: 6px;
 }

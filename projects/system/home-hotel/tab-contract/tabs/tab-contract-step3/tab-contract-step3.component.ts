@@ -37,6 +37,9 @@ export class TabContactStep3Component implements OnInit {
   vatAmount: number = 0; // Số tiền thuế 10%
   prepayment: number = 0; // Giá trị thực (không định dạng)
   formattedPrepayment: string = ''; // Giá trị định dạng hiển thị trong input
+  prepaid: number = 0; //Tiền trả trước
+  roomChangeFee: number = 0; //Phí chuyển phòng
+  totalMoneyService: number = 0; //Tổng tiền dịch vụ sử dụng
 
   constructor(
     private fb: FormBuilder,
@@ -53,15 +56,15 @@ export class TabContactStep3Component implements OnInit {
   ) {
     this.myForm = this.fb.group({
       paymentMethod: [2],
-      prepayment: [null]
+      additionalFee: [null],
     });
   }
 
   ngOnInit() {
-    this.onDate();
+    this.getListService();
     this.getPaymentMethod();
     this.getData();
-    this.getListService();
+    this.onDate();
   }
 
   async getData() {
@@ -85,6 +88,10 @@ export class TabContactStep3Component implements OnInit {
     if (data) {
       data.forEach(item => {
         this.listService.push(item);
+
+        if (item.price) {
+          this.totalMoneyService += +item.price;
+        }
       });
     }
     this.dialogService.closeLoading();
@@ -144,25 +151,26 @@ export class TabContactStep3Component implements OnInit {
       } catch (error) {
         console.error("Lỗi khi tạo thanh toán:", error);
       }
-      debugger;
     }
   }
 
-  onPrepayment() {
-    const prepayment = this.myForm.get('prepayment')?.value;
-    if (prepayment) {
-      this.remainingAmount = this.remainingAmount - prepayment;
+  onAdditionalFee() {
+    const additionalFee = this.myForm.get('additionalFee')?.value;
+    if (additionalFee) {
+      this.remainingAmount = this.remainingAmount + additionalFee;
     } else {
       this.remainingAmount = this.roomAmount + this.vatAmount;
     }
   }
 
-  calculateRemainingAmount() {
+  calCulateRemainingAmount() {
     const vat = 0.1;
     this.vatAmount = this.roomAmount * vat;
     const finalPrice = this.roomAmount + this.vatAmount;
     const remaining = finalPrice;
-    this.remainingAmount = remaining;
+    const prepaid = remaining - this.prepaid;
+    const roomChangeFee = prepaid - this.roomChangeFee;
+    this.remainingAmount = roomChangeFee;
   }
 
   async onDate() {
@@ -172,6 +180,16 @@ export class TabContactStep3Component implements OnInit {
       check_out: this.items?.checkOut,
     };
 
+    const resMoneyInRoom = await this.homeHotelService.getMoneyInRoom(this.items.ruUuid).firstValueFrom();
+    const data = resMoneyInRoom.data;
+    if (data.prepaid) {
+      this.prepaid = +data.prepaid;
+    }
+
+    if (data.roomChangeFee) {
+      this.roomChangeFee = data.roomChangeFee;
+    }
+
     this.dialogService.openLoading();
     const res = await this.orderRoomService.calculator(req).firstValueFrom();
     this.dialogService.closeLoading();
@@ -179,7 +197,11 @@ export class TabContactStep3Component implements OnInit {
     if (res?.data) {
       this.roomAmount = Math.floor(res.data.final_price);
       this.totalAmount = this.roomAmount;
-      this.calculateRemainingAmount();
+      this.calCulateRemainingAmount();
+    }
+
+    if (this.totalMoneyService) {
+      this.remainingAmount = this.remainingAmount + this.totalMoneyService;
     }
   }
 

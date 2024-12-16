@@ -97,7 +97,7 @@ export class CustomerScannerComponent {
         this.readIdentityCard(values);
         break;
       case 10:
-        this.readPassport(values);
+        // this.readPassport(values);
         break;
       case 11:
         this.readIdentityCard(values);
@@ -195,42 +195,42 @@ export class CustomerScannerComponent {
     this.modal.destroy(data);
   }
 
-  private async readPassport(values: string[]) {
-    const [
-      type,
-      nationality,
-      surname,
-      name,
-      docNum,
-      _issCountry,
-      dob,
-      sex,
-      _exp,
-      optional,
-    ] = values;
-    const dict: any = {
-      P: {
-        // identityType: IdentityType.HC,
-        identityNo: docNum,
-      },
-      I: {
-        // identityType: IdentityType.CCCD,
-        identityNo: optional,
-      },
-    };
-    const isVNM = nationality === 'VNM';
-    const data: any = {
-      ...dict[type],
-      fullName: isVNM ? `${surname} ${name}` : `${name} ${surname}`,
-      dateOfBirth: this.convertDate(dob),
-      gender: this.convertSexNational(sex),
-      // nationalityId: isVNM
-      //   ? Nationality.VNM
-      //   : await this.getNationalId(nationality),
-      isVNeID: false,
-    };
-    this.modal.destroy(data);
-  }
+  // private async readPassport(values: string[]) {
+  //   const [
+  //     type,
+  //     nationality,
+  //     surname,
+  //     name,
+  //     docNum,
+  //     _issCountry,
+  //     dob,
+  //     sex,
+  //     _exp,
+  //     optional,
+  //   ] = values;
+  //   const dict: any = {
+  //     P: {
+  //       // identityType: IdentityType.HC,
+  //       identityNo: docNum,
+  //     },
+  //     I: {
+  //       // identityType: IdentityType.CCCD,
+  //       identityNo: optional,
+  //     },
+  //   };
+  //   const isVNM = nationality === 'VNM';
+  //   const data: any = {
+  //     ...dict[type],
+  //     fullName: isVNM ? `${surname} ${name}` : `${name} ${surname}`,
+  //     dateOfBirth: this.convertDate(dob),
+  //     gender: this.convertSexNational(sex),
+  //     // nationalityId: isVNM
+  //     //   ? Nationality.VNM
+  //     //   : await this.getNationalId(nationality),
+  //     isVNeID: false,
+  //   };
+  //   this.modal.destroy(data);
+  // }
 
   setScanMulti(event: any) {
     this.scanMulti = event;

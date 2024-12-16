@@ -21,6 +21,12 @@ export class HomeHotelService extends BaseService {
     });
   }
 
+  public getMoneyInRoom<T = any>(uuid: any) {
+    return this.http.get<ResponseModel<T>>(`${this.baseUrl}/get-money-in-room`, {
+      params: this.stringifyParams({ uuid: uuid }),
+    });
+  }
+
   public override add<T = any>(body: any = null) {
     return this.http.post<ResponseModel<T>>(`${this.baseUrl}/add-guest-room-using`, body);
   }
@@ -34,6 +40,12 @@ export class HomeHotelService extends BaseService {
 
   public override delete<T = any>(uuid: any) {
     return this.http.delete<ResponseModel<T>>(`${this.baseUrl}`, {
+      params: this.stringifyParams({ uuid: uuid }),
+    });
+  }
+
+  public guestOutRoom<T = any>(uuid: any) {
+    return this.http.delete<ResponseModel<T>>(`${this.baseUrl}/check-out-rug`, {
       params: this.stringifyParams({ uuid: uuid }),
     });
   }

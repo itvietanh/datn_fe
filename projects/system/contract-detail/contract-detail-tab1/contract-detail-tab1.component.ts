@@ -189,7 +189,7 @@ export class ContractDetailTab1Component implements OnInit {
         },
         nzClosable: true,
       })
-      .afterClose.subscribe((v) => this.getResidents(Boolean(v)));
+      .afterClose.subscribe((v) => this.getRoomUsingGuest());
   }
 
 
@@ -241,13 +241,12 @@ export class ContractDetailTab1Component implements OnInit {
   }
 
   onRoomTypeSelected(item: any) {
-    debugger;
     // if (item === this.selectFirstRoomType) return;
     this.roomInfo = item;
     this.roomTypeSelected = {
       id: item.id
     };
-    // debugger
+
     if (item.roomnumber !== "Trống") {
       this.roomExist = true;
     } else {

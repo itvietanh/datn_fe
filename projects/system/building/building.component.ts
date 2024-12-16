@@ -141,8 +141,6 @@ export class BuildingComponent implements OnInit {
           id: item?.id,              
           mode: mode,               
           uuid: item?.uuid,         
-          floorNumber: item?.floorNumber, 
-          facilityId: item?.facility?.id 
         };
       },
       (eventName, eventValue) => {

@@ -5,5 +5,6 @@ export interface UserProfile {
   units: string[],
   username: string,
   name: string,
-  id: string
+  id: string,
+  authorizal: any[]
 }

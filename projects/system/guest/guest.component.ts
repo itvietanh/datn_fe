@@ -30,8 +30,12 @@ export class GuestComponent implements OnInit {
       header: 'Tên Khách Hàng',
     },
     {
-      key: 'contact_details',
-      header: 'Thông tin liên lạc',
+      key: 'phone_number',
+      header: 'Số điện thoại',
+    },
+    {
+      key: 'gender',
+      header: 'Giới tính',
     },
     {
       key: 'created_at',
@@ -50,11 +54,15 @@ export class GuestComponent implements OnInit {
       header: 'Phường',
     },
     {
-      key: 'action',
-      header: 'Thao tác',
-      tdClass: 'text-center',
-      pipe: 'template',
+      key: 'addressDetail',
+      header: 'Địa chỉ chi tiết',
     },
+    // {
+    //   key: 'action',
+    //   header: 'Thao tác',
+    //   tdClass: 'text-center',
+    //   pipe: 'template',
+    // },
   ];
 
   constructor(
@@ -110,6 +118,12 @@ export class GuestComponent implements OnInit {
           'dd-MM-yyyy'
         );
       }
+
+      if (item.contact_details) {
+        let address = JSON.parse(item.contact_details);
+        item.addressDetail = address.addressDetail;
+      };
+
       item.province_name = item.province?.name || '';
       item.district_name = item.district?.name || '';
       item.ward_name = item.ward?.name || '';

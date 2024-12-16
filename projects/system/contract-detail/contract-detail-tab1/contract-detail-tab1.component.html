@@ -9,9 +9,9 @@
         <span class="m-2 text-danger">{{ item.status === 3 ? 'Đã trả phòng' : ''}}</span>
       </li>
     </ul>
-    <button nz-button type="button" class="btn btn-default" style="margin-top: 10px;">
+    <!-- <button nz-button type="button" class="btn btn-default" style="margin-top: 10px;">
       Tự Động Chia Phòng
-    </button>
+    </button> -->
   </div>
 
   <div class="room-data">
@@ -23,19 +23,20 @@
       <div class="title-control">
         <div class="d-flex">
           <input-select [items]="listRoomTypeOption" style="width: 150px; margin-right: 8px" [autoSelectFirst]="true"
-            *ngIf="!roomExist" placeholder="Chọn loại phòng" (onChange)="roomType($event)"></input-select>
+            *ngIf="!listRoomUsingGuest.length" placeholder="Chọn loại phòng" (onChange)="roomType($event)"></input-select>
 
-          <input-select-api [apiService]="roomService" [apiParams]="roomTypeId" style="width: 130px" *ngIf="!roomExist"
-            placeholder="Chọn phòng" (onChange)="onRoomChange($event)"></input-select-api>
+          <input-select-api [apiService]="roomService" [apiParams]="roomTypeId" style="width: 130px"
+            *ngIf="!listRoomUsingGuest.length" placeholder="Chọn phòng" (onChange)="onRoomChange($event)"></input-select-api>
 
           <a class="cancel" (click)="cancel()" *ngIf="!listRoomUsingGuest.length">
             <span nz-tooltip nzTooltipTitle="Hủy phòng" class="isax-trash1"></span>
           </a>
         </div>
-        <button type="button" class="btn btn-primary check-out-btn " (click)="checkOut()"
+        <!-- <button type="button" class="btn btn-primary check-out-btn " (c
+         lick)="checkOut()"
           *ngIf="listRoomUsingGuest.length">
           <span nz-icon nzType="logout" nzTheme="outline" class="mr-2"></span>Trả phòng
-        </button>
+        </button> -->
       </div>
     </div>
     <div class="check-in-out my-2 w-100">
@@ -191,15 +192,15 @@
         </div>
       </div>
     </div>
-    <div class="title-group2 mt-2">
+    <!-- <div class="title-group2 mt-2">
       <div class="title-label2">
         <i class="isax-card-slash1"></i> Phát sinh
       </div>
       <div class="title-control2">
-        <!-- <span class="mr-2">{{ servicesArisingTotal | moneyFormat }}</span> -->
+        <span class="mr-2">0000</span>
         <span class="mt-1 float-right cursor-pointer color-primary" nz-icon nzType="plus-circle" nzTheme="fill"></span>
       </div>
-    </div>
+    </div> -->
     <div *ngFor="let item of listGuest" class="d-flex justify-content-between w-100 service-text">
       <div class="name-service-container">
         {{ item.note }}

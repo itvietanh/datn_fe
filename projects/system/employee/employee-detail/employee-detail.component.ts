@@ -67,7 +67,7 @@ export class EmployeeDetailComponent implements OnInit {
   async getData() {
     this.dialogService.openLoading();
     const rs = await this.employeeService.findOne(this.uuid).firstValueFrom();
-    if (rs) {
+    if (rs.data) {
       this.myForm.patchValue(rs.data);
     }
     this.dialogService.closeLoading();

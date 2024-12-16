@@ -8,6 +8,8 @@ import { RoomChangeComponent } from "projects/system/home-hotel/room-change/room
 import { GuestDetailComponent } from "./guest-detail/guest-detail.component";
 import { ServiceDetailComponent } from "./service-detail/service-detail.component";
 import { TabContactStep3Component } from "../tab-contract-step3/tab-contract-step3.component";
+import { HomeHotelService } from "common/share/src/service/application/hotel/home-hotel.service";
+import { MessageService } from "common/base/service/message.service";
 
 @Component({
   selector: 'app-tab-contract-step2',
@@ -50,7 +52,9 @@ export class TabContactStep2Component implements OnInit {
     private fb: FormBuilder,
     public shareData: TabContractService,
     private orderRoomService: OrderRoomService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private homeHotelService: HomeHotelService,
+    private messageService: MessageService
 
   ) {
     this.myForm = shareData.myForm;
@@ -117,7 +121,8 @@ export class TabContactStep2Component implements OnInit {
         option.inputs = {
           mode: mode,
           uuid: item?.guestUuid,
-          item: this.shareData?.item
+          item: this.shareData?.item,
+          listGuestInRoom: this.shareData.listGuest
         };
       },
       (eventName, eventValue) => {
@@ -174,6 +179,18 @@ export class TabContactStep2Component implements OnInit {
         }
       }
     );
+  }
+
+  async handleGuestOutRoom(value: any) {
+    const confirm = await this.messageService.confirm(`Xác nhận Check Out cho khách ${value.name}?`);
+    if (confirm) {
+      this.dialogService.openLoading();
+      const res = await this.homeHotelService.guestOutRoom(value.guestUuid).firstValueFrom();
+      if (res.data) {
+        this.shareData.getDataTab1();
+      }
+      this.dialogService.closeLoading();
+    }
   }
 
 }

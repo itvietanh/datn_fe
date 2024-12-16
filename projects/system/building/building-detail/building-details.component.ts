@@ -78,28 +78,28 @@ export class BuildingDetailsComponent implements OnInit {
       }
     }
   }
+
   async handlerSubmitData() {
     await this.clearValidator();
     this.myForm.markAllAsDirty();
     if (this.myForm.invalid) return;
     const formData = this.myForm.getRawValue();
+
     const dataReq = this.mode === 'add-floor'
       ? {
-          hotel_id: formData.facility,
-          floor_number: formData.floorNumber,
-        }
+        hotel_id: formData.facility,
+        floor_number: formData.floorNumber,
+      }
       : {
-          hotel_id: formData.facility,
-          floor_number: formData.floorNumber,
-          id: this.id,
-        };
-  
+        floor_number: formData.floorNumber,
+      };
+
     this.dialogService.openLoading();
     try {
       if (this.mode === 'add-floor') {
         await this.floorService.add(dataReq).firstValueFrom();
       } else if (this.mode === 'edit-floor') {
-        await this.floorService.edit(this.id, dataReq).firstValueFrom();
+        await this.floorService.edit(this.uuid, dataReq).firstValueFrom();
       }
       this.messageService.notiMessageSuccess('Lưu dữ liệu thành công!');
       this.close(true);
@@ -108,13 +108,13 @@ export class BuildingDetailsComponent implements OnInit {
     } finally {
       this.dialogService.closeLoading();
     }
-  }  
+  }
 
   clearValidator() {
     if (this.mode === 'add-room') {
       this.myForm.get('floorNumber')?.clearValidators();
     }
-  
+
     if (this.mode === 'add-floor' || this.mode === 'edit-floor') {
       this.myForm.get('roomType')?.clearValidators();
       this.myForm.get('roomNumber')?.clearValidators();

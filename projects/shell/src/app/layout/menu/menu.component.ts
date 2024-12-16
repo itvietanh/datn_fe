@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { MenuService } from 'common/share/src/service/application/hotel/menu.service';
 import { MessageService } from 'common/base/service/message.service';
+import { AutService } from 'common/share/src/service/application/auth/aut.service';
 
 declare let $: any;
 @Component({
@@ -16,10 +17,15 @@ export class MenuComponent implements OnInit {
   public menuData: any[] = [];
   public isShowFullMenuMobile = false;
   public isLoading = true;
+  private role: any;
 
-  constructor(private rt: Router, private location: Location, private menuService: MenuService, private messageService: MessageService) { }
+  constructor(private rt: Router, private location: Location, private menuService: MenuService, private messageService: MessageService, private autService: AutService) { }
 
   async ngOnInit(): Promise<void> {
+    await this.autService.initUser();
+    this.role = await this.autService.userInfo;
+    this.role = await this.role.authorizal[0].role;
+
     const url = this.location.path();
     // gọi lần đầu
     this.getDataMenu(url);
@@ -125,36 +131,39 @@ export class MenuComponent implements OnInit {
   // }
 
   getMenuDefault() {
-    this.menuData = [
+    const menuData = [
       {
-        icon: 'isax-pen-tool-2-1',
+        icon: 'isax-house1',
         name: 'ĐẶT PHÒNG',
         url: '/he-thong/dat-phong',
         isOpen: false,
         exact: false,
         level: 1,
         child: [],
+        roles: ['ADMIN', "EMPLOYEE"],
       },
       {
-        icon: 'isax-pen-tool-2-1',
+        icon: 'isax-home-hashtag1',
         name: 'SƠ ĐỒ KHÁCH SẠN',
         url: '/he-thong/trang-chu',
         isOpen: false,
         exact: false,
         level: 1,
         child: [],
+        roles: ['ADMIN', "EMPLOYEE"],
       },
       {
-        icon: 'isax-pen-tool-2-1',
+        icon: 'isax-house-2',
         name: 'QUẢN LÝ CƠ SỞ',
         url: '/he-thong/co-so',
         isOpen: false,
         exact: false,
         level: 1,
         child: [],
+        roles: ['ADMIN'],
       },
       {
-        icon: 'isax-pen-tool-2-1',
+        icon: 'isax-profile-2user',
         name: 'QUẢN LÝ TÀI KHOẢN NHÂN VIÊN',
         url: '/he-thong/tai-khoan',
         isOpen: false,
@@ -162,10 +171,11 @@ export class MenuComponent implements OnInit {
         level: 1,
         child: [
         ],
+        roles: ['ADMIN'],
       },
 
       {
-        icon: 'isax-people1',
+        icon: 'isax-home-hashtag1',
         name: 'QUẢN LÝ KHÁCH SẠN ',
         url: null,
         isOpen: false,
@@ -173,25 +183,27 @@ export class MenuComponent implements OnInit {
         level: 1,
         child: [
           {
-            icon: 'isax-pen-tool-2-1',
+            icon: 'isax-keyboard',
             name: 'QUẢN LÝ TẦNG',
             url: '/he-thong/danh-sach-tang',
             isOpen: false,
             exact: false,
             level: 2,
             child: [],
+            roles: ['ADMIN'],
           },
           {
-            icon: 'isax-pen-tool-2-1',
+            icon: 'isax-layer',
             name: 'QUẢN LÝ LOẠI PHÒNG',
             url: '/he-thong/danh-sach-loai-phong',
             isOpen: false,
             exact: false,
             level: 2,
             child: [],
+            roles: ['ADMIN'],
           },
           {
-            icon: 'isax-pen-tool-2-1',
+            icon: 'isax-sms-edit',
             name: 'QUẢN LÝ DỊCH VỤ',
             url: '/he-thong/dich-vu',
             isOpen: false,
@@ -199,47 +211,43 @@ export class MenuComponent implements OnInit {
             level: 1,
             child: [
               {
-                icon: 'isax-pen-tool-2-1',
+                icon: 'isax-bill',
                 name: 'DỊCH VỤ',
                 url: '/he-thong/dich-vu',
                 isOpen: false,
                 exact: false,
                 level: 2,
                 child: [],
+                roles: ['ADMIN'],
               },
               {
-                icon: 'isax-pen-tool-2-1',
+                icon: 'isax-profile-tick',
                 name: 'DỊCH VỤ KHÁCH ĐẶT',
                 url: '/he-thong/dich-vu-khach-dat',
                 isOpen: false,
                 exact: false,
                 level: 2,
                 child: [],
+                roles: ['ADMIN'],
               },
             ],
-          },
-          {
-            icon: 'isax-pen-tool-2-1',
-            name: 'QUẢN LÝ KHÁCH HÀNG ',
-            url: '/he-thong/khach-hang',
-            isOpen: false,
-            exact: false,
-            level: 1,
-            child: [],
-          },
+            roles: ['ADMIN'],
+          }
         ],
+        roles: ['ADMIN'],
       },
       {
-        icon: 'isax-pen-tool-2-1',
+        icon: 'isax-profile-tick',
         name: 'QUẢN LÝ KHÁCH HÀNG',
         url: '/he-thong/khach-hang',
         isOpen: false,
         exact: false,
         level: 1,
         child: [],
+        roles: ['ADMIN'],
       },
       {
-        icon: 'isax-pen-tool-2-1',
+        icon: 'isax-grid-eraser',
         name: 'THỐNG KÊ',
         url: '/he-thong/thong-ke',
         isOpen: false,
@@ -247,80 +255,99 @@ export class MenuComponent implements OnInit {
         level: 1,
         child: [
           {
-            icon: 'isax-pen-tool-2-1',
+            icon: 'isax-security-card',
             name: 'Giao dịch',
             url: '/he-thong/thong-ke/giao-dich',
             isOpen: false,
             exact: false,
             level: 2,
             child: [],
+            roles: ['ADMIN'],
           },
           {
-            icon: 'isax-pen-tool-2-1',
+            icon: 'isax-shopping-bag',
             name: 'Dịch vụ',
             url: '/he-thong/thong-ke/bao-cao',
             isOpen: false,
             exact: false,
             level: 2,
             child: [],
+            roles: ['ADMIN'],
           },
           {
-            icon: 'isax-pen-tool-2-1',
+            icon: 'isax-tag-user',
             name: 'Khách hàng',
             url: '/he-thong/thong-ke/khach-hang',
             isOpen: false,
             exact: false,
             level: 2,
             child: [],
+            roles: ['ADMIN'],
           },
           {
-            icon: 'isax-pen-tool-2-1',
+            icon: 'isax-user-tag',
             name: 'Nhân viên',
             url: '/he-thong/thong-ke/nhan-vien',
             isOpen: false,
             exact: false,
             level: 2,
             child: [],
+            roles: ['ADMIN'],
           },
           {
-            icon: 'isax-pen-tool-2-1',
+            icon: 'isax-video-horizontal',
             name: 'Loại phòng',
             url: '/he-thong/thong-ke/loai-phong',
             isOpen: false,
             exact: false,
             level: 2,
             child: [],
+            roles: ['ADMIN'],
           },
         ],
+        roles: ['ADMIN'],
       },
       {
-        icon: 'isax-pen-tool-2-1',
+        icon: 'isax-cpu-setting',
         name: 'QUẢN LÝ MENU',
         url: '/he-thong/menu',
         isOpen: false,
         exact: false,
         level: 1,
         child: [],
+        roles: ['ADMIN'],
       },
       {
-        icon: 'isax-pen-tool-2-1',
+        icon: 'isax-refresh-left-square1',
         name: 'LỊCH SỬ',
         url: '/he-thong/lich-su',
         isOpen: false,
         exact: false,
         level: 1,
         child: [],
+        roles: ['ADMIN'],
       },
       {
-        icon: 'isax-pen-tool-2-1',
+        icon: 'isax-verify',
         name: 'QUẢN LÝ QUYỀN',
         url: '/he-thong/quyen',
         isOpen: false,
         exact: false,
         level: 1,
         child: [],
+        roles: ['ADMIN'],
       },
     ];
+    this.menuData = this.filterMenuByRole(menuData, this.role);
+  }
+
+  filterMenuByRole(menu: any[], role: string): any[] {
+    return menu
+      .filter((item) => item.roles.includes(role))
+      .map((item) => ({
+        ...item,
+        child: item.child ? this.filterMenuByRole(item.child, role) : [],
+      }));
   }
 
   clearActiveMenu(source: any[]) {

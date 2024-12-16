@@ -131,7 +131,7 @@ export class ServiceComponent implements OnInit {
         option.title = mode === 'view' ? 'Xem Chi Tiết Dịch Vụ' : 'Thêm Mới Dịch Vụ';
         if (mode === 'edit') option.title = 'Cập Nhật Dịch Vụ';
         option.size = DialogSize.xlarge;
-        option.component = ServiceDetailComponent;// open component; (mở component)
+        option.component = ServiceDetailComponent;
         option.inputs = {
           uuid: item?.uuid,
           item: item,

@@ -32,10 +32,7 @@ export class CustomerDataComponent implements OnInit, OnChanges {
   @Input() requiredReasonStayId = false;
   @Output() formChange = new EventEmitter<FormGroup>();
   genders = GENDERS;
-  // addressTypes = ADDRESS_TYPES;
-  // identityTypes = IDENTITY_TYPES;
   loading = false;
-  // nationality = Nationality;
   scannerOpening = false;
   init = false;
   public maxDate = new Date();
@@ -65,7 +62,7 @@ export class CustomerDataComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    debugger;
+    // debugger;
     if (changes['data']?.currentValue) {
       this.onDataChange(this.data);
     }
@@ -80,7 +77,7 @@ export class CustomerDataComponent implements OnInit, OnChanges {
       keys.push(key);
     });
     // data.notAllowedToBeModified = keys.join(',');
-    debugger;
+    // debugger;
     this.initForm(data);
   }
 
@@ -118,11 +115,26 @@ export class CustomerDataComponent implements OnInit, OnChanges {
   }
 
   initForm(data: any = {}) {
+    data.id_number = data.identityNo ? data.identityNo : data.id_number;
+    data.name = data.fullName ? data.fullName : data.name;
+    data.address_detail = data.addressDetail ? data.addressDetail : data.address_detail;
+    data.province_id = data.provinceId ? data.provinceId : data.province_id;
+    data.district_id = data.districtId  ?data.districtId : data.district_id;
+    data.ward_id = data.wardId ? data.wardId : data.ward_id;
+    if (data.gender === 5) {
+      data.gender = "Nam";
+    } 
+
+    if (data.gender === 6) {
+      data.gender = "Nữ";
+    } 
+    data.birth_date = data.dateOfBirth ? data.dateOfBirth : data.birth_date;
+
     if (!this.init) {
       this.form = this.fb.group({
         uuid: [null],
         name: [null, ValidatorExtension.required()],
-        phone_number: [null, ValidatorExtension.phoneNumberVN()],
+        phone_number: [null, [ValidatorExtension.phoneNumberVN(), ValidatorExtension.required()]],
         id_number: [null, ValidatorExtension.required()],
         passport_number: [null, ValidatorExtension.required()],
         province_id: [null, ValidatorExtension.required()],

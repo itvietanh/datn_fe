@@ -12,7 +12,8 @@
   <div class="row" *ngIf="mode === 'add-floor'">
     <div class="col-md-6">
       <app-form-control label="Chọn Cơ Sở">
-        <input-select-api [apiService]="hotelService" [actionName]="'getCombobox'" formControlName="facility"> </input-select-api>
+        <input-select-api [apiService]="hotelService" [actionName]="'getCombobox'" formControlName="facility">
+        </input-select-api>
       </app-form-control>
     </div>
     <div class="col-md-6">
@@ -21,6 +22,7 @@
       </app-form-control>
     </div>
   </div>
+
   <div class="row" *ngIf="mode === 'edit-floor'">
     <div class="col-md-12">
       <app-form-control label="Tầng">
@@ -32,17 +34,20 @@
   <div class="row" *ngIf="mode === 'add-room'">
     <div class="col-md-6">
       <app-form-control label="Chọn Cơ Sở">
-        <input-select-api [apiService]="hotelService" [actionName]="'getCombobox'" formControlName="facility"> </input-select-api>
+        <input-select-api [apiService]="hotelService" [actionName]="'getCombobox'" formControlName="facility">
+        </input-select-api>
       </app-form-control>
     </div>
     <div class="col-md-6">
       <app-form-control label="Tầng">
-        <input-select-api [apiService]="floorService" [actionName]="'getCombobox'" formControlName="floor"> </input-select-api>
+        <input-select-api [apiService]="floorService" [actionName]="'getCombobox'" formControlName="floor">
+        </input-select-api>
       </app-form-control>
     </div>
     <div class="col-md-6">
       <app-form-control label="Kiểu phòng">
-        <input-select-api [apiService]="roomTypeService" [actionName]="'getCombobox'" formControlName="roomType"> </input-select-api>
+        <input-select-api [apiService]="roomTypeService" [actionName]="'getCombobox'" formControlName="roomType">
+        </input-select-api>
       </app-form-control>
     </div>
     <div class="col-md-6">
@@ -67,8 +72,7 @@
       <i nz-icon nzType="close" nzTheme="outline"></i>Hủy
     </button>
     <!-- lưu và đóng -->
-    <button nz-button type="button" class="btn btn-primary" (click)="handlerSubmitData()" 
-    *ngIf="mode !== 'view'">
+    <button nz-button type="button" class="btn btn-primary" (click)="handlerSubmitData()" *ngIf="mode !== 'view'">
       <i class="icon-plus-circle2 mr-2"></i>
       Lưu và đóng
     </button>

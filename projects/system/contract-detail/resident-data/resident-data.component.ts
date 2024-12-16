@@ -51,8 +51,6 @@ export class ResidentDataComponent implements OnInit {
 
 
   ngOnInit() {
-    const roomId = this.nzModalData.roomId;
-    debugger;
     this.getListGuest();
   }
 
@@ -130,13 +128,14 @@ export class ResidentDataComponent implements OnInit {
 
     const guests = this.myForm.getRawValue();
     guests.contact_details = JSON.stringify({ addressDetail: guests.address_detail });
-    debugger;
+    // debugger;
     const formData = {
       roomUsingGuest: {
         check_in: this.nzModalData.checkIn,
         check_out: this.nzModalData.checkOut,
         room_using_id: this.nzModalData.ruId,
-        guestUuid: guests.uuid
+        guestUuid: guests.uuid,
+        guest: guests
       }
     };
 

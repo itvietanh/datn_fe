@@ -57,7 +57,7 @@ export class ServiceDetailComponent implements OnInit {
   }
 
   updateTotal() {
-    this.total = sumBy(this.services, (s: any) => s.price * s.quantity);
+    this.total = sumBy(this.services, (s: any) => s.service_price * s.quantity);
   }
 
   async addContractServices() {

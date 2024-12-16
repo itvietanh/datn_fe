@@ -9,6 +9,7 @@ import { NzSegmentedModule } from 'ng-zorro-antd/segmented';
 import { TabContractModule } from './tab-contract/tab-contract.module';
 import { RoomChangeComponent } from './room-change/room-change.component';
 import { ServiceDetailModule } from './tab-contract/tabs/tab-contract-step2/service-detail/service-detail.module';
+import { CustomerScannerModule } from '../customer-scanner/customer-scanner.module';
 
 @NgModule({
   imports:
@@ -17,6 +18,7 @@ import { ServiceDetailModule } from './tab-contract/tabs/tab-contract-step2/serv
       NzSegmentedModule,
       TabContractModule,
       ServiceDetailModule,
+      CustomerScannerModule,
       HomeHotelRoutes,
     ],
     declarations: [HomeHotelComponent, HomeHotelDetailsComponent, QrCodeDetailsComponent, RoomChangeComponent],

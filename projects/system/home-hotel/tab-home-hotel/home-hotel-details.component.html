@@ -1,8 +1,4 @@
 <form [formGroup]="myForm">
-  <ng-template #controlErrorTpl let-control>
-    <app-render-errors [control]="control"></app-render-errors>
-  </ng-template>
-
   <div class="title-group">
     <div class="title-label">
       <i class="isax-house-21"></i> Thông tin phòng
@@ -24,19 +20,38 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
           <app-form-control label="Loại phòng">
             <input-select-api [apiService]="roomTypeService" [actionName]="'getCombobox'"
               formControlName="roomTypeId"></input-select-api>
           </app-form-control>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <app-form-control label="Phòng">
-            <input-select-api [apiService]="roomService" [actionName]="'getCombobox'" formControlName="roomId"
-              [allowSearch]="false"></input-select-api>
+            <input-select-api [apiService]="roomService" [actionName]="'getCombobox'"
+              formControlName="roomId"></input-select-api>
           </app-form-control>
         </div>
-        <div class="col-md-4">
+
+        <div class="col-md-3">
+          <app-form-control label="Loại giá">
+            <div class="price-type">
+              <input-select [items]="prices" [allowClear]="false" formControlName="priceId"></input-select>
+              <div class="price-type-info" nz-tooltip [nzTooltipTitle]="priceDetailTemplate">
+                <ng-template #priceDetailTemplate>
+                  <div style="white-space: pre-line">
+                    <p>Giá theo giờ: {{ priceDetail[0].price_per_hour }} / (1 giờ)</p>
+                    <p>Giá theo ngày: {{ priceDetail[0].price_per_day }} / (1 ngày)</p>
+                    <p>Giá quá giờ: {{ priceDetail[0].price_overtime }} / (1 giờ)</p>
+                  </div>
+                </ng-template>
+                <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+              </div>
+            </div>
+          </app-form-control>
+        </div>
+
+        <div class="col-md-3">
           <app-form-control label="Giá phòng">
             <input-number formControlName="totalPrice"></input-number>
           </app-form-control>
@@ -93,76 +108,36 @@
           <i class="isax-house-21"></i> Thông tin khách
         </div>
         <div class="title-control">
-          <button nz-button type="button" class="btn btn-default mr-2" (click)="myForm.reset()">
-            <i class="isax-rotate-left1 mr-2"></i>Làm mới
-          </button>
-          <!-- <button nz-button type="button" class="btn btn-default mr-2">
-            <i class="isax-rotate-left1 mr-2"></i>Hủy
-          </button> -->
-          <!-- <button nz-button type="button" class="btn btn-primary mr-2">
-            <i class="isax-import-11 mr-2"></i>Cập nhật
-          </button> -->
-          <button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
-            <i class="isax-scan-barcode1 mr-2"></i>Quét CCCD
+          <button *ngIf="residentIndex !== -1" type="button" class="btn btn-default mr-2" (click)="deleteResident()">
+            <i class="isax-trash1 mr-2"></i>Xóa khách
           </button>
 
-          <!-- <app-customer-scanner-button (success)="data = $event"></app-customer-scanner-button> -->
+          <button *ngIf="residentIndex === -1" type="button" class="btn btn-primary mr-2" (click)="handleAddGuest()">
+            <i class="isax-add-circle1 mr-2"></i>Thêm khách
+          </button>
+
+          <button (click)="resetForm()" nz-button type="button" class="btn btn-default mr-2"
+            *ngIf="residentIndex === -1">
+            <i class="isax-rotate-left1 mr-2"></i>Làm mới
+          </button>
+
+          <button (click)="cancelResident()" nz-button type="button" class="btn btn-default mr-2"
+            *ngIf="residentIndex !== -1">
+            <i class="isax-rotate-left1 mr-2"></i>Hủy
+          </button>
+
+          <button (click)="updateResident()" nz-button type="button" class="btn btn-primary mr-2"
+            *ngIf="residentIndex !== -1">
+            <i class="isax-import-11 mr-2"></i>Cập nhật
+          </button>
+
+          <app-customer-scanner-button #btnScaner (success)="data = $event"
+            (successMulti)="scanMulti($event)"></app-customer-scanner-button>
         </div>
       </div>
 
-      <!-- <app-customer-data [(form)]="resident" [data]="items"></app-customer-data> -->
-      <div class="row mt-2" formGroupName="guests">
-        <div class="col-md-4">
-          <app-form-control label="Họ tên">
-            <input-text formControlName="fullName" [toUper]="true"></input-text>
-          </app-form-control>
-        </div>
-        <div class="col-md-4">
-          <app-form-control label="Giới tính">
-            <input-select [items]="listGender" formControlName="gender"></input-select>
-          </app-form-control>
-        </div>
-        <div class="col-md-4">
-          <app-form-control label="Ngày sinh">
-            <input-date formControlName="dateOfBirth"></input-date>
-          </app-form-control>
-        </div>
-        <div class="col-md-4">
-          <app-form-control label="Số điện thoại">
-            <input-text formControlName="phoneNumber"></input-text>
-          </app-form-control>
-        </div>
-        <div class="col-md-4">
-          <app-form-control label="Quốc tịch">
-            <input-select-api [apiService]="diaBanService" [actionName]="'getComboboxQT'" formControlName="natId">
-            </input-select-api>
-          </app-form-control>
-        </div>
-        <div class="col-md-4" *ngIf="myForm.get('guests.natId')?.value === 196">
-          <app-form-control label="Số CCCD">
-            <input-text formControlName="identityNo"></input-text>
-          </app-form-control>
-        </div>
-        <div class="col-md-4">
-          <app-form-control label="Số hộ chiếu" *ngIf="myForm.get('guests.natId')?.value !== 196">
-            <input-text formControlName="passportNumber"></input-text>
-          </app-form-control>
-        </div>
-
-        <ng-container *ngIf="myForm.get('guests.natId')?.value === 196">
-          <div class="col-md-12">
-            <input-diaban [apiService]="diaBanService" [city]="myForm.get('guests.provinceId')"
-              [district]="myForm.get('guests.districtId')" [village]="myForm.get('guests.wardId')"></input-diaban>
-          </div>
-        </ng-container>
-
-        <ng-container>
-          <div class="col-md-12">
-            <app-form-control label="Địa chỉ chi tiết">
-              <input-text formControlName="addressDetail"></input-text>
-            </app-form-control>
-          </div>
-        </ng-container>
+      <div class="mt-2">
+        <app-customer-data [(form)]="resident" [data]="data"></app-customer-data>
       </div>
     </div>
     <div class="customer-list">
@@ -170,32 +145,23 @@
         <div class="title-label">
           <i class="isax-house-21"></i> Danh sách khách
         </div>
-        <div class="title-control">
-          <button type="button" class="btn btn-default" (click)="handleRemoveGuest()">
-            <i class="isax-trash1 mr-2"></i>Xóa khách
-          </button>
-
-          <button type="button" class="btn btn-primary ml-2" (click)="handleAddGuest()">
-            <i class="isax-add-circle1 mr-2"></i>Thêm khách
-          </button>
-        </div>
       </div>
 
       <div class="resident-list">
-        <div class="resident-item selected" *ngFor="let item of listGuest">
-          <div class="name" (click)="handleChooseGuest(item)">
+        <div class="resident-item selected" *ngFor="let item of listGuest; let i = index">
+          <div class="name" (click)="handleChooseGuest(item, i)" [ngClass]="{ selected: i === residentIndex }">
             <i class="mr-1" [ngClass]="{
                 'isax-man1': item.gender === 'Nam',
                 'isax-woman1': item.gender === 'Nữ'
               }"></i>
-            {{ item.fullName.toUpperCase() ?? "Đang nhập thông tin khách..." }}
+            {{ item.name.toUpperCase() ?? "Đang nhập thông tin khách..." }}
           </div>
           <div class="title-label" *ngIf="item.representative">
             Người đại diện
           </div>
           <div class="birth">
             <i class="isax-cake1 mr-1"></i>
-            {{ item.dateOfBirth }}
+            {{ item.birth_date | dateFormat }}
           </div>
         </div>
       </div>

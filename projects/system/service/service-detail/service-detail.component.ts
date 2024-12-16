@@ -46,7 +46,7 @@ export class ServiceDetailComponent implements OnInit {
 
   async ngOnInit() {
     this.loading = true;
-    if (this.id) this.getData();
+    if (this.uuid) this.getData();
     if (this.mode === DialogMode.view) {
       this.myForm.disable();
     };
@@ -72,11 +72,6 @@ export class ServiceDetailComponent implements OnInit {
         service_price: rs.data.service_price,
         hotel_name: rs.data.hotel.name
       });
-      const hotelInfo = rs.data.hotel;
-      if (hotelInfo) {
-        console.log(`Hotel Name: ${hotelInfo.name}`);
-        this.hotelName = hotelInfo.name;
-      }
     }
     this.dialogService.closeLoading();
   }

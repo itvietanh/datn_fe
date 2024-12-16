@@ -1,6 +1,7 @@
+import { filter } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { HomeHotelService } from './../../../../../../../common/share/src/service/application/hotel/home-hotel.service';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ExtentionService } from 'common/base/service/extention.service';
 import { MessageService } from 'common/base/service/message.service';
@@ -11,21 +12,25 @@ import { DiaBanService } from 'share';
 import { ColumnConfig } from 'common/base/models';
 import { QrCodeDetailsComponent } from 'projects/system/home-hotel/tab-home-hotel/tab-qrcode/qrcode-details.component';
 import { GuestEditComponent } from '../guest-edit/guest-edit.component';
+import { FormUtil } from 'common/base/utils';
 
 @Component({
   selector: 'app-guest-detail',
   templateUrl: './guest-detail.component.html',
   styleUrls: ['./guest-detail.component.scss']
 })
-export class GuestDetailComponent implements OnInit {
+export class GuestDetailComponent implements OnInit, OnChanges {
+  @Input() listGuestInRoom: any;
   @Input() item: any;
   @Input() id: any;
   @Input() uuid: any;
   @Input() mode: any;
   @Output() onClose = new EventEmitter<any | null>();
   myForm!: FormGroup;
-
+  resident = new FormGroup<any>({});
   listGuest: any[] = [];
+
+  data: any;
 
   listGender: any[] = [
     {
@@ -108,6 +113,13 @@ export class GuestDetailComponent implements OnInit {
     };
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    debugger;
+    if (changes['data']?.currentValue) {
+      // this.onDataChange(this.data);
+    }
+  }
+
   async getData() {
     this.dialogService.openLoading();
     const rs = await this.guestService.findOne(this.uuid).firstValueFrom();
@@ -123,9 +135,26 @@ export class GuestDetailComponent implements OnInit {
   }
 
   async addGuestToList() {
-    this.dialogService.openLoading();
-    const formData = this.myForm.getRawValue();
+    const formData = this.resident.getRawValue();
+
+    const isGuestExist = this.listGuestInRoom.some((x: any) => formData.id_number === x.idNumber);
+    if (isGuestExist) {
+      this.messageService.notiMessageWarning("Thông tin khách đã tồn tại!");
+      this.resetForm();
+      return;
+    }
+
+    if (formData.nat_id === 196) {
+      this.resident.get('passport_number')?.clearValidators();
+      this.resident.get('id_number')?.addValidators([ValidatorExtension.required()]);
+    } else {
+      this.resident.get('passport_number')?.addValidators([ValidatorExtension.required()]);
+      this.resident.get('id_number')?.clearValidators();
+    }
+
+    FormUtil.validate(this.resident);
     formData.uuid = this.ex.newGuid();
+    this.dialogService.openLoading();
     if (formData.nat_id) {
       const params = {
         page: 1,
@@ -139,25 +168,52 @@ export class GuestDetailComponent implements OnInit {
       });
     }
     this.listGuest = [...this.listGuest, formData];
-    this.myForm.reset();
-    this.myForm.get('nat_id')?.setValue(196);
+    this.resetForm();
+    this.resident.get('nat_id')?.setValue(196);
     this.dialogService.closeLoading();
     this.messageService.notiMessageSuccess('Thêm vào danh sách thành công!')
   }
 
+  resetForm() {
+    this.data = {
+      uuid: null,
+      name: null,
+      id_number: null,
+      passport_number: null,
+      phone_number: null,
+      province_id: null,
+      district_id: null,
+      ward_id: null,
+      gender: null,
+      birth_date: null,
+      representative: null,
+      nat_id: 196,
+      address_detail: null,
+    };
+  }
+
   async handlerSubmitData() {
-    if (!this.listGuest.length) {
-      if (this.myForm.get('nat_id')?.value === 196) {
-        this.myForm.get('passport_number')?.clearValidators();
-      }
-      this.myForm.markAllAsDirty();
-      if (this.myForm.invalid) return;
-    } else {
-      this.clearValidator();
+
+    const formData = this.resident.getRawValue();
+
+    const isGuestExist = this.listGuestInRoom.some((x: any) => formData.id_number === x.idNumber);
+    if (isGuestExist) {
+      this.messageService.notiMessageWarning("Thông tin khách đã tồn tại!");
+      this.resetForm();
+      return;
     }
 
-    const formData = this.myForm.getRawValue();
-    this.listGuest = formData;
+    if (formData.nat_id === 196) {
+      this.resident.get('passport_number')?.clearValidators();
+      this.resident.get('id_number')?.addValidators([ValidatorExtension.required()]);
+    } else {
+      this.resident.get('passport_number')?.addValidators([ValidatorExtension.required()]);
+      this.resident.get('id_number')?.clearValidators();
+    }
+
+    FormUtil.validate(this.resident);
+    formData.uuid = this.ex.newGuid();
+    formData.contact_details = JSON.stringify({ addressDetail: formData.address_detail });
 
     this.dialogService.openLoading();
     if (this.uuid) {
@@ -222,8 +278,6 @@ export class GuestDetailComponent implements OnInit {
       }
     ];
 
-    // this.listGuest = guest;
-
     this.myForm.get('name')?.setValue(item[2]);
     this.myForm.get('id_number')?.setValue(item[0]);
     this.myForm.get('birth_date')?.setValue(item[3]);
@@ -236,7 +290,7 @@ export class GuestDetailComponent implements OnInit {
     const dialog = this.dialogService.openDialog(
       async (option) => {
         option.title = 'Sửa thông tin khách hàng'
-        option.size = DialogSize.small;
+        option.size = DialogSize.medium;
         option.component = GuestEditComponent;
         option.inputs = {
           item: item,
@@ -270,17 +324,17 @@ export class GuestDetailComponent implements OnInit {
   }
 
   clearValidator() {
-    this.myForm.get('name')?.clearValidators();
-    this.myForm.get('phone_number')?.clearValidators();
-    this.myForm.get('id_number')?.clearValidators();
-    this.myForm.get('passport_number')?.clearValidators();
-    this.myForm.get('province_id')?.clearValidators();
-    this.myForm.get('district_id')?.clearValidators();
-    this.myForm.get('ward_id')?.clearValidators();
-    this.myForm.get('nat_id')?.clearValidators();
-    this.myForm.get('birth_date')?.clearValidators();
-    this.myForm.get('gender')?.clearValidators();
-    this.myForm.get('address_detail')?.clearValidators();
+    this.resident.get('name')?.clearValidators();
+    this.resident.get('phone_number')?.clearValidators();
+    this.resident.get('id_number')?.clearValidators();
+    this.resident.get('passport_number')?.clearValidators();
+    this.resident.get('province_id')?.clearValidators();
+    this.resident.get('district_id')?.clearValidators();
+    this.resident.get('ward_id')?.clearValidators();
+    this.resident.get('nat_id')?.clearValidators();
+    this.resident.get('birth_date')?.clearValidators();
+    this.resident.get('gender')?.clearValidators();
+    this.resident.get('address_detail')?.clearValidators();
   }
 
   close(data?: any) {

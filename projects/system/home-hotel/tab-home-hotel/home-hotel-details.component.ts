@@ -2,7 +2,7 @@ import { MoneyFormatPipe } from './../../../../common/base/pipe/money-format.pip
 import { DateFormatPipe } from './../../../../common/base/pipe/date-format.pipe';
 import { DiaBanService } from './../../../../common/share/src/service/application/categories/diaban.service';
 import { RoomTypeService } from 'common/share/src/service/application/hotel/room-type.service';
-import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, OnDestroy, inject } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, OnDestroy, inject, ViewChild } from "@angular/core";
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { ExtentionService } from "common/base/service/extention.service";
 import { MessageService } from "common/base/service/message.service";
@@ -16,6 +16,8 @@ import { DatePipe } from "@angular/common";
 import { NzModalRef, NZ_MODAL_DATA } from "ng-zorro-antd/modal";
 import { RoomService } from "common/share/src/service/application/hotel/room.service";
 import { OrderRoomService } from 'common/share/src/service/application/hotel/order-room.service';
+import { CustomerScannerButtonComponent } from 'projects/system/customer-scanner/customer-scanner-button/customer-scanner-button.component';
+import { FormUtil } from 'common/base/utils';
 
 
 @Component({
@@ -24,6 +26,8 @@ import { OrderRoomService } from 'common/share/src/service/application/hotel/ord
   styleUrls: ['./home-hotel-details.component.scss'],
 })
 export class HomeHotelDetailsComponent implements OnInit {
+  @ViewChild(CustomerScannerButtonComponent) btnScaner!: CustomerScannerButtonComponent;
+
   @Input() uuid: any;
   @Input() mode: any;
   @Output() onClose = new EventEmitter<any | null>();
@@ -32,6 +36,7 @@ export class HomeHotelDetailsComponent implements OnInit {
   loading = true;
   public paging: any;
   data: any;
+  resident = new FormGroup<any>({});
 
   whereRoom: any;
   now = new Date() as any;
@@ -40,6 +45,15 @@ export class HomeHotelDetailsComponent implements OnInit {
   listGuest: any[] = [];
   representative: boolean = false;
   natId: number | null = null;
+  residentIndex = -1;
+
+  priceDetail: any;
+  prices: any = [
+    {
+      'value': 1,
+      'label': `Mặc định`
+    }
+  ];
 
   listGender: any[] = [
     {
@@ -94,7 +108,6 @@ export class HomeHotelDetailsComponent implements OnInit {
     private datePipe: DatePipe,
     private orderRoomService: OrderRoomService,
     public diaBanService: DiaBanService,
-    // private moneyFormatPipe: MoneyFormatPipe
   ) {
     this.myForm = this.fb.group({
       checkInTime: [{ value: this.now.toNumberYYYYMMDDHHmmss(), disabled: true }, ValidatorExtension.required()],
@@ -103,40 +116,13 @@ export class HomeHotelDetailsComponent implements OnInit {
       note: [null],
       numOfResidents: [0],
       reasonStayId: [null],
-      roomTypeId: [null, ValidatorExtension.required()],
-      roomId: [null, ValidatorExtension.required()],
-      priceId: [null, ValidatorExtension.required()],
+      roomTypeId: [{ value: null, disabled: true }, ValidatorExtension.required()],
+      priceId: [{ value: 1, disabled: true }],
+      roomId: [{ value: null, disabled: true }, ValidatorExtension.required()],
       totalPrice: [{ value: 0, disabled: true }],
       finalPrice: [{ value: 0, disabled: true }],
       vat: [{ value: 0, disabled: true }],
       prepayment: [0, ValidatorExtension.min(0)],
-
-      guests: this.fb.group({
-        uuid: [ex.newGuid()],
-        identityNo: [null, ValidatorExtension.required()],
-        fullName: [
-          null,
-          [
-            ValidatorExtension.required(),
-            ValidatorExtension.validNameVN(
-              "Họ và tên chỉ được sử dụng chữ cái, dấu khoảng trắng và dấu '"
-            ),
-            ValidatorExtension.validateUnicode(
-              'Bạn đang sử dụng bảng mã Unicode tổ hợp! Vui lòng sử dụng bảng mã Unicode dựng sẵn'
-            ),
-            ValidatorExtension.maxLength(40, 'Họ tên tối đa 40 ký tự'),
-          ],
-        ],
-        gender: [null, ValidatorExtension.required()],
-        phoneNumber: [null, [ValidatorExtension.required(), ValidatorExtension.phoneNumber()]],
-        dateOfBirth: [null, ValidatorExtension.required()],
-        addressDetail: [null, ValidatorExtension.required()],
-        provinceId: [null, ValidatorExtension.required()],
-        districtId: [null, ValidatorExtension.required()],
-        wardId: [null, ValidatorExtension.required()],
-        natId: [196, ValidatorExtension.required()],
-        passportNumber: [null, ValidatorExtension.required()]
-      })
     })
   }
 
@@ -147,6 +133,53 @@ export class HomeHotelDetailsComponent implements OnInit {
     };
   }
 
+  resetForm() {
+    this.data = {
+      uuid: null,
+      name: null,
+      id_number: null,
+      passport_number: null,
+      phone_number: null,
+      province_id: null,
+      district_id: null,
+      ward_id: null,
+      gender: null,
+      birth_date: null,
+      representative: null,
+      nat_id: 196,
+      address_detail: null,
+    };
+  }
+
+  cancelResident() {
+    this.residentIndex = -1;
+    this.resetForm();
+  }
+
+  updateResident() {
+    FormUtil.validate(this.resident);
+    const resident = this.resident.getRawValue();
+    if (
+      this.listGuest.some(
+        (r, i) =>
+          i !== this.residentIndex && r.id_number === resident.id_number
+      )
+    ) {
+      this.messageService.alert('Đã tồn tại thông tin khách hàng');
+      return;
+    }
+    this.listGuest[this.residentIndex] = resident;
+    this.cancelResident();
+  }
+
+  deleteResident() {
+    const resident = this.resident.getRawValue();
+    this.listGuest = this.listGuest.filter(
+      (r: any) => r.id_number !== resident.id_number
+    );
+    this.cancelResident();
+  }
+
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
     this.dialogService.openLoading();
     const res = await this.roomService.findOne(this.uuid).firstValueFrom();
@@ -154,59 +187,71 @@ export class HomeHotelDetailsComponent implements OnInit {
       roomTypeId: res.data.room_type_id,
       roomId: res.data.id,
     }
+    const resRt = await this.roomTypeService.getPaging({ id: res.data.room_type_id }).firstValueFrom();
+    this.priceDetail = resRt.data?.items;
     this.dataRoom = res.data;
     this.myForm.patchValue(data);
     this.whereRoom = res.data.hotel_id;
     this.dialogService.closeLoading();
   }
 
-  handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
-    const dialog = this.dialogService.openDialog(
-      async (option) => {
-        option.title = 'Quét mã QR'
-        option.size = DialogSize.small;
-        option.component = QrCodeDetailsComponent;
-        option.inputs = {
-          id: item?.id,
-          mode: mode,
-        };
-      },
-      (eventName, eventValue) => {
-        if (eventName === 'onClose') {
-          this.dialogService.closeDialogById(dialog.id);
-          if (eventValue) {
-            this.handlerGetDataQrCode(eventValue);
-            this.getData({ ...this.paging });
-          }
-        }
-      }
-    );
+  // handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
+  //   const dialog = this.dialogService.openDialog(
+  //     async (option) => {
+  //       option.title = 'Quét mã QR'
+  //       option.size = DialogSize.small;
+  //       option.component = QrCodeDetailsComponent;
+  //       option.inputs = {
+  //         id: item?.id,
+  //         mode: mode,
+  //       };
+  //     },
+  //     (eventName, eventValue) => {
+  //       if (eventName === 'onClose') {
+  //         this.dialogService.closeDialogById(dialog.id);
+  //         if (eventValue) {
+  //           this.handlerGetDataQrCode(eventValue);
+  //           this.getData({ ...this.paging });
+  //         }
+  //       }
+  //     }
+  //   );
+  // }
+
+  scanMulti(event: any) {
+    const body = this.myForm.getRawValue();
+    this.data = {
+      ...event,
+      reasonStayId: body.reasonStayId
+    };
+    setTimeout(async () => {
+      this.btnScaner.openScanner();
+    }, 300);
   }
 
-  handlerGetDataQrCode(item: any) {
-    const day = item[3].substring(0, 2);
-    const month = item[3].substring(2, 4);
-    const year = item[3].substring(4, 8);
-    const parseDate = new Date(+year, +month - 1, +day);
-    item[3] = this.datePipe.transform(parseDate, 'dd/MM/yyyy');
+  // handlerGetDataQrCode(item: any) {
+  //   const day = item[3].substring(0, 2);
+  //   const month = item[3].substring(2, 4);
+  //   const year = item[3].substring(4, 8);
+  //   const parseDate = new Date(+year, +month - 1, +day);
+  //   item[3] = this.datePipe.transform(parseDate, 'dd/MM/yyyy');
 
-    const guest = [
-      {
-        identityNo: item[0],
-        dateOfBirth: item[3],
-        fullName: item[2],
-        gender: item[4],
-        addressDetail: item[5]
-      }
-    ];
+  //   const guest = [
+  //     {
+  //       identityNo: item[0],
+  //       dateOfBirth: item[3],
+  //       fullName: item[2],
+  //       gender: item[4],
+  //       addressDetail: item[5]
+  //     }
+  //   ];
 
-    this.myForm.get('guests.fullName')?.setValue(item[2]);
-    this.myForm.get('guests.identityNo')?.setValue(item[0]);
-    this.myForm.get('guests.dateOfBirth')?.setValue(item[3]);
-    this.myForm.get('guests.gender')?.setValue(item[4]);
-    this.myForm.get('guests.addressDetail')?.setValue(item[5]);
-
-  }
+  //   this.myForm.get('guests.fullName')?.setValue(item[2]);
+  //   this.myForm.get('guests.identityNo')?.setValue(item[0]);
+  //   this.myForm.get('guests.dateOfBirth')?.setValue(item[3]);
+  //   this.myForm.get('guests.gender')?.setValue(item[4]);
+  //   this.myForm.get('guests.addressDetail')?.setValue(item[5]);
+  // }
 
   async onDate() {
     this.dialogService.openLoading();
@@ -244,21 +289,40 @@ export class HomeHotelDetailsComponent implements OnInit {
   }
 
   handleAddGuest() {
-    const guest = this.myForm.get('guests')?.getRawValue();
+    const resident = this.resident;
+    resident.get('uuid')?.setValue(this.ex.newGuid());
+    if (!this.listGuest.length) {
+      if (resident.value.nat_id === 196) {
+        resident.get('passport_number')?.clearValidators();
+        resident.get('id_number')?.addValidators([ValidatorExtension.required()]);
+      } else {
+        resident.get('passport_number')?.addValidators([ValidatorExtension.required()]);
+        resident.get('id_number')?.clearValidators();
+      }
+      this.resident.markAllAsDirty();
+      if (this.resident.invalid) return;
+    }
 
-    this.listGuest = [...this.listGuest, guest];
+    if (this.listGuest.some((r) => r.id_number === resident.get('id_number')?.value)) {
+      this.messageService.notiMessageWarning('Đã tồn tại thông tin khách hàng');
+      return false;
+    }
+
+    if (resident.valid) {
+      this.listGuest.push(resident.value);
+    }
+
     if (this.listGuest[0]) {
       this.listGuest[0].representative = true;
     }
 
-    this.myForm.get('guests')?.reset();
-    this.myForm.get('guests.provinceId')?.reset();
-    this.myForm.get('guests.districtId')?.reset();
-    this.myForm.get('guests.wardId')?.reset();
-  }
+    resident.reset();
+    resident.get('province_id')?.reset();
+    resident.get('district_id')?.reset();
+    resident.get('ward_id')?.reset();
+    resident.get('nat_id')?.setValue(196);
 
-  handleRemoveGuest() {
-
+    return true;
   }
 
   resetFormInvoice() {
@@ -268,53 +332,61 @@ export class HomeHotelDetailsComponent implements OnInit {
     this.myForm.get('prepayment')?.reset();
   }
 
-  handleChooseGuest(item: any) {
+  handleChooseGuest(item: any, index: any) {
     this.listGuest.filter(x => {
       if (x.representative === true) {
         x.representative = false;
       }
 
-      if (x.identityNo === item.identityNo) {
+      if (x.id_number === item.id_number) {
         x.representative = true;
       }
     });
+
+    this.residentIndex = index;
+    const data = this.listGuest[index];
+
+    let itemMap = [data].map((x: any) => {
+      let b = {
+        uuid: x.uuid,
+        name: x.name,
+        id_number: x.id_number,
+        passport_number: x.passport_number,
+        phone_number: x.phone_number,
+        province_id: x.province_id,
+        district_id: x.district_id,
+        ward_id: x.ward_id,
+        gender: x.gender,
+        birth_date: x.birth_date,
+        representative: x.representative,
+        nat_id: x.nat_id,
+        address_detail: x.address_detail,
+      }
+      return b;
+    });
+
+    this.data = itemMap[0];
   }
 
   async handlerSubmit() {
+    this.myForm.markAllAsDirty();
+    if (this.myForm.invalid) return;
+
+    this.handleAddGuest();
     if (this.listGuest.length) {
       this.clearValidator();
     } else {
-      this.myForm.markAllAsDirty();
-      if (this.myForm.invalid) return;
+      FormUtil.validate(this.resident);
     }
 
-    this.handleAddGuest();
-
-    const body = this.myForm.getRawValue();
-    if (body.guests.natId !== 196) {
-      body.guests.identityNo = null;
-    } else {
-      body.guests.passportNumber = null;
-    }
-
-    const guests = this.listGuest.map(x => ({
-      uuid: this.ex.newGuid(),
-      name: x.fullName,
-      id_number: x.identityNo,
-      passport_number: x.passportNumber,
-      phone_number: x.phoneNumber,
-      province_id: x.provinceId,
-      district_id: x.districtId,
-      ward_id: x.wardId,
-      gender: x.gender,
-      birth_date: x.dateOfBirth,
-      representative: x.representative,
-      nat_id: x.natId,
-      contact_details: JSON.stringify({ addressDetail: x.addressDetail })
-    }));
+    this.listGuest.forEach(item => {
+      if (item.address_detail) {
+        item.contact_details = JSON.stringify({ addressDetail: item.address_detail });
+      }
+    });
 
     const formData = {
-      guests: guests,
+      guests: this.listGuest,
 
       transition: {
         uuid: this.ex.newGuid(),
@@ -348,16 +420,17 @@ export class HomeHotelDetailsComponent implements OnInit {
   }
 
   clearValidator() {
-    this.myForm.get('guests.identityNo')?.clearValidators();
-    this.myForm.get('guests.fullName')?.clearValidators();
-    this.myForm.get('guests.gender')?.clearValidators();
-    this.myForm.get('guests.phoneNumber')?.clearValidators();
-    this.myForm.get('guests.dateOfBirth')?.clearValidators();
-    this.myForm.get('guests.addressDetail')?.clearValidators();
-    this.myForm.get('guests.provinceId')?.clearValidators();
-    this.myForm.get('guests.wardId')?.clearValidators();
-    this.myForm.get('guests.natId')?.clearValidators();
-    this.myForm.get('guests.passportNumber')?.clearValidators();
+    this.resident.get('name')?.clearValidators();
+    this.resident.get('phone_number')?.clearValidators();
+    this.resident.get('id_number')?.clearValidators();
+    this.resident.get('passport_number')?.clearValidators();
+    this.resident.get('province_id')?.clearValidators();
+    this.resident.get('district_id')?.clearValidators();
+    this.resident.get('ward_id')?.clearValidators();
+    this.resident.get('nat_id')?.clearValidators();
+    this.resident.get('birth_date')?.clearValidators();
+    this.resident.get('gender')?.clearValidators();
+    this.resident.get('address_detail')?.clearValidators();
   }
 
   close(data?: any) {
