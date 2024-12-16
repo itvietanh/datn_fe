@@ -6,4 +6,6 @@ import { BaseService } from '../../base/base.service';
 })
 export class ServiceCategoryService extends BaseService {
   protected override prefix = 'service-categories';
+
+  
 }

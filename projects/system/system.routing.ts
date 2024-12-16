@@ -119,7 +119,7 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'nhom-quyen',
+        path: 'quyen',
         loadChildren: () =>
           import('./role/role.module').then(
             (x) => x.RoleModule

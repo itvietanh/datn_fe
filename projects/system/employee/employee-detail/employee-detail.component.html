@@ -32,7 +32,7 @@
 
     <div class="col-md-6">
       <app-form-control label="Vai trò">
-        <input-select [items]="listRole" formControlName="role"></input-select>
+        <input-select-api [apiService]="roleService" formControlName="role_id"></input-select-api>
       </app-form-control>
     </div>
     <div class="col-md-6">
@@ -41,13 +41,16 @@
           formControlName="hotel_id"></input-select-api>
       </app-form-control>
     </div>
-
+    <div class="col-md-6">
+      <app-form-control label="Tình trạng làm việc">
+        <input-select [items]="listStatus" formControlName="status"></input-select>
+      </app-form-control>
+    </div>
     <div class="col-md-6">
       <app-form-control label="Mật khẩu">
         <input-password formControlName="password"></input-password>
       </app-form-control>
     </div>
-
   </div>
 
   <div class="list-control-search">

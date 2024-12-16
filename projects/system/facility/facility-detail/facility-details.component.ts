@@ -21,6 +21,21 @@ export class FacilityDetailsComponent implements OnInit {
   myForm: FormGroup;
   public paging: any;
 
+  listStatus: any[] = [
+    {
+      value: 1,
+      label: "Đang hoạt động"
+    },
+    {
+      value: 2,
+      label: "Dừng hoạt động"
+    },
+    {
+      value: 3,
+      label: "Tạm dừng hoạt động"
+    }
+  ];
+
   constructor(
     private messageService: MessageService,
     private fb: FormBuilder,
@@ -36,6 +51,7 @@ export class FacilityDetailsComponent implements OnInit {
       district_code: [null, ValidatorExtension.required()],
       ward_code: [null, ValidatorExtension.required()],
       address: [null, ValidatorExtension.required()],
+      status: [null, ValidatorExtension.required()]
     })
   }
 

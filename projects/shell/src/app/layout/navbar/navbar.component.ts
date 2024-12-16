@@ -32,6 +32,7 @@ export class NavbarComponent implements OnInit {
   public dropdownOpen: boolean = false;
   public paging?: PagingModel;
   username: any;
+  hotelId: any;
 
   constructor(
     private messageService: MessageService,
@@ -43,6 +44,12 @@ export class NavbarComponent implements OnInit {
 
   async ngOnInit() {
     this.getNotify();
+    this.authService.initUser();
+    if (LocalStorageUtil.getHotelId()) {
+      this.hotelId = {
+        id: LocalStorageUtil.getHotelId()
+      }
+    }
   }
 
   resizeMenu() {

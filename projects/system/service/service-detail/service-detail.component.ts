@@ -2,10 +2,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ExtentionService } from 'common/base/service/extention.service';
 import { MessageService } from 'common/base/service/message.service';
+import { LocalStorageUtil } from 'common/base/utils';
 import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
 import { Service } from 'common/share/src/service/application/hotel/service.service';
 import { ValidatorExtension } from 'common/validator-extension';
-import { DialogService, DialogMode } from 'share';
+import { DialogService, DialogMode, ServiceCategoryService } from 'share';
 
 @Component({
   selector: 'app-service-detail',
@@ -31,24 +32,31 @@ export class ServiceDetailComponent implements OnInit {
     public hotelService: HotelService,
     private ex: ExtentionService,
     public service: Service,
+    public serviceCategories: ServiceCategoryService
   ) {
     this.myForm = this.fb.group({
+      uuid: [ex.newGuid(), ValidatorExtension.required()],
       hotel_id: [null, ValidatorExtension.required()],
       service_name: [null, ValidatorExtension.required()],
-      service_price: [null, ValidatorExtension.required()],
-      hotel_name: [{ value: '', disabled: true }]
+      price: [null, ValidatorExtension.required()],
+      hotel_name: [{ value: '', disabled: true }],
+      service_categories_id: [null, ValidatorExtension.required()]
     });
   }
 
   async ngOnInit() {
     this.loading = true;
-    this.getData();
     if (this.id) this.getData();
     if (this.mode === DialogMode.view) {
       this.myForm.disable();
     };
-    if (this.item.hotel_id) {
-        this.myForm.get('hotel_id')?.setValue(this.item.hotel_id);
+    if (this.mode === "add") {
+      if (LocalStorageUtil.getHotelId()) {
+        this.myForm.get('hotel_id')?.setValue(LocalStorageUtil.getHotelId());
+        if (this.myForm.get('hotel_id')?.value) {
+          this.myForm.get('hotel_id')?.disable();
+        }
+      }
     }
     this.loading = false;
   }

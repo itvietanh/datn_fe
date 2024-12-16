@@ -30,7 +30,7 @@
             <app-render-errors [control]="control"></app-render-errors>
           </ng-template>
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <nz-form-item>
                 <nz-form-label>Tên Cơ Sở</nz-form-label>
                 <nz-form-control [nzErrorTip]="controlErrorTpl">
@@ -39,7 +39,7 @@
               </nz-form-item>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-4">
               <nz-form-item>
                 <nz-form-label>Địa chỉ</nz-form-label>
                 <nz-form-control [nzErrorTip]="controlErrorTpl">
@@ -48,32 +48,12 @@
               </nz-form-item>
             </div>
 
-            <!-- <div class="col-md-4">
+            <div class="col-md-4">
               <nz-form-item>
                 <nz-form-label>Trạng thái hoạt động</nz-form-label>
                 <nz-form-control [nzErrorTip]="controlErrorTpl">
-                  <input-select formControlName="status">
+                  <input-select [items]="listStatus" formControlName="status">
                   </input-select>
-                </nz-form-control>
-              </nz-form-item>
-            </div> -->
-
-            <div class="col-md-6">
-              <nz-form-item>
-                <nz-form-label>Từ ngày</nz-form-label>
-                <nz-form-control [nzErrorTip]="controlErrorTpl">
-                  <input-date formControlName="dateFrom">
-                  </input-date>
-                </nz-form-control>
-              </nz-form-item>
-            </div>
-
-            <div class="col-md-6">
-              <nz-form-item>
-                <nz-form-label>Đến ngày</nz-form-label>
-                <nz-form-control [nzErrorTip]="controlErrorTpl">
-                  <input-date formControlName="dateTo">
-                  </input-date>
                 </nz-form-control>
               </nz-form-item>
             </div>
@@ -107,13 +87,13 @@
     <app-table [columns]="columns" [items]="items" [loading]="loading">
       <ng-template [appCellTemplate]="'action'" let-item>
         <div class="list-icons list-icons-extended text-center">
-          <a class="list-icons-item action-view" (click)="handlerOpenDialog('view',item)">
+          <a class="list-icons-item action-view" (click)="handlerOpenDialog('view', item)">
             <span nz-tooltip nzTooltipTitle="Xem thông tin cơ sở" class="isax-eye1"></span>
           </a>
           <a class="list-icons-item action-delete" (click)="handlerDelete(item)">
             <span nz-tooltip nzTooltipTitle="Xóa cơ sở" class="isax-trash1"></span>
           </a>
-          <a class="list-icons-item action-edit" (click)="handlerOpenDialog(item)">
+          <a class="list-icons-item action-edit" (click)="handlerOpenDialog('edit', item)">
             <span nz-tooltip nzTooltipTitle="Sửa thông tin cơ sở" class="isax-edit-21"></span>
           </a>
         </div>

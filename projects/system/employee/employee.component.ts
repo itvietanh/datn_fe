@@ -37,43 +37,62 @@ export class EmployeeComponent implements OnInit {
       header: 'Tên nhân viên',
     },
     {
+      key: 'role_name',
+      header: 'Vai trò',
+    },
+    {
       key: 'created_at',
       header: 'Ngày tạo',
     },
     {
-      key:"phone",
-      header:"Số điện thoại",
+      key: "phone",
+      header: "Số điện thoại",
     },
     {
-      key:"email",
-      header:"Email",
+      key: "email",
+      header: "Email",
+    },
+    {
+      key: "statusTxt",
+      header: "Tình trạng làm việc",
     },
     {
       key: 'action',
       header: 'Thao tác',
       tdClass: 'text-center',
       pipe: 'template',
+      alignRight: true
     },
   ];
+
+  listStatus: any[] = [
+    {
+      value: 1,
+      label: "Đang làm việc"
+    },
+    {
+      value: 2,
+      label: "Đã nghỉ việc"
+    }
+  ];
+
 
   constructor(
     private fb: FormBuilder,
     private dialogService: DialogService,
     private messageService: MessageService,
     public hotelService: HotelService,
-    private employeeService:EmployeeService,
-    // private guestService : GuestService,
-
+    private employeeService: EmployeeService,
     private datePipe: DatePipe
 
   ) {
     this.formSearch = this.fb.group({
-      name:[null, ValidatorExtension.required()],
+      name: [null, ValidatorExtension.required()],
       email: [null, ValidatorExtension.required()],
-      password:['',ValidatorExtension.required()],
-      phone:[null,ValidatorExtension.required()],
-      address:[null,ValidatorExtension.required()],
-      hotel_id:[null,ValidatorExtension.required()]
+      password: ['', ValidatorExtension.required()],
+      phone: [null, ValidatorExtension.required()],
+      address: [null, ValidatorExtension.required()],
+      hotel_id: [null, ValidatorExtension.required()]
     });
     this.formSearch
       .get('outEndDate')
@@ -116,6 +135,14 @@ export class EmployeeComponent implements OnInit {
           'dd-MM-yyyy'
         );
       }
+
+      if (item.status) {
+        this.listStatus.map(x => {
+          if (x.value === item.status) {
+            item.statusTxt = x.label;
+          }
+        })
+      }
     }
     this.items = rs.data!.items;
     this.paging = rs.data?.meta;
@@ -153,7 +180,9 @@ export class EmployeeComponent implements OnInit {
       'Bạn có muốn xóa dữ liệu này không?'
     );
     if (confirm) {
+      this.dialogService.openLoading();
       const rs = await this.employeeService.delete(item?.uuid).firstValueFrom();
+      this.dialogService.closeLoading();
       if (rs.data) {
         this.messageService.notiMessageSuccess('Xóa dữ liệu thành công');
         return this.getData({ ...this.paging });
