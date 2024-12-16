@@ -127,7 +127,7 @@ export class HomeHotelDetailsComponent implements OnInit {
           ],
         ],
         gender: [null, ValidatorExtension.required()],
-        phoneNumber: [null, [ValidatorExtension.phoneNumber()]],
+        phoneNumber: [null, [ValidatorExtension.phoneNumber(),ValidatorExtension.required()]],
         dateOfBirth: [null, ValidatorExtension.required()],
         addressDetail: [null, ValidatorExtension.required()],
         provinceId: [null, ValidatorExtension.required()],
