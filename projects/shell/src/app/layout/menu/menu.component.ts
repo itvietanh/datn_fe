@@ -313,8 +313,8 @@ export class MenuComponent implements OnInit {
       },
       {
         icon: 'isax-pen-tool-2-1',
-        name: 'QUẢN LÝ NHÓM QUYỀN',
-        url: '/he-thong/nhom-quyen',
+        name: 'QUẢN LÝ QUYỀN',
+        url: '/he-thong/quyen',
         isOpen: false,
         exact: false,
         level: 2,

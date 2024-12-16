@@ -34,7 +34,7 @@ export class RoleComponent implements OnInit {
   columns: ColumnConfig[] = [
     {
       key: 'role_name',
-      header: 'Tên nhóm quyền',
+      header: 'Tên quyền',
     },
     {
       key: 'description',

@@ -5,7 +5,7 @@ import { ColumnConfig } from 'common/base/models';
 import { MessageService } from 'common/base/service/message.service';
 import { HotelService } from 'common/share/src/service/application/hotel/hotel.service';
 import { ValidatorExtension } from 'common/validator-extension';
-import { DialogService, PagingModel, DialogMode, DialogSize } from 'share';
+import { DialogService, PagingModel, DialogMode, DialogSize, ServiceCategoryService } from 'share';
 import { FacilityDetailsComponent } from '../facility/facility-detail/facility-details.component';
 import { FloorService } from 'common/share/src/service/application/hotel/floor.service';
 import { ServiceDetailComponent } from './service-detail/service-detail.component';
@@ -35,6 +35,10 @@ export class ServiceComponent implements OnInit {
       header: 'Tên dịch vụ',
     },
     {
+      key: 'catName',
+      header: 'Loại dịch vụ',
+    },
+    {
       key: 'service_price',
       header: 'Giá dịch vụ',
     },
@@ -58,6 +62,7 @@ export class ServiceComponent implements OnInit {
     private datePipe: DatePipe,
     public floorService: FloorService,
     public service: Service,
+    private serviceCategories: ServiceCategoryService
   ) {
     this.formSearch = this.fb.group({
       hotel_id: [null],
@@ -91,9 +96,9 @@ export class ServiceComponent implements OnInit {
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
     const params = {
       ...paging,
-      ...this.formSearch.value 
+      ...this.formSearch.value
     };
-    this.isLoading = true; 
+    this.isLoading = true;
     this.dialogService.openLoading();
 
     try {
@@ -103,7 +108,12 @@ export class ServiceComponent implements OnInit {
         if (item.created_at) {
           item.created_at = this.datePipe.transform(item.created_at, 'dd-MM-yyyy');
         }
-        item.hotel_name = item.hotel?.name || 'Chưa có khách sạn'; 
+
+        if (item.service_categories_id) {
+          const res = await this.serviceCategories.getCombobox({ id: item.service_categories_id }).firstValueFrom();
+          item.catName = res.data?.items[0].label;
+        }
+        item.hotel_name = item.hotel?.name || 'Chưa có khách sạn';
       }
       this.items = rs.data!.items;
       this.paging = rs.data?.meta;
@@ -111,7 +121,7 @@ export class ServiceComponent implements OnInit {
       console.error('Error fetching data', error);
     } finally {
       this.dialogService.closeLoading();
-      this.isLoading = false; 
+      this.isLoading = false;
     }
   }
 
