@@ -28,6 +28,38 @@
       </app-form-control>
     </div>
   </div>
+  <div class="row" *ngIf="mode === 'edit-room'">
+    <div class="col-md-6">
+      <app-form-control label="Chọn Cơ Sở">
+        <input-select-api [apiService]="hotelService" [actionName]="'getCombobox'" formControlName="facility"> </input-select-api>
+      </app-form-control>
+    </div>
+    <div class="col-md-6">
+      <app-form-control label="Tầng">
+        <input-select-api [apiService]="floorService" [actionName]="'getCombobox'" formControlName="floor"> </input-select-api>
+      </app-form-control>
+    </div>
+    <div class="col-md-6">
+      <app-form-control label="Kiểu phòng">
+        <input-select-api [apiService]="roomTypeService" [actionName]="'getCombobox'" formControlName="roomType"> </input-select-api>
+      </app-form-control>
+    </div>
+    <div class="col-md-6">
+      <app-form-control label="Số phòng">
+        <input-number formControlName="roomNumber"> </input-number>
+      </app-form-control>
+    </div>
+    <div class="col-md-6">
+      <app-form-control label="Trạng thái">
+        <input-select [items]="listRoomStatus" formControlName="status"> </input-select>
+      </app-form-control>
+    </div>
+    <div class="col-md-6">
+      <app-form-control label="Số lượng người ở">
+        <input-number formControlName="maxCapacity"> </input-number>
+      </app-form-control>
+    </div>
+  </div>
 
   <div class="row" *ngIf="mode === 'add-room'">
     <div class="col-md-6">
