@@ -16,7 +16,6 @@ import { EmployeeDetailComponent } from './employee-detail/employee-detail.compo
 import { EmployeeService } from 'common/share/src/service/application/hotel/employee.service';
 import { filter } from 'rxjs';
 
-
 @Component({
   selector: 'app-employee',
   templateUrl: './employee.component.html',
@@ -40,42 +39,42 @@ export class EmployeeComponent implements OnInit {
       key: 'role_name',
       header: 'Vai trò',
     },
+    //
     {
-      key: 'created_at',
-      header: 'Ngày tạo',
+      key: 'address',
+      header: 'Địa chỉ',
     },
     {
-      key: "phone",
-      header: "Số điện thoại",
+      key: 'phone',
+      header: 'Số điện thoại',
     },
     {
-      key: "email",
-      header: "Email",
+      key: 'email',
+      header: 'Email',
     },
     {
-      key: "statusTxt",
-      header: "Tình trạng làm việc",
+      key: 'statusTxt',
+      header: 'Tình trạng làm việc',
     },
     {
       key: 'action',
       header: 'Thao tác',
       tdClass: 'text-center',
       pipe: 'template',
-      alignRight: true
+      alignRight: true,
     },
   ];
 
   listStatus: any[] = [
     {
       value: 1,
-      label: "Đang làm việc"
+      label: 'Đang làm việc',
     },
     {
       value: 2,
-      label: "Đã nghỉ việc"
-    }
+      label: 'Đã nghỉ việc',
+    },
   ];
-
 
   constructor(
     private fb: FormBuilder,
@@ -84,13 +83,12 @@ export class EmployeeComponent implements OnInit {
     public hotelService: HotelService,
     private employeeService: EmployeeService,
     private datePipe: DatePipe
-
   ) {
     this.formSearch = this.fb.group({
-      fullName: [null],
-      phoneNumber: [null],
+      name: [null],
+      phone: [null],
       address: [null],
-      status: [null]
+      status: [null],
     });
   }
 
@@ -100,14 +98,40 @@ export class EmployeeComponent implements OnInit {
     this.isLoading = false;
   }
 
+  // async getData(paging: PagingModel = { page: 1, size: 20 }) {
+  //   const params = {
+  //     ...paging,
+  //     ...this.formSearch.value,
+  //   };
+  //   this.dialogService.openLoading();
+  //   const rs = await this.employeeService.getPaging(params).firstValueFrom();
+  //   const dataRaw = rs.data!.items;
+  //   for (const item of dataRaw) {
+  //     if (item.created_at) {
+  //       item.created_at = this.datePipe.transform(
+  //         item.created_at,
+  //         'dd-MM-yyyy'
+  //       );
+  //     }
+
+  //     if (item.status) {
+  //       this.listStatus.map((x) => {
+  //         if (x.value === item.status) {
+  //           item.statusTxt = x.label;
+  //         }
+  //       });
+  //     }
+  //   }
+  //   this.items = rs.data!.items;
+  //   this.paging = rs.data?.meta;
+  //   this.dialogService.closeLoading();
+  // }
   async getData(paging: PagingModel = { page: 1, size: 20 }) {
-    const params = {
-      ...paging,
-      ...this.formSearch.value,
-    };
+    const params = { ...paging, ...this.formSearch.value };
     this.dialogService.openLoading();
     const rs = await this.employeeService.getPaging(params).firstValueFrom();
     const dataRaw = rs.data!.items;
+
     for (const item of dataRaw) {
       if (item.created_at) {
         item.created_at = this.datePipe.transform(
@@ -117,19 +141,17 @@ export class EmployeeComponent implements OnInit {
       }
 
       if (item.status) {
-        this.listStatus.map(x => {
+        this.listStatus.map((x) => {
           if (x.value === item.status) {
             item.statusTxt = x.label;
           }
-        })
+        });
       }
     }
     this.items = rs.data!.items;
     this.paging = rs.data?.meta;
     this.dialogService.closeLoading();
   }
-
-
 
   async handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
     const dialog = this.dialogService.openDialog(
