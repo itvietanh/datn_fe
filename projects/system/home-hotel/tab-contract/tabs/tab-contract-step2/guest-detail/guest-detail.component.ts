@@ -214,7 +214,9 @@ export class GuestDetailComponent implements OnInit, OnChanges {
     }
 
     FormUtil.validate(this.resident);
-    formData.uuid = this.ex.newGuid();
+    if (this.mode !== 'edit') {
+      formData.uuid = this.ex.newGuid();
+    }
     formData.contact_details = JSON.stringify({ addressDetail: formData.address_detail });
 
     this.dialogService.openLoading();
