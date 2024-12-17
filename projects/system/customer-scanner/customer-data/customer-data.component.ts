@@ -119,15 +119,15 @@ export class CustomerDataComponent implements OnInit, OnChanges {
     data.name = data.fullName ? data.fullName : data.name;
     data.address_detail = data.addressDetail ? data.addressDetail : data.address_detail;
     data.province_id = data.provinceId ? data.provinceId : data.province_id;
-    data.district_id = data.districtId  ?data.districtId : data.district_id;
+    data.district_id = data.districtId ? data.districtId : data.district_id;
     data.ward_id = data.wardId ? data.wardId : data.ward_id;
     if (data.gender === 5) {
       data.gender = "Nam";
-    } 
+    }
 
     if (data.gender === 6) {
       data.gender = "Nữ";
-    } 
+    }
     data.birth_date = data.dateOfBirth ? data.dateOfBirth : data.birth_date;
 
     if (!this.init) {
@@ -143,7 +143,7 @@ export class CustomerDataComponent implements OnInit, OnChanges {
         nat_id: [196, ValidatorExtension.required()],
         birth_date: [null, ValidatorExtension.required()],
         gender: [null, ValidatorExtension.required()],
-        address_detail: [null, ValidatorExtension.required()],
+        address_detail: [null],
         representative: [null]
       });
       this.init = true;
@@ -172,5 +172,21 @@ export class CustomerDataComponent implements OnInit, OnChanges {
     //   });
     // }
     this.formChange.emit(this.form);
+  }
+
+  hanldeOnChangeQT() {
+    if (this.form.value.nat_id === 196) {
+      this.form.get('passport_number')?.clearValidators();
+      this.form.get('id_number')?.addValidators([ValidatorExtension.required()]);
+      this.form.get('province_id')?.addValidators([ValidatorExtension.required()]);
+      this.form.get('district_id')?.addValidators([ValidatorExtension.required()]);
+      this.form.get('ward_id')?.addValidators([ValidatorExtension.required()]);
+    } else {
+      this.form.get('passport_number')?.addValidators([ValidatorExtension.required()]);
+      this.form.get('id_number')?.clearValidators();
+      this.form.get('province_id')?.clearValidators();
+      this.form.get('district_id')?.clearValidators();
+      this.form.get('ward_id')?.clearValidators();
+    }
   }
 }

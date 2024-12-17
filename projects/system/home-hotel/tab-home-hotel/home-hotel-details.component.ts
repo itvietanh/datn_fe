@@ -294,9 +294,15 @@ export class HomeHotelDetailsComponent implements OnInit {
       if (resident.value.nat_id === 196) {
         resident.get('passport_number')?.clearValidators();
         resident.get('id_number')?.addValidators([ValidatorExtension.required()]);
+        resident.get('province_id')?.addValidators([ValidatorExtension.required()]);
+        resident.get('district_id')?.addValidators([ValidatorExtension.required()]);
+        resident.get('ward_id')?.addValidators([ValidatorExtension.required()]);
       } else {
         resident.get('passport_number')?.addValidators([ValidatorExtension.required()]);
         resident.get('id_number')?.clearValidators();
+        resident.get('province_id')?.clearValidators();
+        resident.get('district_id')?.clearValidators();
+        resident.get('ward_id')?.clearValidators();
       }
       this.resident.markAllAsDirty();
       if (this.resident.invalid) return;
