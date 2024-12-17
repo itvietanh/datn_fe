@@ -5,6 +5,7 @@ import { MessageService } from "common/base/service/message.service";
 import { EmployeeService } from "common/share/src/service/application/hotel/employee.service";
 import { HotelService } from "common/share/src/service/application/hotel/hotel.service";
 import { RoleService } from "common/share/src/service/application/hotel/role.service";
+import { ShiftService } from "common/share/src/service/application/hotel/shift.service";
 import { ValidatorExtension } from "common/validator-extension";
 import { DialogService, DialogMode, PagingModel, DialogSize } from "share";
 
@@ -40,7 +41,8 @@ export class EmployeeDetailComponent implements OnInit {
     public hotelService: HotelService,
     private employeeService: EmployeeService,
     private ex: ExtentionService,
-    public roleService: RoleService
+    public roleService: RoleService,
+    public shiftService: ShiftService
   ) {
     this.myForm = this.fb.group({
       uuid: [ex.newGuid()],
@@ -51,7 +53,8 @@ export class EmployeeDetailComponent implements OnInit {
       address: [null, ValidatorExtension.required()],
       hotel_id: [null, ValidatorExtension.required()],
       status: [null, ValidatorExtension.required()],
-      role_id: [null, ValidatorExtension.required()]
+      role_id: [null, ValidatorExtension.required()],
+      shift_id: [null, ValidatorExtension.required()]
     })
   }
 

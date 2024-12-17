@@ -92,6 +92,7 @@ export class EmployeeComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.refreshData();
+    this.getEmployeesByDate();
   }
   // Lấy danh sách khách sạn
 

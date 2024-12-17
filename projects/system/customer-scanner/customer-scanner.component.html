@@ -41,7 +41,7 @@
       ></app-customer-scanner-id-box>
     </ng-template>
   </nz-tab> -->
-  <ng-template #qrCamera>
+  <!-- <ng-template #qrCamera>
     <div class="tab-title">QR Camera</div>
   </ng-template>
   <nz-tab [nzTitle]="qrCamera">
@@ -56,11 +56,11 @@
           (camerasNotFound)="camerasNotFound = true"></zxing-scanner>
       </nz-spin>
     </ng-template>
-  </nz-tab>
+  </nz-tab> -->
 </nz-tabset>
-<div class="multiScan" *ngIf="selectedIndex === 0">
+<!-- <div class="multiScan" *ngIf="selectedIndex === 0">
   <input-check-box [ngModel]="scanMulti" (ngModelChange)="setScanMulti($event)">Quét liên tục</input-check-box>
-</div>
+</div> -->
 <button nz-button (click)="closeDialog()" type="button" class="btn btn-default qr-close">
   <i nz-icon nzType="close" nzTheme="outline"></i>Đóng
 </button>

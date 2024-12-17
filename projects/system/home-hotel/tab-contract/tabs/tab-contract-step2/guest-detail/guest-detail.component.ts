@@ -124,11 +124,11 @@ export class GuestDetailComponent implements OnInit, OnChanges {
     this.dialogService.openLoading();
     const rs = await this.guestService.findOne(this.uuid).firstValueFrom();
     if (rs.data) {
-      this.myForm.patchValue(rs.data);
+      this.resident.patchValue(rs.data);
     }
     const dataTemp = JSON.parse(rs.data.contact_details);
     if (dataTemp.addressDetail) {
-      this.myForm.get('address_detail')?.setValue(dataTemp.addressDetail);
+      this.resident.get('address_detail')?.setValue(dataTemp.addressDetail);
     }
 
     this.dialogService.closeLoading();
@@ -196,11 +196,13 @@ export class GuestDetailComponent implements OnInit, OnChanges {
 
     const formData = this.resident.getRawValue();
 
-    const isGuestExist = this.listGuestInRoom.some((x: any) => formData.id_number === x.idNumber);
-    if (isGuestExist) {
-      this.messageService.notiMessageWarning("Thông tin khách đã tồn tại!");
-      this.resetForm();
-      return;
+    if (this.mode !== 'edit') {
+      const isGuestExist = this.listGuestInRoom.some((x: any) => formData.id_number === x.idNumber);
+      if (isGuestExist) {
+        this.messageService.notiMessageWarning("Thông tin khách đã tồn tại!");
+        this.resetForm();
+        return;
+      }
     }
 
     if (formData.nat_id === 196) {

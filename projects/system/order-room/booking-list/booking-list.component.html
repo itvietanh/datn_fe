@@ -22,9 +22,9 @@
 
   <div class="hearder-table mt-m-15">
     <nz-tabset>
-      <nz-tab nzTitle="Tất cả"></nz-tab>
-      <nz-tab nzTitle="Nhận phòng hôm nay"></nz-tab>
-      <nz-tab nzTitle="Quá giờ nhận"> </nz-tab>
+      <!-- <nz-tab nzTitle="Tất cả"></nz-tab> -->
+      <!-- <nz-tab nzTitle="Nhận phòng hôm nay"></nz-tab>
+      <nz-tab nzTitle="Quá giờ nhận"> </nz-tab> -->
     </nz-tabset>
     <div class="lst-controls d-flex justify-content-between">
       <app-filter></app-filter>
@@ -63,11 +63,11 @@
         </ng-template>
 
         <ng-template [appCellTemplate]="'action'" let-item>
-          <div *ngIf="item.status === 1" class="list-icons list-icons-extended text-center">
+          <div class="list-icons list-icons-extended text-center">
             <a class="list-icons-item action-edit" (click)="showContractDetailModal(item)">
               <i nz-tooltip nzTooltipTitle="Nhận phòng" nz-icon nzType="login" nzTheme="outline"></i>
             </a>
-            <a class="list-icons-item action-delete">
+            <a *ngIf="item.status === 1" class="list-icons-item action-delete" (click)="handleDeleteBooking(item)">
               <span nz-tooltip nzTooltipTitle="Hủy đặt phòng" class="isax-trash1"></span>
             </a>
           </div>

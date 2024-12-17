@@ -49,6 +49,7 @@ export class TableComponent implements OnInit, OnChanges, AfterContentInit {
   @Input() isShowFilter = false;
   @Input() selectOnlyOne = false;
   @Input() disableAllCheck = false;
+  @Input() nzEllipsis = false;
   @Output() queryParams = new EventEmitter<TableQueryParams>();
   @Output() checkedKeysChange = new EventEmitter<any[]>();
   @Output() itemSelected = new EventEmitter<any[]>();
@@ -63,7 +64,7 @@ export class TableComponent implements OnInit, OnChanges, AfterContentInit {
   filter: { [key: string]: any } = {};
   filterOptions: { [key: string]: OptionModel[] } = {};
   scroll: any = {};
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     if (!this.displayColumns.length) {

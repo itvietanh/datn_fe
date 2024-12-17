@@ -22,9 +22,9 @@ export class MenuComponent implements OnInit {
   constructor(private rt: Router, private location: Location, private menuService: MenuService, private messageService: MessageService, private autService: AutService) { }
 
   async ngOnInit(): Promise<void> {
-    await this.autService.initUser();
-    this.role = await this.autService.userInfo;
-    this.role = await this.role.authorizal[0].role;
+    this.autService.initUser();
+    this.role = this.autService.userInfo;
+    this.role = this.role.authorizal[0].role;
 
     const url = this.location.path();
     // gọi lần đầu
@@ -182,6 +182,7 @@ export class MenuComponent implements OnInit {
         level: 1,
         child: [
         ],
+        roles: ['ADMIN'],
       },
 
       {
@@ -277,7 +278,7 @@ export class MenuComponent implements OnInit {
           {
             icon: 'isax-shopping-bag',
             name: 'Dịch vụ',
-            url: '/he-thong/thong-ke/bao-cao',
+            url: '/he-thong/thong-ke/bao-cao-dich-vu',
             isOpen: false,
             exact: false,
             level: 2,

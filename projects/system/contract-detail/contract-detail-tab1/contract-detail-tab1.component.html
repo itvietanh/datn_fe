@@ -23,14 +23,16 @@
       <div class="title-control">
         <div class="d-flex">
           <input-select [items]="listRoomTypeOption" style="width: 150px; margin-right: 8px" [autoSelectFirst]="true"
-            *ngIf="!listRoomUsingGuest.length" placeholder="Chọn loại phòng" (onChange)="roomType($event)"></input-select>
+            *ngIf="!listRoomUsingGuest.length" placeholder="Chọn loại phòng"
+            (onChange)="roomType($event)"></input-select>
 
           <input-select-api [apiService]="roomService" [apiParams]="roomTypeId" style="width: 130px"
-            *ngIf="!listRoomUsingGuest.length" placeholder="Chọn phòng" (onChange)="onRoomChange($event)"></input-select-api>
+            *ngIf="!listRoomUsingGuest.length" placeholder="Chọn phòng"
+            (onChange)="onRoomChange($event)"></input-select-api>
 
-          <a class="cancel" (click)="cancel()" *ngIf="!listRoomUsingGuest.length">
+          <!-- <a class="cancel" (click)="cancel()" *ngIf="!listRoomUsingGuest.length">
             <span nz-tooltip nzTooltipTitle="Hủy phòng" class="isax-trash1"></span>
-          </a>
+          </a> -->
         </div>
         <!-- <button type="button" class="btn btn-primary check-out-btn " (c
          lick)="checkOut()"
@@ -84,7 +86,7 @@
         <ng-template [appCellTemplate]="'identity'" let-item>
           {{ item.name }} - {{ item.phoneNumber }}
         </ng-template>
-        <ng-template [appCellTemplate]="'action'" let-item>
+        <!-- <ng-template [appCellTemplate]="'action'" let-item>
           <a>
             <span nz-tooltip nzTooltipTitle="Cập nhật" class="isax-edit-21 text-primary"
               (click)="hanldeOpenDialog(item, 'edit')"></span>
@@ -93,7 +95,7 @@
           <a class="p-2">
             <span nz-tooltip nzTooltipTitle="Check-out" class="isax-logout1 text-primary"></span>
           </a>
-        </ng-template>
+        </ng-template> -->
       </app-table>
     </div>
 
@@ -170,11 +172,10 @@
     </div>
   </div>
 
-  <div class="room-money">
+  <!-- <div class="room-money">
     <div class="title-group2 mt-2">
       <div class="title-label2"><i class="isax-card-slash1"></i> Dịch vụ</div>
       <div class="title-control2">
-        <!-- <span class="mr-2">{{ extraServicesTotal | moneyFormat }}</span> -->
         <span class="mt-1 float-right cursor-pointer color-primary" nz-icon nzType="plus-circle" nzTheme="fill"></span>
       </div>
     </div>
@@ -192,15 +193,6 @@
         </div>
       </div>
     </div>
-    <!-- <div class="title-group2 mt-2">
-      <div class="title-label2">
-        <i class="isax-card-slash1"></i> Phát sinh
-      </div>
-      <div class="title-control2">
-        <span class="mr-2">0000</span>
-        <span class="mt-1 float-right cursor-pointer color-primary" nz-icon nzType="plus-circle" nzTheme="fill"></span>
-      </div>
-    </div> -->
     <div *ngFor="let item of listGuest" class="d-flex justify-content-between w-100 service-text">
       <div class="name-service-container">
         {{ item.note }}
@@ -215,11 +207,15 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </div>
 
 <div class="list-control-footer">
   <button (click)="close()" nz-button type="button" class="btn btn-default mr-2">
     <i nz-icon nzType="close" nzTheme="outline"></i>Đóng
+  </button>
+
+  <button (click)="handleConfirm()" nz-button type="button" class="btn btn-default mr-2">
+    <i nz-icon nzType="check-circle" nzTheme="outline"></i>Xác nhận hoàn tất gán phòng
   </button>
 </div>

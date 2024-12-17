@@ -31,7 +31,6 @@ export class HomeHotelDetailsComponent implements OnInit {
   @Input() uuid: any;
   @Input() mode: any;
   @Output() onClose = new EventEmitter<any | null>();
-  // resident = new FormGroup<any>({});
   myForm: FormGroup;
   loading = true;
   public paging: any;

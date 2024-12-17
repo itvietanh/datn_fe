@@ -50,6 +50,11 @@
         <input-password formControlName="password"></input-password>
       </app-form-control>
     </div>
+    <div class="col-md-12">
+      <app-form-control label="Ca làm việc">
+        <input-select-api [apiService]="shiftService" formControlName="shift_id"></input-select-api>
+      </app-form-control>
+    </div>
   </div>
 
   <div class="list-control-search">

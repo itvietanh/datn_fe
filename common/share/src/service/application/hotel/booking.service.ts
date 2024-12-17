@@ -45,4 +45,16 @@ export class BookingService extends BaseService {
   public updateRoomInRoomType<T = any>(params: any = null) {
     return this.http.put<ResponseModel<T>>(`${this.baseUrl}/update-room-in-rt`, params);
   }
+
+  public override delete<T = any>(id: any) {
+    return this.http.delete<ResponseModel<T>>(`${this.baseUrl}/delete-booking`, {
+      params: this.stringifyParams({ id }),
+    });
+  }
+
+  public confirmBooking<T = any>(id: string) {
+    return this.http.put<ResponseModel<T>>(`${this.baseUrl}/confirm-booking`, {
+      id: id,
+    });
+  }
 }

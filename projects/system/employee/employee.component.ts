@@ -15,6 +15,7 @@ import { GuestService } from 'common/share/src/service/application/hotel/guest.s
 import { EmployeeDetailComponent } from './employee-detail/employee-detail.component';
 import { EmployeeService } from 'common/share/src/service/application/hotel/employee.service';
 import { filter } from 'rxjs';
+import { ShiftService } from 'common/share/src/service/application/hotel/shift.service';
 
 @Component({
   selector: 'app-employee',
@@ -39,7 +40,10 @@ export class EmployeeComponent implements OnInit {
       key: 'role_name',
       header: 'Vai trò',
     },
-    //
+    {
+      key: 'shiftTxt',
+      header: 'Ca làm việc',
+    },
     {
       key: 'address',
       header: 'Địa chỉ',
@@ -82,7 +86,8 @@ export class EmployeeComponent implements OnInit {
     private messageService: MessageService,
     public hotelService: HotelService,
     private employeeService: EmployeeService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private shiftService: ShiftService
   ) {
     this.formSearch = this.fb.group({
       name: [null],
@@ -146,6 +151,16 @@ export class EmployeeComponent implements OnInit {
             item.statusTxt = x.label;
           }
         });
+      }
+
+      if (item.shift_id) {
+        const res = await this.shiftService.getCombobox({ id: item.shift_id }).firstValueFrom();
+        const data = res.data?.items
+        data?.map(x => {
+          if (x.value === item.shift_id) {
+            item.shiftTxt = x.label;
+          }
+        })
       }
     }
     this.items = rs.data!.items;

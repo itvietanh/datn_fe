@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
 import { ColumnConfig } from 'common/base/models';
 import { MessageService } from 'common/base/service/message.service';
 import { sumBy, values } from 'lodash-es';
@@ -23,6 +23,7 @@ import { OrderRoomService } from 'common/share/src/service/application/hotel/ord
 import { HomeHotelService } from 'common/share/src/service/application/hotel/home-hotel.service';
 import { DatePipe } from '@angular/common';
 import { GuestDetailComponent } from 'projects/system/home-hotel/tab-contract/tabs/tab-contract-step2/guest-detail/guest-detail.component';
+import { ServiceDetailComponent } from 'projects/system/home-hotel/tab-contract/tabs/tab-contract-step2/service-detail/service-detail.component';
 
 @Component({
   selector: 'app-contract-detail-tab1',
@@ -34,7 +35,7 @@ export class ContractDetailTab1Component implements OnInit {
   readonly nzModalData: any = inject(NZ_MODAL_DATA);
   residents: any[] = [];
   listRoomUsingGuest: any[] = [];
-
+  @Output() onClose = new EventEmitter<any>();
   columns: ColumnConfig[] = [
     {
       key: 'name',
@@ -51,14 +52,14 @@ export class ContractDetailTab1Component implements OnInit {
       header: 'Số CCCD',
       nzWidth: '140px'
     },
-    {
-      key: 'action',
-      header: 'Thao tác',
-      tdClass: 'text-center',
-      pipe: 'template',
-      alignRight: true,
-      nzWidth: '100px'
-    },
+    // {
+    //   key: 'action',
+    //   header: 'Thao tác',
+    //   tdClass: 'text-center',
+    //   pipe: 'template',
+    //   alignRight: true,
+    //   nzWidth: '100px'
+    // },
   ];
 
   rooms: any[] = [];
@@ -192,7 +193,6 @@ export class ContractDetailTab1Component implements OnInit {
       .afterClose.subscribe((v) => this.getRoomUsingGuest());
   }
 
-
   async getListRoomType() {
     this.loading = true;
     this.dialogService.openLoading();
@@ -320,5 +320,18 @@ export class ContractDetailTab1Component implements OnInit {
     }
 
     this.listGuest = [...this.listGuest];
+  }
+
+  async handleConfirm() {
+    const ok = await this.messageService.confirm("Xác nhận hoàn tất gán phòng?");
+    if (ok) {
+      this.dialogService.openLoading();
+      const res = await this.bookingService.confirmBooking(this.shareData.id).firstValueFrom();
+      if (res.data) {
+        this.messageService.notiMessageSuccess('Xác nhận thành công');
+        this.onClose.emit(true);
+      }
+      this.dialogService.closeLoading();
+    }
   }
 }

@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit {
     if (res && res.access_token) {
       LocalStorageUtil.setItem(ACCESS_TOKEN_KEY, res.access_token);
       LocalStorageUtil.setHotelId(res.employee.hotel_id);
-      this.router.navigateByUrl(this.redirectLogin);
+      this.router.navigateByUrl('/he-thong/trang-chu');
     } else {
       this.messageService.notiMessageError("Tài khoản hoặc mật khẩu không chính xác!");
     }

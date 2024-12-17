@@ -155,33 +155,33 @@ export class CreateBookingComponent implements OnInit {
       prepayment: [0, ValidatorExtension.min(0)],
       prepaid: [0, ValidatorExtension.min(0)],
       pricesDict: [1],
-      contractType: [1],
+      contractType: [1, ValidatorExtension.required()],
 
-      guests: this.fb.group({
-        uuid: [ex.newGuid()],
-        identityNo: [null, ValidatorExtension.required()],
-        fullName: [
-          null,
-          [
-            ValidatorExtension.validNameVN(
-              "Họ và tên chỉ được sử dụng chữ cái, dấu khoảng trắng và dấu '"
-            ),
-            ValidatorExtension.validateUnicode(
-              'Bạn đang sử dụng bảng mã Unicode tổ hợp! Vui lòng sử dụng bảng mã Unicode dựng sẵn'
-            ),
-            ValidatorExtension.maxLength(40, 'Họ tên tối đa 40 ký tự'),
-          ],
-        ],
-        gender: [null, ValidatorExtension.required()],
-        phoneNumber: [null, [ValidatorExtension.phoneNumber()]],
-        dateOfBirth: [null, ValidatorExtension.required()],
-        addressDetail: [null, ValidatorExtension.required()],
-        provinceId: [null, ValidatorExtension.required()],
-        districtId: [null, ValidatorExtension.required()],
-        wardId: [null, ValidatorExtension.required()],
-        natId: [196, ValidatorExtension.required()],
-        passportNumber: [null, ValidatorExtension.required()]
-      })
+      // guests: this.fb.group({
+      //   uuid: [ex.newGuid()],
+      //   identityNo: [null, ValidatorExtension.required()],
+      //   fullName: [
+      //     null,
+      //     [
+      //       ValidatorExtension.validNameVN(
+      //         "Họ và tên chỉ được sử dụng chữ cái, dấu khoảng trắng và dấu '"
+      //       ),
+      //       ValidatorExtension.validateUnicode(
+      //         'Bạn đang sử dụng bảng mã Unicode tổ hợp! Vui lòng sử dụng bảng mã Unicode dựng sẵn'
+      //       ),
+      //       ValidatorExtension.maxLength(40, 'Họ tên tối đa 40 ký tự'),
+      //     ],
+      //   ],
+      //   gender: [null, ValidatorExtension.required()],
+      //   phoneNumber: [null, [ValidatorExtension.phoneNumber()]],
+      //   dateOfBirth: [null, ValidatorExtension.required()],
+      //   addressDetail: [null, ValidatorExtension.required()],
+      //   provinceId: [null, ValidatorExtension.required()],
+      //   districtId: [null, ValidatorExtension.required()],
+      //   wardId: [null, ValidatorExtension.required()],
+      //   natId: [196, ValidatorExtension.required()],
+      //   passportNumber: [null, ValidatorExtension.required()]
+      // })
     });
 
   }
@@ -196,7 +196,21 @@ export class CreateBookingComponent implements OnInit {
   }
 
   resetForm() {
-    this.data = {};
+    this.data = {
+      uuid: null,
+      name: null,
+      id_number: null,
+      passport_number: null,
+      phone_number: null,
+      province_id: null,
+      district_id: null,
+      ward_id: null,
+      gender: null,
+      birth_date: null,
+      representative: null,
+      nat_id: 196,
+      address_detail: null,
+    };
   }
 
   cancelResident() {
@@ -212,22 +226,22 @@ export class CreateBookingComponent implements OnInit {
     FormUtil.validate(this.resident);
     const resident = this.resident.getRawValue();
     if (
-      this.residents.some(
+      this.listGuest.some(
         (r, i) =>
-          i !== this.residentIndex && r.identityNo === resident.identityNo
+          i !== this.residentIndex && r.id_number === resident.id_number
       )
     ) {
       this.messageService.alert('Đã tồn tại thông tin khách hàng');
       return;
     }
-    this.residents[this.residentIndex] = resident;
+    this.listGuest[this.residentIndex] = resident;
     this.cancelResident();
   }
 
   deleteResident() {
     const resident = this.resident.getRawValue();
-    this.residents = this.residents.filter(
-      (r: any) => r.identityNo !== resident.identityNo
+    this.listGuest = this.listGuest.filter(
+      (r: any) => r.id_number !== resident.id_number
     );
     this.cancelResident();
   }
@@ -399,7 +413,6 @@ export class CreateBookingComponent implements OnInit {
     this.updateInvoice();
   }
 
-
   updateInvoice() {
     this.totalAmountSum = sumBy(
       this.items,
@@ -439,17 +452,40 @@ export class CreateBookingComponent implements OnInit {
   }
 
   handleAddGuest() {
-    const guest = this.myForm.get('guests')?.getRawValue();
+    const resident = this.resident;
+    resident.get('uuid')?.setValue(this.ex.newGuid());
+    if (!this.listGuest.length) {
+      if (resident.value.nat_id === 196) {
+        resident.get('passport_number')?.clearValidators();
+        resident.get('id_number')?.addValidators([ValidatorExtension.required()]);
+      } else {
+        resident.get('passport_number')?.addValidators([ValidatorExtension.required()]);
+        resident.get('id_number')?.clearValidators();
+      }
+      this.resident.markAllAsDirty();
+      if (this.resident.invalid) return;
+    }
 
-    this.listGuest = [...this.listGuest, guest];
+    if (this.listGuest.some((r) => r.id_number === resident.get('id_number')?.value)) {
+      this.messageService.notiMessageWarning('Đã tồn tại thông tin khách hàng');
+      return false;
+    }
+
+    if (resident.valid) {
+      this.listGuest.push(resident.value);
+    }
+
     if (this.listGuest[0]) {
       this.listGuest[0].representative = true;
     }
 
-    this.myForm.get('guests')?.reset();
-    this.myForm.get('guests.provinceId')?.reset();
-    this.myForm.get('guests.districtId')?.reset();
-    this.myForm.get('guests.wardId')?.reset();
+    resident.reset();
+    resident.get('province_id')?.reset();
+    resident.get('district_id')?.reset();
+    resident.get('ward_id')?.reset();
+    resident.get('nat_id')?.setValue(196);
+
+    return true;
   }
 
   handleRemoveGuest() {
@@ -463,29 +499,40 @@ export class CreateBookingComponent implements OnInit {
     this.myForm.get('prepayment')?.reset();
   }
 
-  handleChooseGuest(item: any) {
+  handleChooseGuest(item: any, index: any) {
     this.listGuest.filter(x => {
-      x.representative = null;
-
       if (x.representative === true) {
         x.representative = false;
       }
 
-      if (x.idNumber === item.idNumber) {
+      if (x.id_number === item.id_number) {
         x.representative = true;
       }
-
-      x.dateOfBirth = x.birthDateText;
-
-      x.identityNo = x.idNumber;
-
-      x.provinceId = x.provinceCode;
-
-      x.districtId = x.districtCode;
-
-      x.wardId = x.wardCode;
     });
-    this.myForm.get('guests')?.patchValue(item);
+
+    this.residentIndex = index;
+    const data = this.listGuest[index];
+
+    let itemMap = [data].map((x: any) => {
+      let b = {
+        uuid: x.uuid,
+        name: x.name,
+        id_number: x.id_number,
+        passport_number: x.passport_number,
+        phone_number: x.phone_number,
+        province_id: x.province_id,
+        district_id: x.district_id,
+        ward_id: x.ward_id,
+        gender: x.gender,
+        birth_date: x.birth_date,
+        representative: x.representative,
+        nat_id: x.nat_id,
+        address_detail: x.address_detail,
+      }
+      return b;
+    });
+
+    this.data = itemMap[0];
   }
 
   handlerOpenDialog(mode: string = DialogMode.add, item: any = null) {
@@ -527,39 +574,21 @@ export class CreateBookingComponent implements OnInit {
 
   async handlerSubmit() {
 
-    if (this.listGuest.length) {
-      this.clearValidator();
-    }
-
     this.myForm.markAllAsDirty();
     if (this.myForm.invalid) return;
 
-    if (!this.listGuest.length) {
-      this.handleAddGuest();
-    }
-
-    const body = this.myForm.getRawValue();
-    if (body.guests.natId !== 196) {
-      body.guests.identityNo = null;
+    this.handleAddGuest();
+    if (this.listGuest.length) {
+      this.clearValidator();
     } else {
-      body.guests.passportNumber = null;
+      FormUtil.validate(this.resident);
     }
 
-    const guests = this.listGuest.map(x => ({
-      uuid: this.ex.newGuid(),
-      name: x.fullName,
-      id_number: x.identityNo,
-      passport_number: x.passportNumber,
-      phone_number: x.phoneNumber,
-      province_id: x.provinceId,
-      district_id: x.districtId,
-      ward_id: x.wardId,
-      gender: x.gender,
-      birth_date: x.dateOfBirth,
-      representative: x.representative,
-      nat_id: x.natId,
-      contact_details: JSON.stringify({ addressDetail: x.addressDetail })
-    }));
+    this.listGuest.forEach(item => {
+      if (item.address_detail) {
+        item.contact_details = JSON.stringify({ addressDetail: item.address_detail });
+      }
+    });
 
     const formData = {
 
@@ -577,7 +606,8 @@ export class CreateBookingComponent implements OnInit {
         room_quantity: this.numOfRooms,
         group_name: this.myForm.get('groupName')?.value,
         total_amount: this.remainingAmount,
-        contract_type: this.checkType
+        contract_type: this.checkType,
+        note: this.myForm.get('note')?.value
       },
 
       transition: {
@@ -587,7 +617,7 @@ export class CreateBookingComponent implements OnInit {
         payment_status: 1,
       },
 
-      guests: guests,
+      guests: this.listGuest,
 
       roomUsing: {
         uuid: this.ex.newGuid(),
@@ -596,11 +626,6 @@ export class CreateBookingComponent implements OnInit {
         check_in: this.myForm.get('checkInTime')?.value,
         total_amount: this.remainingAmount
       },
-
-      // roomUsingGuest: {
-      //   check_in: this.myForm.get('checkInTime')?.value,
-      //   check_out: this.myForm.get('checkOutTime')?.value,
-      // }
     };
 
     this.dialogService.openLoading();
@@ -615,16 +640,17 @@ export class CreateBookingComponent implements OnInit {
   }
 
   clearValidator() {
-    this.myForm.get('guests.identityNo')?.clearValidators();
-    this.myForm.get('guests.fullName')?.clearValidators();
-    this.myForm.get('guests.gender')?.clearValidators();
-    this.myForm.get('guests.phoneNumber')?.clearValidators();
-    this.myForm.get('guests.dateOfBirth')?.clearValidators();
-    this.myForm.get('guests.addressDetail')?.clearValidators();
-    this.myForm.get('guests.provinceId')?.clearValidators();
-    this.myForm.get('guests.wardId')?.clearValidators();
-    this.myForm.get('guests.natId')?.clearValidators();
-    this.myForm.get('guests.passportNumber')?.clearValidators();
+    this.resident.get('name')?.clearValidators();
+    this.resident.get('phone_number')?.clearValidators();
+    this.resident.get('id_number')?.clearValidators();
+    this.resident.get('passport_number')?.clearValidators();
+    this.resident.get('province_id')?.clearValidators();
+    this.resident.get('district_id')?.clearValidators();
+    this.resident.get('ward_id')?.clearValidators();
+    this.resident.get('nat_id')?.clearValidators();
+    this.resident.get('birth_date')?.clearValidators();
+    this.resident.get('gender')?.clearValidators();
+    this.resident.get('address_detail')?.clearValidators();
   }
 
   close(data?: any) {

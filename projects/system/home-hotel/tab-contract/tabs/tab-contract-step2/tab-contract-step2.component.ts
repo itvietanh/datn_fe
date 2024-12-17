@@ -98,6 +98,7 @@ export class TabContactStep2Component implements OnInit {
         option.inputs = {
           uuid: this.shareData.item.roomUuid,
           guest: this.shareData.listGuest,
+          item: this.shareData.item
         };
       },
       (eventName, eventValue) => {

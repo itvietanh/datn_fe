@@ -45,6 +45,7 @@ export class OrderHistoryComponent implements OnInit {
     {
       key: 'check_in',
       header: 'Ngày nhận phòng',
+      pipe: 'template',
     },
     {
       key: 'check_out',
@@ -78,7 +79,7 @@ export class OrderHistoryComponent implements OnInit {
     this.formSearch = this.fb.group({
       name: [null],
       room_number: [null],
-      total_amount : [null],
+      total_amount: [null],
       payment_status: [null],
       check_in: [null],
       check_out: [null],

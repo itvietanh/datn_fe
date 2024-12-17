@@ -1,5 +1,3 @@
-import { ShiftModule } from './shift/shift.module';
-
 import { Routes, RouterModule } from '@angular/router';
 import { SystemComponent } from './system.component';
 import { AuthGuard } from 'common/base/service/auth.guard';
@@ -26,11 +24,6 @@ const routes: Routes = [
         path: 'tai-khoan',
         loadChildren: () =>
           import('./employee/employee.module').then((x) => x.EmployeeModule),
-      },
-      {
-        path: 'ca-lam',
-        loadChildren: () =>
-          import('./shift/shift.module').then((x) => x.ShiftModule),
       },
       {
         path: 'danh-sach-tang',
@@ -70,7 +63,7 @@ const routes: Routes = [
           import('./guest/guest.module').then((x) => x.GuestModule),
       },
       {
-        path: 'thong-ke/bao-cao',
+        path: 'thong-ke/bao-cao-dich-vu',
         loadChildren: () =>
           import('./statistical/service/service.module').then(
             (x) => x.ServiceModule
@@ -130,6 +123,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('./role/role.module').then(
             (x) => x.RoleModule
+          ),
+      },
+      {
+        path: 'ca-lam',
+        loadChildren: () =>
+          import('./shift/shift.module').then(
+            (x) => x.ShiftModule
           ),
       },
     ],

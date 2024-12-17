@@ -17,23 +17,13 @@
   <div class="header-elements-inline">
     <div class="navbar-expand-md w-100">
       <div class="padding-left-15 text-right d-md-none w-100 row">
-        <button
-          class="navbar-toggler"
-          data-target="#search-list"
-          data-toggle="collapse"
-          type="button"
-        >
+        <button class="navbar-toggler" data-target="#search-list" data-toggle="collapse" type="button">
           <i nz-icon nzType="menu" nzTheme="outline"></i>
         </button>
       </div>
       <!-- search -->
       <div class="navbar-collapse collapse" id="search-list">
-        <form
-          *ngIf="formSearch"
-          [formGroup]="formSearch"
-          class="w-100"
-          (ngSubmit)="getData()"
-        >
+        <form *ngIf="formSearch" [formGroup]="formSearch" class="w-100" (ngSubmit)="getData()">
           <ng-template #controlErrorTpl let-control>
             <app-render-errors [control]="control"></app-render-errors>
           </ng-template>
@@ -42,10 +32,7 @@
               <nz-form-item>
                 <nz-form-label>Tên khách hàng</nz-form-label>
                 <nz-form-control [nzErrorTip]="controlErrorTpl">
-                  <input-text
-                    placeholder="Tên khách hàng..."
-                    formControlName="name"
-                  ></input-text>
+                  <input-text placeholder="Tên khách hàng..." formControlName="name"></input-text>
                 </nz-form-control>
               </nz-form-item>
             </div>
@@ -54,10 +41,7 @@
               <nz-form-item>
                 <nz-form-label>Phòng</nz-form-label>
                 <nz-form-control [nzErrorTip]="controlErrorTpl">
-                  <input-text
-                    placeholder="Nhập số phòng..."
-                    formControlName="room_number"
-                  ></input-text>
+                  <input-text placeholder="Nhập số phòng..." formControlName="room_number"></input-text>
                 </nz-form-control>
               </nz-form-item>
             </div>
@@ -66,10 +50,7 @@
               <nz-form-item>
                 <nz-form-label>Trạng thái</nz-form-label>
                 <nz-form-control [nzErrorTip]="controlErrorTpl">
-                  <input-select
-                    [items]="listPaymentStatus"
-                    formControlName="payment_status"
-                  ></input-select>
+                  <input-select [items]="listPaymentStatus" formControlName="payment_status"></input-select>
                 </nz-form-control>
               </nz-form-item>
             </div>
@@ -127,19 +108,21 @@
   <ng-template #tab1>
     <app-table [columns]="columns" [items]="items">
       <ng-template [appCellTemplate]="'payment_status'" let-item>
-        <span
-          [ngClass]="{
+        <span [ngClass]="{
             'status-badge': item.payment_status,
             cancelled: item.payment_status === 1,
             confirmed: item.payment_status === 2
-          }"
-        >
+          }">
           {{ item.payment_status | labelValue : listPaymentStatus }}
         </span>
       </ng-template>
 
+      <ng-template [appCellTemplate]="'check_in'" let-item>
+        {{ item.check_in | datetimeFormat }}
+      </ng-template>
+
       <ng-template [appCellTemplate]="'check_out'" let-item>
-        {{ item.check_out ? item.check_out : "Chưa trả phòng" }}
+        {{ item.check_out ? (item.check_out | datetimeFormat) : "Chưa trả phòng" }}
       </ng-template>
 
       <ng-template [appCellTemplate]="'total_amount'" let-item>
@@ -160,10 +143,6 @@
         </div>
       </ng-template> -->
     </app-table>
-    <app-paging
-      [data]="paging"
-      [changeListPage]="0"
-      (onChange)="getData($event)"
-    ></app-paging>
+    <app-paging [data]="paging" [changeListPage]="0" (onChange)="getData($event)"></app-paging>
   </ng-template>
 </div>

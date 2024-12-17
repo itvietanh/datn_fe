@@ -32,9 +32,10 @@ import {
 export class RoomChangeComponent implements OnInit {
   @Input() uuid: any;
   @Input() guest: any;
+  @Input() item: any;
   @Input() myForm!: FormGroup;
   onClose = new EventEmitter<any | null>();
-  now = new Date() as any;
+  now: any;
   hasSaveData: any;
 
   /** Where Params Room Type ID*/
@@ -50,18 +51,20 @@ export class RoomChangeComponent implements OnInit {
     private messageService: MessageService
   ) {
     this.myForm = this.fb.group({
-      checkIn: [{ value: this.now.toNumberYYYYMMDDHHmmss(), disabled: true }],
-      checkOut: [null, ValidatorExtension.required()],
+      checkIn: [{ value: null, disabled: true }],
+      checkOut: [null],
       roomTypeId: [null, ValidatorExtension.required()],
-      roomId: [null, ValidatorExtension.required()],
-      totalAmount: [{ value: null, disabled: true }, ValidatorExtension.required()], // Make totalAmount read-only
+      roomId: [null],
+      totalAmount: [{ value: null, disabled: true }], // Make totalAmount read-only
       transferFee: [null, ValidatorExtension.min(0)], // Ensure transferFee is non-negative
     });
   }
 
   ngOnInit() {
-    this.myForm.get('checkOut')?.disable();
+    // this.myForm.get('checkOut')?.disable();
     this.myForm.get('roomId')?.disable();
+    const data = this.item;
+    this.myForm.get('checkIn')?.setValue(new Date(data.checkIn).toNumberYYYYMMDDHHmmss());
   }
 
   async onDate() {
@@ -109,7 +112,6 @@ export class RoomChangeComponent implements OnInit {
   }
 
   async saveData() {
-    debugger;
     const formData = this.myForm.getRawValue();
     formData.guest = formData.guest || [];
     for (const item of this.guest) {

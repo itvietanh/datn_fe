@@ -29,7 +29,7 @@
         <td *ngIf="showIndex" class="text-center">
           {{ (pagination.page - 1) * pagination.size + i + 1 }}
         </td>
-        <td *ngFor="let column of displayedColumns" [class]="column.tdClass" nzEllipsis [title]="
+        <td *ngFor="let column of displayedColumns" [class]="column.tdClass" [nzEllipsis]="nzEllipsis" [title]="
             column.pipe !== 'tagsColor' && column.pipe !== 'boolean'
               ? item[column.key]
               : ''

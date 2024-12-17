@@ -154,30 +154,29 @@ export class TabContactStep3Component implements OnInit {
     }
   }
 
+  previousAdditionalFee = 0; 
+
   onAdditionalFee() {
-    const additionalFee = this.myForm.get('additionalFee')?.value;
-    if (additionalFee) {
-      this.remainingAmount = this.remainingAmount + additionalFee;
-    } else {
-      this.remainingAmount = this.roomAmount + this.vatAmount;
-    }
+    const additionalFee = this.myForm.get('additionalFee')?.value || 0;
+    this.remainingAmount = this.remainingAmount - this.previousAdditionalFee + additionalFee;
+    this.previousAdditionalFee = additionalFee;
   }
 
   calCulateRemainingAmount() {
     const vat = 0.1;
     this.vatAmount = this.roomAmount * vat;
     const finalPrice = this.roomAmount + this.vatAmount;
-    const remaining = finalPrice;
+    const remaining = finalPrice + this.roomChangeFee;
     const prepaid = remaining - this.prepaid;
-    const roomChangeFee = prepaid - this.roomChangeFee;
-    this.remainingAmount = roomChangeFee;
+    this.remainingAmount = prepaid;
   }
 
   async onDate() {
     const req = {
       room_uuid: this.items?.roomUuid,
       check_in: this.items?.checkIn,
-      check_out: this.items?.checkOut,
+      // check_out: this.items?.checkOut,
+      check_out: new Date(),
     };
 
     const resMoneyInRoom = await this.homeHotelService.getMoneyInRoom(this.items.ruUuid).firstValueFrom();

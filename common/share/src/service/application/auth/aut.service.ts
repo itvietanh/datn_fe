@@ -54,6 +54,6 @@ export class AutService {
     let url = location.href;
     if (url.indexOf('/dang-nhap') !== -1) return;
     const rs = await this.profile().firstValueFrom();
-    this.userInfo = rs.data;
+    this.userInfo = await rs.data;
   }
 }

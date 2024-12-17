@@ -15,6 +15,7 @@ import { EditBookingComponent } from './edit-booking/edit-booking.component';
 import { ImportBookingComponent } from './create-booking/import-booking/import-booking.component';
 import { CommonModule } from '@angular/common';
 import { ContractDetailModule } from '../contract-detail/contract-detail.module';
+import { CustomerScannerModule } from '../customer-scanner/customer-scanner.module';
 
 @NgModule({
   imports: [
@@ -32,6 +33,7 @@ import { ContractDetailModule } from '../contract-detail/contract-detail.module'
       { path: '', component: BookingListComponent },
       { path: 'dat-phong', component: CreateBookingComponent },
     ]),
+    CustomerScannerModule
   ],
   declarations: [CreateBookingComponent, BookingListComponent, EditBookingComponent, ImportBookingComponent],
 })

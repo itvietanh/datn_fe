@@ -67,6 +67,7 @@ export class BookingListComponent implements OnInit {
       key: 'orderDate',
       header: 'Ngày đặt',
       pipe: 'datetime',
+      labelValue: ['dateFormat']
     },
     {
       key: 'checkIn',
@@ -211,6 +212,20 @@ export class BookingListComponent implements OnInit {
     );
   }
 
+  async handleDeleteBooking(value: any) {
+    const ok = await this.messageService.confirm(
+      'Bạn có chắc chắn muốn hủy đặt phòng không?'
+    );
+    if (!ok) return;
+
+    this.dialogService.openLoading();
+    const res = await this.bookingService.delete(value.id).firstValueFrom();
+    if (res.data) {
+      this.messageService.notiMessageSuccess('Hủy đặt phòng thành công');
+      this.getData();
+    }
+    this.dialogService.closeLoading();
+  }
 
 
   // async cancel(id: string) {

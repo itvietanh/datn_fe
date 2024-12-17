@@ -12,11 +12,11 @@
             </div>
 
             <div class="header-content">
-              <div class="download-header mr-2">
+              <!-- <div class="download-header mr-2">
                 <button nz-button type="button" class="btn btn-success" (click)="dowloadFile()">
                   <i class="isax-document-download1 mr-2"></i>Tải về file mẫu
                 </button>
-              </div>
+              </div> -->
 
               <div class="contract-type">
                 <!-- <input-radio formControlName="contractType"></input-radio> -->
@@ -208,114 +208,62 @@
               <i class="isax-house-21"></i> Thông tin khách
             </div>
             <div class="title-control">
-              <button nz-button type="button" class="btn btn-default mr-2" (click)="myForm.reset()">
-                <i class="isax-rotate-left1 mr-2"></i>Làm mới
-              </button>
-              <!-- <button nz-button type="button" class="btn btn-default mr-2">
-                <i class="isax-rotate-left1 mr-2"></i>Hủy
-              </button> -->
-              <!-- <button nz-button type="button" class="btn btn-primary mr-2">
-                <i class="isax-import-11 mr-2"></i>Cập nhật
-              </button> -->
-              <button type="button" class="btn btn-primary" (click)="handlerOpenDialog()">
-                <i class="isax-scan-barcode1 mr-2"></i>Quét CCCD
+              <button *ngIf="residentIndex !== -1" type="button" class="btn btn-default mr-2"
+                (click)="deleteResident()">
+                <i class="isax-trash1 mr-2"></i>Xóa khách
               </button>
 
-
-              <button type="button" class="btn btn-primary ml-2" (click)="handleAddGuest()">
+              <button *ngIf="residentIndex === -1" type="button" class="btn btn-primary mr-2"
+                (click)="handleAddGuest()">
                 <i class="isax-add-circle1 mr-2"></i>Thêm khách
               </button>
 
-              <!-- <app-customer-scanner-button (success)="data = $event"></app-customer-scanner-button> -->
+              <button (click)="resetForm()" nz-button type="button" class="btn btn-default mr-2"
+                *ngIf="residentIndex === -1">
+                <i class="isax-rotate-left1 mr-2"></i>Làm mới
+              </button>
+
+              <button (click)="cancelResident()" nz-button type="button" class="btn btn-default mr-2"
+                *ngIf="residentIndex !== -1">
+                <i class="isax-rotate-left1 mr-2"></i>Hủy
+              </button>
+
+              <button (click)="updateResident()" nz-button type="button" class="btn btn-primary mr-2"
+                *ngIf="residentIndex !== -1">
+                <i class="isax-import-11 mr-2"></i>Cập nhật
+              </button>
+
+              <app-customer-scanner-button #btnScaner (success)="data = $event"
+                (successMulti)="scanMulti($event)"></app-customer-scanner-button>
             </div>
           </div>
 
-          <!-- <app-customer-data [(form)]="resident" [data]="items"></app-customer-data> -->
-          <div class="row mt-2" formGroupName="guests">
-            <div class="col-md-4">
-              <app-form-control label="Họ tên">
-                <input-text formControlName="fullName" [toUper]="true"></input-text>
-              </app-form-control>
-            </div>
-            <div class="col-md-4">
-              <app-form-control label="Giới tính">
-                <input-select [items]="listGender" formControlName="gender"></input-select>
-              </app-form-control>
-            </div>
-            <div class="col-md-4">
-              <app-form-control label="Ngày sinh">
-                <input-date formControlName="dateOfBirth"></input-date>
-              </app-form-control>
-            </div>
-            <div class="col-md-4">
-              <app-form-control label="Số điện thoại">
-                <input-text formControlName="phoneNumber"></input-text>
-              </app-form-control>
-            </div>
-            <div class="col-md-4">
-              <app-form-control label="Quốc tịch">
-                <input-select-api [apiService]="diaBanService" [actionName]="'getComboboxQT'" formControlName="natId">
-                </input-select-api>
-              </app-form-control>
-            </div>
-            <div class="col-md-4" *ngIf="myForm.get('guests.natId')?.value === 196">
-              <app-form-control label="Số CCCD">
-                <input-text formControlName="identityNo"></input-text>
-              </app-form-control>
-            </div>
-            <div class="col-md-4">
-              <app-form-control label="Số hộ chiếu" *ngIf="myForm.get('guests.natId')?.value !== 196">
-                <input-text formControlName="passportNumber"></input-text>
-              </app-form-control>
-            </div>
-
-            <ng-container *ngIf="myForm.get('guests.natId')?.value === 196">
-              <div class="col-md-12">
-                <input-diaban [apiService]="diaBanService" [city]="myForm.get('guests.provinceId')"
-                  [district]="myForm.get('guests.districtId')" [village]="myForm.get('guests.wardId')"></input-diaban>
-              </div>
-            </ng-container>
-
-            <ng-container>
-              <div class="col-md-12">
-                <app-form-control label="Địa chỉ chi tiết">
-                  <input-text formControlName="addressDetail"></input-text>
-                </app-form-control>
-              </div>
-            </ng-container>
+          <div class="mt-2">
+            <app-customer-data [(form)]="resident" [data]="data"></app-customer-data>
           </div>
         </div>
         <div class="customer-list">
-          <div class="title-group2">
+          <div class="title-group">
             <div class="title-label">
               <i class="isax-house-21"></i> Danh sách khách
-            </div>
-            <div class="title-control">
-              <button type="button" class="btn btn-default mr-2" (click)="addModel()">
-                <i class="isax-clipboard-import mr-2"></i>Thêm danh sách khách
-              </button>
-
-              <button *ngIf="residentIndex !== -1" type="button" class="btn btn-default" (click)="deleteResident()">
-                <i class="isax-trash1 mr-2"></i>Xóa khách
-              </button>
             </div>
           </div>
 
           <div class="resident-list">
-            <div class="resident-item selected" *ngFor="let item of listGuest">
-              <div class="name" (click)="handleChooseGuest(item)">
+            <div class="resident-item selected" *ngFor="let item of listGuest; let i = index">
+              <div class="name" (click)="handleChooseGuest(item, i)" [ngClass]="{ selected: i === residentIndex }">
                 <i class="mr-1" [ngClass]="{
                     'isax-man1': item.gender === 'Nam',
                     'isax-woman1': item.gender === 'Nữ'
                   }"></i>
-                {{ item.fullName.toUpperCase() ?? "Đang nhập thông tin khách..." }}
+                {{ item.name.toUpperCase() ?? "Đang nhập thông tin khách..." }}
               </div>
               <div class="title-label" *ngIf="item.representative">
                 Người đại diện
               </div>
               <div class="birth">
                 <i class="isax-cake1 mr-1"></i>
-                {{ item.birthDateText }}
+                {{ item.birth_date | dateFormat }}
               </div>
             </div>
           </div>
